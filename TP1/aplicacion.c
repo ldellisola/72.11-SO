@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <sys/wait.h>
 
+#define SLAVES 5
 typedef struct 
 {
     int readFD;
@@ -22,7 +23,7 @@ int main(int  argc, char ** argv){
 
 
 
-    ChildProcess_t processes[5];
+    ChildProcess_t processes[SLAVES];
 
     bool end=false;
 
@@ -44,14 +45,11 @@ int main(int  argc, char ** argv){
 
             switch (pid)
             {
-            case -1:
+            case -1:{
                 perror("Error creating child Process");
                 return -1;
-                break;
-            case 0:
-
-                
-
+                break;}
+            case 0:{
                 srand(time(0)+ getpid());
 
                 int ownPID = (int) getpid();
@@ -59,9 +57,7 @@ int main(int  argc, char ** argv){
                 close(fd[0]);
                 
                 int rnd =  rand() % 500;
-
                 
-
                 printf("Process %d talsk to father.\t Token: %d\n",ownPID, rnd);
                 char str[100];
                 int sleepTime = 3 + rand() % 10;
@@ -75,7 +71,7 @@ int main(int  argc, char ** argv){
 
                 exit(EXIT_SUCCESS);
 
-                break;
+                break;}
             default:
                 // Guardo el FD a donde voy a leer y cierro el que escribe.
                 processes[i].readFD = fd[0];
