@@ -10,6 +10,8 @@
 #include <sys/wait.h>
 
 #define SLAVES 5
+#define BUF 100
+
 typedef struct 
 {
     int readFD;
@@ -21,8 +23,19 @@ typedef struct
 
 int main(int  argc, char ** argv){  
 
+    char buffer[BUF];
 
-
+    system("ps | grep vista > rta"); //look for Vista process
+	FILE * file=fopen("./rta","r");
+	fscanf(file,"%s",buffer);
+    system("rm ./rta");
+	
+    pid_t v_pid=atoi(buffer);
+	if(v_pid!=0)
+	    printf("%d\n",v_pid);
+    else
+        printf("No hay vista \n");
+    
     ChildProcess_t processes[SLAVES];
 
     bool end=false;

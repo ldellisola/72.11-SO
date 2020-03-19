@@ -4,7 +4,7 @@ LDFLAGS =  -fsanitize=address
 
 SRC = *.c
 OBJ = $(SRC:.cc=.o)
-EXEC = exec/processes.out
+EXEC = solve
 
 all: $(EXEC)
 
