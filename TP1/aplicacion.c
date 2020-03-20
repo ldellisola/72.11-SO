@@ -15,16 +15,17 @@
 
 #define SLAVES 5
 #define BUF 100
+#define MAX 2
 
 typedef struct 
 {
-    char fifo[6];
+    int fd;
+    int cant;
     pid_t pid;
 }ChildProcess_t;
 
 pid_t waitV();
-void createSlaves(ChildProcess_t  processes[][SLAVES]);
-void rmFifo();
+void createSlaves(ChildProcess_t  processes[][SLAVES],char * path);
 
 int main(int  argc, char ** argv){  
 
@@ -45,14 +46,27 @@ int main(int  argc, char ** argv){
         printf("No hay vista \n");
     
     ChildProcess_t processes[SLAVES];
-    createSlaves(&processes);
+    
+    char * fifo="./ff";
+    if (mkfifo(fifo,0666) == -1){  //rw-rw-rw-
+                perror("Pipe not established");
+                exit(-1);
+    }
+    
+    createSlaves(&processes,fifo);
     
     int resultados=open("resultados", O_WRONLY | O_TRUNC | O_CREAT);
-    int i;
-    rmFifo();
+    int i,j;
     for(i=1;i<argc;i++){
-        //...
+        for(j=0;processes[j].cant=2 && j<SLAVES;j++);
+        if(j==SLAVES){
+            //... hay que esperar porque todos llenos
+        }
+        write(processes[j].fd,argv[i],sizeof(argv[i]));
+        processes[j].cant++;
+        //chequear el fifo para saber si mando otro
     }
+    system("rm ./ff >/dev/null 2>&1");
     
 }
 
@@ -68,10 +82,13 @@ pid_t waitV(){
         return atoi(buffer);
 }
 
-void createSlaves(ChildProcess_t  processes[][SLAVES]){
-    char fifoP[6]={'.','/','f','f','n',0};
+void createSlaves(ChildProcess_t  processes[][SLAVES],char * path){
     int i;
     for(i = 0 ; i < SLAVES ; i++){
+        int fd[2];
+        if(pipe(fd)==-1){
+            perror("Pipe error:");
+            exit(-1);}
         pid_t pid = fork();
         switch (pid)
         {
@@ -80,35 +97,20 @@ void createSlaves(ChildProcess_t  processes[][SLAVES]){
             exit(-1);
             break;}
         case 0:{
-            int ownPID = (int) getpid();
-            char ** c=NULL;
-            //if(execvp("./slave",(char **)&fifoP)==-1)
+            close(fd[1]);
+            dup2(fd[0],0);
+            char * c[4]={"./slave",path,NULL};
             if(execvp("./slave",c)==-1)
                 perror("Execvp error:");
             break;
             }
         default:
             // Guardo el FD a donde voy a leer y cierro el que escribe.
-            fifoP[4]=i+'0';
-            if (mkfifo(fifoP,0666) == -1){  //rw-rw-rw-
-                perror("Pipe not established");
-                exit(-1);
-            }
-        
-            strcpy((*processes)[i].fifo,fifoP);
+            
+            close(fd[0]);
+            (*processes)[i].fd=fd[1];
             (*processes)[i].pid = pid;
             break;
         }
     }
-}
-void rmFifo(){
-    char fifoP[6]={'.','/','f','f','n',0};
-    int i;
-    for(i = 0 ; i < SLAVES ; i++){
-        fifoP[4]=i+'0';
-        char rm[40]="rm ";
-        strcat(rm,fifoP);
-        strcat(rm," >/dev/null 2>&1");
-        system(rm);
-    }    
 }
