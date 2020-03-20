@@ -18,22 +18,25 @@
 
 typedef struct 
 {
-    char * fifo;
+    char fifo[6];
     pid_t pid;
 }ChildProcess_t;
 
 pid_t waitV();
-void createSlaves(ChildProcess_t ** processes);
+void createSlaves(ChildProcess_t  processes[][SLAVES]);
+void rmFifo();
 
 int main(int  argc, char ** argv){  
+
+    if(argc<2){
+        printf("Please, send files\n");
+        exit(1);
+    }    
+
     sleep(2);
     
     pid_t v_pid = waitV(); //if ==0 no esta, else es el pid
     
-    if(argc<2){
-        printf("Please, send files");
-        exit(1);
-    }    
     
     if(v_pid!=0){
         char buffer[BUF];
@@ -41,17 +44,13 @@ int main(int  argc, char ** argv){
     }else
         printf("No hay vista \n");
     
-    if(argc==1){
-        printf("Please send files");
-        exit(1);
-    }
-
     ChildProcess_t processes[SLAVES];
     createSlaves(&processes);
     
-
     int resultados=open("resultados", O_WRONLY | O_TRUNC | O_CREAT);
-    for(int i=1;i<argc;i++){
+    int i;
+    rmFifo();
+    for(i=1;i<argc;i++){
         //...
     }
     
@@ -59,8 +58,8 @@ int main(int  argc, char ** argv){
 
 
 pid_t waitV(){
-    char buffer[BUF];
-
+        
+        char buffer[BUF];
         system("ps | grep vista > rta"); //look for Vista process
         FILE * file=fopen("./rta","r");
         fscanf(file,"%s",buffer);
@@ -69,39 +68,46 @@ pid_t waitV(){
         return atoi(buffer);
 }
 
-void createSlaves(ChildProcess_t ** processes){
-    char fifo[6]={'.','/','f','f','n',0};
+void createSlaves(ChildProcess_t  processes[][SLAVES]){
+    char fifoP[6]={'.','/','f','f','n',0};
    
-
-    for(int i = 0 ; i < SLAVES ; i++){
-        fifo[4]=i;
-        if (mkfifo(fifo,0666) == -1)  //rw-rw-rw-
+    int i;
+    for(i = 0 ; i < SLAVES ; i++){
+        fifoP[4]=i+'0';
+        if (mkfifo(fifoP,0666) == -1)  //rw-rw-rw-
         {
-            perror("Pipe not established");
-            return -1;
+            perror("Pipe not established\n");
+            exit(-1);
         }
         pid_t pid = fork();
-
 
         switch (pid)
         {
         case -1:{
-            perror("Error creating child Process");
-            return -1;
+            perror("Error creating child Process\n");
+            exit(-1);
             break;}
         case 0:{
             int ownPID = (int) getpid();
-            char * sPath="./slave";
-            char ** args={sPath,fifo};
-            execvp(sPath,args);
+            execvp("./slave",(char **)&fifoP);
             break;
             }
         default:
             // Guardo el FD a donde voy a leer y cierro el que escribe.
-            (*processes)[i].fifo = fifo;
+            strcpy((*processes)[i].fifo,fifoP);
             (*processes)[i].pid = pid;
             break;
         }
     }
-    
+}
+void rmFifo(){
+    char fifoP[6]={'.','/','f','f','n',0};
+    int i;
+    for(i = 0 ; i < SLAVES ; i++){
+        fifoP[4]=i+'0';
+        char rm[40]="rm ";
+        strcat(rm,fifoP);
+        strcat(rm," >/dev/null 2>&1");
+        system(rm);
+    }    
 }

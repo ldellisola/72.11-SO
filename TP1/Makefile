@@ -1,5 +1,5 @@
 CXX = gcc
-CXXFLAGS = -Wall -Werror -Wextra -pedantic  -g -fsanitize=address
+CXXFLAGS = -std=c99 -Wall -Werror -Wextra -pedantic -g -fsanitize=address
 LDFLAGS =  -fsanitize=address
 
 SRC = *.c
