@@ -70,30 +70,31 @@ pid_t waitV(){
 
 void createSlaves(ChildProcess_t  processes[][SLAVES]){
     char fifoP[6]={'.','/','f','f','n',0};
-   
     int i;
     for(i = 0 ; i < SLAVES ; i++){
-        fifoP[4]=i+'0';
-        if (mkfifo(fifoP,0666) == -1)  //rw-rw-rw-
-        {
-            perror("Pipe not established\n");
-            exit(-1);
-        }
         pid_t pid = fork();
-
         switch (pid)
         {
         case -1:{
-            perror("Error creating child Process\n");
+            perror("Error creating child Process:");
             exit(-1);
             break;}
         case 0:{
             int ownPID = (int) getpid();
-            execvp("./slave",(char **)&fifoP);
+            char ** c=NULL;
+            //if(execvp("./slave",(char **)&fifoP)==-1)
+            if(execvp("./slave",c)==-1)
+                perror("Execvp error:");
             break;
             }
         default:
             // Guardo el FD a donde voy a leer y cierro el que escribe.
+            fifoP[4]=i+'0';
+            if (mkfifo(fifoP,0666) == -1){  //rw-rw-rw-
+                perror("Pipe not established");
+                exit(-1);
+            }
+        
             strcpy((*processes)[i].fifo,fifoP);
             (*processes)[i].pid = pid;
             break;
