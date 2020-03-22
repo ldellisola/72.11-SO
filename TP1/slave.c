@@ -28,22 +28,32 @@ int main(int argc,char ** argv){
     while ((linelen = getline(&file, &linecap, stdin)) > 0) {
         FILE *fp;
         int status;
-        char * ans=NULL;
-        size_t n=0;
-        ssize_t ansSize;
-char inst[MAX]="minisat ";
-        strcat(inst,argv[1]);
+        char inst[MAX]="minisat ";
+        strcat(inst,file);
 
-        //strcat(inst," | grep -o -e \"Number of [a-z]+: [0-9]+\" -e \"CPU time.*\" -e\".*SATISFIABLE\"");
+        strcat(inst," | grep -e variables -e clauses: -e SAT -e CPU | tr -s [:space:] | tr -d \\\\n");
   		
   		fp = popen(inst, "r");
         if (fp == NULL){
             perror("Popen error:");
             exit(-1);
         }
-       
-       while((ansSize=getline(&ans,&n,fp))>0)
-            write(fifo,ans,ansSize);
+
+        char * ans=NULL;
+        size_t n=0;
+        ssize_t ansSize;
+        
+        ansSize=getline(&ans,&n,fp);  
+        if(ansSize==-1){
+            perror("getLine error:");
+            exit(-1);
+        }
+
+        char info[MAX];
+        snprintf(info,MAX,"File: %s. My pid is :%d",file,getpid());
+        ans=realloc(ans,sizeof(ans)+sizeof(info));
+        strcat(ans,info);
+        write(fifo,ans,sizeof(ans));
         
         status=fclose(fp);
         if(status==-1){
