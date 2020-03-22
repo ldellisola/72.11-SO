@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define MAX 150
+#define MAX 200
 int main(int argc,char ** argv){
     
     if(argc!=2){
@@ -26,12 +26,10 @@ int main(int argc,char ** argv){
     ssize_t linelen;
 
     while ((linelen = getline(&file, &linecap, stdin)) > 0) {
-        FILE *fp;
+        FILE * fp;
         int status;
-        char inst[MAX]="minisat ";
-        strcat(inst,file);
-
-        strcat(inst," | grep -e variables -e clauses: -e SAT -e CPU | tr -s [:space:] | tr -d \\\\n");
+        char inst[MAX];
+        snprintf(inst,MAX,"minisat %s |grep -e variables -e clauses: -e CPU -e SAT| \\tr -d \"|\" | tr -s \" \" | tr -d \\\\n",file);
   		
   		fp = popen(inst, "r");
         if (fp == NULL){
@@ -49,13 +47,15 @@ int main(int argc,char ** argv){
             exit(-1);
         }
 
-        char info[MAX];
-        snprintf(info,MAX,"File: %s. My pid is :%d",file,getpid());
-        ans=realloc(ans,sizeof(ans)+sizeof(info));
-        strcat(ans,info);
+        char * info=NULL;
+        info=realloc(info,MAX+strlen(ans));
+        snprintf(info,MAX,"PID: %d. File: %s. %s \n",getpid(),argv[1],ans);
         write(fifo,ans,sizeof(ans));
         
+        free(info);
+        free(ans);
         status=fclose(fp);
+        
         if(status==-1){
             perror("Fclose error:");
             exit(-1);
