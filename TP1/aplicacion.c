@@ -8,119 +8,143 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
 
 #define SLAVES 5
+#define BUF 100
+#define MAX 2
+#define BLOCK 20
+
 typedef struct 
 {
-    int readFD;
+    int fd;
+    int cant;
     pid_t pid;
-    bool open;
 }ChildProcess_t;
 
-
+pid_t waitV();
+void createSlaves(ChildProcess_t  processes[][SLAVES],char * path);
+int readline(int fd, char * buffer);
 
 int main(int  argc, char ** argv){  
 
+    if(argc<2){
+        printf("Please, send files\n");
+        exit(1);
+    }    
 
-
-    ChildProcess_t processes[SLAVES];
-
-    bool end=false;
-
+    sleep(2);
     
-
-
-    do{
-
-        for(int i = 0 ; i < 5 ; i++){
-            
-            int fd[2];
-            if (pipe(fd) == -1)
-            {
+    pid_t v_pid = waitV(); //if ==0 no esta, else es el pid
+    
+    
+    if(v_pid!=0){
+        char buffer[BUF];
+	    printf("%d\n",v_pid);
+    }else
+        printf("No hay vista \n");
+    
+    ChildProcess_t processes[SLAVES];
+    
+    char * fifoP="./ff";
+    if (mkfifo(fifoP,0666) == -1){  //rw-rw-rw-
                 perror("Pipe not established");
-                return -1;
-            }
-            pid_t pid = fork();
-
-
-            switch (pid)
-            {
-            case -1:{
-                perror("Error creating child Process");
-                return -1;
-                break;}
-            case 0:{
-                srand(time(0)+ getpid());
-
-                int ownPID = (int) getpid();
-
-                close(fd[0]);
+                exit(-1);
+    }
+    int fifo=open(fifoP, O_RDONLY);
+    
+    createSlaves(&processes,fifoP);
+    
+    int resultados=open("resultados", O_WRONLY | O_TRUNC | O_CREAT);
+    int i,j;
+    for(i=1;i<argc;i++){
+        for(j=0;(processes[j].cant)==2 && j<SLAVES;j++);
+        if(j==SLAVES){
+            //... hay que esperar porque todos llenos
+            //una vez que le dicen que uno terminó
+            char * ans=NULL;
+            size_t x;
+            int k;
+            int pid;
+            while((x=readline(fifo,ans))>0){
+                sscanf(ans,"%*s %d",&pid);
+                for(k=0;processes[k].pid!=pid && k<SLAVES;k++);
+                processes[k].cant--;
                 
-                int rnd =  rand() % 500;
-                
-                printf("Process %d talsk to father.\t Token: %d\n",ownPID, rnd);
-                char str[100];
-                int sleepTime = 3 + rand() % 10;
-                sleep(sleepTime);
-
-                int n = sprintf(str,"Slept for %d seconds. Secret token: %d",sleepTime, rnd);
-
-                str[n] = 0;
-
-                write(fd[1],str,n);
-
-                exit(EXIT_SUCCESS);
-
-                break;}
-            default:
-                // Guardo el FD a donde voy a leer y cierro el que escribe.
-                processes[i].readFD = fd[0];
-                processes[i].pid = pid;
-                processes[i].open = true;
-                close(fd[1]);
-                break;
+                write(resultados,ans,sizeof(ans));                
+                if(v_pid!=0){
+                    //mandar ans al buffer si esta vista
+                }
             }
+            j=k;
         }
+        write(processes[j].fd,argv[i],sizeof(argv[i]));
+        processes[j].cant++;
+    }
+    system("rm ./ff >/dev/null 2>&1");
+    
+}
 
-            bool leave = false;
 
-        do{
-            int status;
+pid_t waitV(){
+        
+        char buffer[BUF];
+        system("ps | grep vista > rta"); //look for Vista process
+        FILE * file=fopen("./rta","r");
+        fscanf(file,"%s",buffer);
+        system("rm ./rta");
+        
+        return atoi(buffer);
+}
 
-            printf("Waiting for childs\n");
-            pid_t ChildPID =  wait(&status);
-
-            leave = true;
-
-            if(ChildPID == -1){
-                perror("Wait Failed");
-                return -1;
+void createSlaves(ChildProcess_t  processes[][SLAVES],char * path){
+    int i;
+    for(i = 0 ; i < SLAVES ; i++){
+        int fd[2];
+        if(pipe(fd)==-1){
+            perror("Pipe error:");
+            exit(-1);}
+        pid_t pid = fork();
+        switch (pid)
+        {
+        case -1:{
+            perror("Error creating child Process:");
+            exit(-1);
+            break;}
+        case 0:{
+            close(fd[1]);
+            dup2(fd[0],0);
+            char * c[4]={"./slave",path,NULL};
+            if(execvp("./slave",c)==-1)
+                perror("Execvp error:");
+            break;
             }
+        default:
+            // Guardo el FD a donde voy a leer y cierro el que escribe.
             
-            int selected = -1;
-            for(int i = 0 ; i < 5 ; i++){
-                if(processes[i].pid == ChildPID)
-                    selected = i;
-            }
-
-            processes[selected].open = false;
-            char str[300];
-
-            read(processes[selected].readFD,str,300);
-
-            printf("PARENT:\n\t\tChild process: %d sent the following message:\n\t\t\t %s \n",(int)ChildPID,str);
-            
-
-            for(int i = 0 ; i < 5 ; i++){
-                if(processes[i].open)
-                    leave = false;
-            }
-            
-
-        }while(!leave);
-
-
-    }while(!end);
-
-
+            close(fd[0]);
+            (*processes)[i].fd=fd[1];
+            (*processes)[i].pid = pid;
+            break;
+        }
+    }
+}
+int readline(int fd, char * buffer) {
+    char c;
+    int counter = 0;
+    int x;
+    while ((x=read(fd, &c, 1)) != 0) {
+        if (c == '\n') {
+            break;
+        }
+        
+        if(buffer==NULL||strlen(buffer)==counter)
+            buffer=realloc(buffer,counter+BLOCK);
+        
+        buffer[counter++] = c;
+    }
+    return x==0 ? x:counter;
 }

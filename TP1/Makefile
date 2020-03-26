@@ -1,19 +1,19 @@
 CXX = gcc
-CXXFLAGS = -Wall -Werror -Wextra -pedantic  -g -fsanitize=address
+CXXFLAGS = -std=c99 -Wall -Wextra -pedantic -g -fsanitize=address
 LDFLAGS =  -fsanitize=address
 
-SRC = *.c
-OBJ = $(SRC:.cc=.o)
-EXEC = exec/processes.out
+EXEC = solve slave
 
 all: $(EXEC)
 
-$(EXEC): $(OBJ)
-	$(CXX) $(LDFLAGS) -o $@ $(OBJ) $(LBLIBS)
+slave: 
+	$(CXX) slave.c $(CXXFLAGS) -o $@ $(LBLIBS)
+solve: 
+	$(CXX) aplicacion.c $(CXXFLAGS) -o $@ $(LBLIBS)
 
 clean:
 	rm -rf *.o $(EXEC)
 
 run:
 	./$(EXEC)
-	
+		
