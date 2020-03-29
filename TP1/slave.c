@@ -44,7 +44,7 @@ int main(int argc,char ** argv){
 
     fprintf(stderr,"SLAVE: %d -- REcieved Files: %s - %s\n",id,initialFiles[0],initialFiles[1]);
     
-    bool exit = false;
+    bool exitCondition = false;
     int initialIndex = 0;
     char file[MAX];
     do{
@@ -62,11 +62,41 @@ int main(int argc,char ** argv){
 
         }
 
+
 // Implementar minisat
+        FILE * fp;
 
-        //write(STDOUT_FILENO,str,a);
+        char inst[MAX];
+        snprintf(inst,MAX,"minisat %s |grep -e variables -e clauses: -e CPU -e SAT| \\tr -d \"|\" | tr -s \" \" | tr -d \\\\n",file);
+  		fp = popen(inst, "r");
+        if (fp == NULL){
+            perror("Popen error:");
+            exit(-1);
+        }
 
-    }while(!exit);
+        char ans[MAX];
+        size_t n=0;
+        ssize_t ansSize;
+        
+        ansSize=read(fileno(fp),ans,MAX);  
+        if(ansSize==-1){
+            perror("getLine error:");
+            exit(-1);
+        }
+        ans[ansSize]=0;
+
+        char info[MAX*2];
+        n = snprintf(info,MAX*2,"PID: %d. File: %s. %s \n",getpid(),file,ans);
+        // printf(info);
+        write(STDOUT_FILENO,info,n);
+
+        int status=fclose(fp);
+        
+        if(status==-1){
+            perror("Fclose error:");
+             exit(-1);
+             }
+    }while(!exitCondition);
     
 
     
@@ -109,6 +139,7 @@ int main(int argc,char ** argv){
     //         perror("Fclose error:");
     //         exit(-1);
     //     }
+    // WARNING! DIMACS header mismatch: wrong number of clauses.
     // }    
     return 0;
 }
