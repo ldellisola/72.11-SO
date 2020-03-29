@@ -22,7 +22,7 @@ int main(int argc, char ** argv){
 
     validateInput(argc,argv);
 
-        setvbuf(stdout, NULL, _IONBF, 0);
+    setvbuf(stdout, NULL, _IONBF, 0);
     setvbuf(stdin, NULL, _IONBF, 0);
 
 
@@ -30,8 +30,6 @@ int main(int argc, char ** argv){
     char semName[200];
     sprintf(semName,"sem_%s",argv[1]);
     SemData_t semData = semaphoreSetUp(semName,false);
-
-    SemaphoreWait(&semData);
 
     // Configuro shared memory
 

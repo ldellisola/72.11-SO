@@ -46,29 +46,25 @@ int main(int argc,char ** argv){
     
     bool exit = false;
     int initialIndex = 0;
-    char file[200];
+    char file[MAX];
     do{
         if(initialFiles[initialIndex] != NULL){
-            strncpy(file,initialFiles[initialIndex++],200);
+            strncpy(file,initialFiles[initialIndex++],MAX);
             fprintf(stderr,"SLAVE: %d -- Loading Initial File: %s\n",id,file);
         }
         else
         {
             fprintf(stderr,"SLAVE: %d -- Waiting for file from master\n",id);
             // Leo del pipe
-            int final = read(STDIN_FILENO,file,200);
+            int final = read(STDIN_FILENO,file,MAX);
             file[final] = 0;
             fprintf(stderr,"SLAVE: %d -- Loading recieved File: %s\n",id,file);
 
         }
 
-        int sleepTime = 1 + rand()%5;
-        sleep(sleepTime);
+// Implementar minisat
 
-        char str[1000];
-        fprintf(stderr,"SLAVE: %d -- Sending Message\n",id);
-        int a = sprintf(str,"%d: Proceso el archivo: %s\n",id,file);
-        write(STDOUT_FILENO,str,a);
+        //write(STDOUT_FILENO,str,a);
 
     }while(!exit);
     

@@ -16,7 +16,7 @@
 #include "semaphoreHelper.h"
 #include "shmHelper.h"
 
-#include <poll.h>
+// #include <poll.h>
 
 #define SLAVES 5
 #define BUF 100
