@@ -11,6 +11,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <sys/select.h>
+
 #define MAX 1024
 
 // Parametros
@@ -22,14 +24,12 @@ int main(int argc,char ** argv){
 
     setvbuf(stdout, NULL, _IONBF, 0);
 
-
-    if(argc <= 1){
-        fprintf(stderr,"Invalid Arguments.\n");
-        return -1;
-    }
+    // if(argc <= 1){
+    //     fprintf(stderr,"Invalid Arguments.\n");
+    //     return -1;
+    // }
 
     initialFiles = argv;
-
 
     // Me quedo solo con los archivos en este arreglo de strings.
     for(int i = 1; i < argc ;i++ )
@@ -37,38 +37,38 @@ int main(int argc,char ** argv){
         
     initialFiles[argc-1] = NULL;
 
-
     srand(time(NULL));
 
     int id = getpid();
-    
 
+
+    fprintf(stderr,"SLAVE: %d -- REcieved Files: %s - %s\n",id,initialFiles[0],initialFiles[1]);
+    
     bool exit = false;
     int initialIndex = 0;
+    char file[200];
     do{
-        char file[200];
-
-        if(initialFiles[initialIndex] != NULL)
+        if(initialFiles[initialIndex] != NULL){
             strncpy(file,initialFiles[initialIndex++],200);
+            fprintf(stderr,"SLAVE: %d -- Loading Initial File: %s\n",id,file);
+        }
         else
         {
+            fprintf(stderr,"SLAVE: %d -- Waiting for file from master\n",id);
             // Leo del pipe
             int final = read(STDIN_FILENO,file,200);
             file[final] = 0;
+            fprintf(stderr,"SLAVE: %d -- Loading recieved File: %s\n",id,file);
+
         }
 
-        int sleepTime = 3 + rand()%5;
-
+        int sleepTime = 1 + rand()%5;
         sleep(sleepTime);
 
         char str[1000];
-
-        int a = sprintf(str,"%d: Proceso el archivo: %s",id,file);
+        fprintf(stderr,"SLAVE: %d -- Sending Message\n",id);
+        int a = sprintf(str,"%d: Proceso el archivo: %s\n",id,file);
         write(STDOUT_FILENO,str,a);
-
-
-            
-        
 
     }while(!exit);
     

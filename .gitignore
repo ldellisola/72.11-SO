@@ -55,6 +55,9 @@ dkms.conf
 *.tar.gz
 File/
 
-solve
 
-slave
+*.cnf
+
+Sat*
+*TEST
+.bash_history
