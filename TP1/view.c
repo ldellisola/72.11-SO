@@ -25,9 +25,6 @@ int main(int argc, char ** argv){
     setvbuf(stdout, NULL, _IONBF, 0);
     setvbuf(stdin, NULL, _IONBF, 0);
 
-
-
-
     // Configuro shared memory
 
     char shmName[200];
@@ -51,9 +48,7 @@ int main(int argc, char ** argv){
         char shmResponse[MAX];
         shmRead(shmResponse,MAX,&shmData);
 
-        printf("Mandaron: %s\n",shmResponse);
-        printf("Activo el semaforo\n");
-        // SemaphorePost(&semData);
+
 
     }while(true);
     
