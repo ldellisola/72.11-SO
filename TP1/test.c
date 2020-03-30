@@ -29,9 +29,7 @@ int main(int argc, char ** argv){
     // Configuro Semaforo
     char semName[200];
     sprintf(semName,"sem_%s",argv[1]);
-    SemData_t semData = semaphoreSetUp(semName,true);
-
-    SemaphorePost(&semData);
+    SemData_t semData = semaphoreSetUp(semName);
 
     // Configuro shared memory
 
@@ -45,7 +43,7 @@ int main(int argc, char ** argv){
 
     do{
         printf("Espero al semaforo\n");
-        SemaphoreWait(&semData);
+       
         printf("Escucho input del usuario\n");
         char buff[500];
         int a = read(STDIN_FILENO,buff,500);

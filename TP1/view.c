@@ -37,7 +37,7 @@ int main(int argc, char ** argv){
         // Configuro Semaforo
     char semName[200];
     sprintf(semName,"sem_%s",argv[1]);
-    SemData_t semData = semaphoreOpen(semName,false);
+    SemData_t semData = semaphoreOpen(semName);
 
 
     // Loop principal
@@ -53,7 +53,7 @@ int main(int argc, char ** argv){
 
         printf("Mandaron: %s\n",shmResponse);
         printf("Activo el semaforo\n");
-        SemaphorePost(&semData);
+        // SemaphorePost(&semData);
 
     }while(true);
     

@@ -55,7 +55,7 @@ int main(int  argc, char ** argv){
     // Inicializo el semaforo
     char semName[50];
     sprintf(semName,"SEM_%d",argc);
-    SemData_t semData = semaphoreSetUp(semName,true);
+    SemData_t semData = semaphoreSetUp(semName);
 
     // Creo el archivo de memoria compartida y uso como nombre la cantidad de archivos que recibi
     char shmName[50];

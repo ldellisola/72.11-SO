@@ -15,16 +15,14 @@
 
 
 
-SemData_t semaphoreSetUp(const char * name,bool initialValue){
+SemData_t semaphoreSetUp(const char * name){
 
     SemData_t data;
 
     strncpy(data.name,name,500);
+    sem_unlink(name);
+    data.id = sem_open(name, O_CREAT | O_RDWR  , 0777,0);//S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH , 0);
 
-    data.id = sem_open(name, O_CREAT | O_RDWR  ,S_IWOTH | S_IROTH , 1);
-
-    if(initialValue)
-        sem_post(data.id);
 
     if(data.id == SEM_FAILED){
         perror("Creating Semaphore");
@@ -37,21 +35,20 @@ SemData_t semaphoreSetUp(const char * name,bool initialValue){
 
 
 
-SemData_t semaphoreOpen(const char * name,bool initialValue){
+SemData_t semaphoreOpen(const char * name){
 
     SemData_t data;
 
     strncpy(data.name,name,500);
 
-    data.id = sem_open(name, O_RDWR  ,S_IWOTH | S_IROTH , 1);
+    data.id = sem_open(name, O_RDWR  , 0777,0);// S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH , 0);
 
-    if(initialValue)
-        sem_post(data.id);
 
     if(data.id == SEM_FAILED){
         perror("Creating Semaphore");
         exit(-1);
     }
+
 
     return data;
 
