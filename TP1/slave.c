@@ -67,7 +67,7 @@ int main(int argc,char ** argv){
         FILE * fp;
 
         char inst[MAX];
-        snprintf(inst,MAX,"minisat %s |grep -e variables -e clauses: -e CPU -e SAT| \\tr -d \"|\" | tr -s \" \" | tr -d \\\\n",file);
+        snprintf(inst,MAX,"minisat %s |grep -o -e 'Number of.*[0-9]\\+' -e 'CPU time.*' -e '.*SATISFIABLE' | grep -o -e '[0-9|.]*' -o -e '.*SATISFIABLE' | xargs | sed 's/ /\t/g'",file);
   		fp = popen(inst, "r");
         if (fp == NULL){
             perror("Popen error:");
@@ -85,8 +85,12 @@ int main(int argc,char ** argv){
         }
         ans[ansSize]=0;
 
-        char info[MAX*2];
-        n = snprintf(info,MAX*2,"PID: %d. File: %s. %s \n",getpid(),file,ans);
+        int v,c,t=0;
+        char s[15];
+        sscanf(ans,"%d %d %d %s",&v,&c,&t,s);
+
+        char info[MAX*2]; 
+        n = snprintf(info,MAX,"PID: %d. File: %s. Number of Variables: %d. Number of Clauses: %d. CPU TIME: %d. %s \n",getpid(),file,v,c,t,s);
         // printf(info);
         write(STDOUT_FILENO,info,n);
 
