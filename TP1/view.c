@@ -26,16 +26,19 @@ int main(int argc, char ** argv){
     setvbuf(stdin, NULL, _IONBF, 0);
 
 
-    // Configuro Semaforo
-    char semName[200];
-    sprintf(semName,"sem_%s",argv[1]);
-    SemData_t semData = semaphoreSetUp(semName,false);
+
 
     // Configuro shared memory
 
     char shmName[200];
     sprintf(shmName,"shm_%s",argv[1]);
     SHMData_t shmData = shmCreate(shmName,MAX * 50);
+
+        // Configuro Semaforo
+    char semName[200];
+    sprintf(semName,"sem_%s",argv[1]);
+    SemData_t semData = semaphoreOpen(semName,false);
+
 
     // Loop principal
 

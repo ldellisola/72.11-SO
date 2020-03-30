@@ -86,7 +86,7 @@ int main(int  argc, char ** argv){
 
     bool exitCondition = false;
 
-    int maxFDPlusOne = SLAVES + 1;
+
 
     setvbuf(stdout, NULL, _IONBF, 0);
 
@@ -106,6 +106,9 @@ int main(int  argc, char ** argv){
         // Seteo el arreglo de FDs que el select va a estar escuchando. Esto se tiene que hacer siempre que se va a llamar select
         fd_set listeningFDs;
         FD_ZERO(&listeningFDs);
+
+            int maxFDPlusOne = processes[SLAVES-1].readFD + 1;
+
 
         for(int i = 0 ; i < SLAVES ; i++){
             FD_SET(processes[i].readFD,&listeningFDs);

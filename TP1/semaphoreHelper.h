@@ -12,6 +12,9 @@ typedef struct{
 // Creates an instance of a named semaphore to connect with another process
 SemData_t semaphoreSetUp(const char * name,bool initialValue);
 
+// Creates an instance of a named semaphore to connect with another process
+SemData_t semaphoreOpen(const char * name,bool initialValue);
+
 // Destroys and disconnects the semaphore instance created
 void semaphoreDestroy(SemData_t * data);
 
