@@ -39,18 +39,20 @@ int main(int argc, char ** argv){
 
     // Loop principal
 
-    printf("Configuro todo\n");
+    // printf("Configuro todo\n");
+
+    bool exitCondition = false;
 
     do{
-        printf("Espero en el semaforo\n");
+        // printf("Espero en el semaforo\n");
         SemaphoreWait(&semData);
-        printf("Leo input de memoria\n");
+        // printf("Leo input de memoria\n");
         char shmResponse[MAX];
         shmRead(shmResponse,MAX,&shmData);
 
-
-
-    }while(true);
+        exitCondition =  shmResponse[0] == '\n' && shmResponse[1] == '\n' && shmResponse[2] == '\n';
+        
+    }while(!exitCondition);
     
 
 
