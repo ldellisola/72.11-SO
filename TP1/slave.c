@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 
     int id = getpid();
 
-    //fprintf(stderr, "SLAVE: %d -- REcieved Files: %s - %s\n", id, initialFiles[0], initialFiles[1]);
+    fprintf(stderr, "SLAVE: %d -- REcieved Files: %s - %s\n", id, initialFiles[0], initialFiles[1]);
 
     bool exitCondition = false;
     int initialIndex = 0;
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
         if (initialFiles[initialIndex] != NULL)
         {
             strncpy(file, initialFiles[initialIndex++], MAX);
-           // fprintf(stderr, "SLAVE: %d -- Loading Initial File: %s\n", id, file);
+            fprintf(stderr, "SLAVE: %d -- Loading Initial File: %s\n", id, file);
         }
         else
         {

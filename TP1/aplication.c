@@ -26,6 +26,7 @@
 #define WRITE 1
 
 #define SLAVE_EXEC "./SatSlave"
+#define INITIAL_FILES (2)
 
 typedef struct
 {
@@ -69,11 +70,11 @@ int main(int argc, char **argv)
 
     ChildProcess_t processes[SLAVES];
 
-    char *initialFiles[SLAVES * 2];
+    char *initialFiles[SLAVES * INITIAL_FILES];
 
     // Preparo los archivos iniciales que le voy a mandar a los hijos, si tengo menos archivos que el doble de los esclavos,
     // les mando NULL para que no los reconozcan los esclavos y se queden esperando a que el padre les mande archivos.
-    for (int i = 0; i < SLAVES * 2; i++)
+    for (int i = 0; i < SLAVES * INITIAL_FILES; i++)
     {
         if (i + 1 < argc)
         {
@@ -127,7 +128,7 @@ int main(int argc, char **argv)
         {
 
             if (!FD_ISSET(processes[i].readFD, &listeningFDs))
-                break;
+                continue;
 
             //exitCondition = (fileIndex == argc-1);
 
@@ -141,21 +142,28 @@ int main(int argc, char **argv)
                 perror("Reading from Slave");
                 exit(-1);
             }
-            write(STDOUT_FILENO, response, size);
+            // write(STDOUT_FILENO, response, size);
             response[size] = 0;
-            for(int i=checklines(response);i>0;i--)
+            for(int i=checklines(response);i>0;i--){
                 counter--;
-            printf("%d\n",counter);
+                processes[i].cant = processes[i].cant +1;
+            }
+
+            printf("MASTER -- Faltan: %d\n",counter);
             // Lo guardo en memoria compartida
 
             shmWrite(response, size, &shmData);
 
             SemaphorePost(&semData);
 
+            
+
             // Le asigno el proximo archivo al slave
             // Veo si en la proxima ronda va a terminar. Si no va a terminar le mando otro archivo.
             
-            if (fileIndex<=(argc-1))
+            printf("MASTER -- Archivos procesados por %d: %d\n",processes[i].pid,processes[i].cant);
+
+            if (fileIndex<=(argc-1) && processes[i].cant >= INITIAL_FILES)
             {
 
                 int writeFD = processes[i].writeFD;
@@ -169,6 +177,8 @@ int main(int argc, char **argv)
                     exit(-1);
                 }
                 // printf("Me quedan %d arhcivos\n",FilesRemaining);
+            }else{
+                printf("MASTER -- No le envio archivos a %d\n",processes[i].pid);
             }
             FD_CLR(processes[i].readFD, &listeningFDs);
         }
@@ -276,7 +286,17 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
                 perror("Converting SlaveToMaster into STDOUT");
                 exit(-1);
             }
-            char *c[4] = {SLAVE_EXEC,filesToSend[2 * i], filesToSend[(2 * i) + 1],NULL};
+
+
+            char *c[2 + INITIAL_FILES];
+            c[0] = SLAVE_EXEC;
+            for(int j = 0 ; j < INITIAL_FILES ; j++){
+                c[j+1] = filesToSend[i * INITIAL_FILES + j];
+                // fprintf("SLAVE: %d -- Preparo file: %n\n",getpid(),i * INITIAL_FILES + j);
+            }
+
+            c[INITIAL_FILES+1] = NULL;
+                        
             if (execvp(SLAVE_EXEC, c) == -1)
                 perror("Execvp error:");
             break;
@@ -300,6 +320,7 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
             processes[i].readFD = SlaveToMaster[READ];
             processes[i].writeFD = MasterToSlave[WRITE];
             processes[i].pid = pid;
+            processes[i].cant = 0;
             break;
         }
     }
