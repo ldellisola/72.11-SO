@@ -17,10 +17,10 @@
 # run:
 # 	./$(EXEC)
 
-#-fsanitize=address -pedantic
+# 
 CC = gcc
-CFLAGS = -std=c11 -Wall -Wextra 
-LDFLAGS =  -lrt  -pthread
+CFLAGS = -std=c11 -Wall -Wextra -pedantic
+LDFLAGS =  -lrt  -pthread -fsanitize=address
 OBJFILES = shmHelper.o semaphoreHelper.o  
 EXEC = SatSolver SatSlave SatView SHMTEST
 
