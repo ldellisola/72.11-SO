@@ -42,8 +42,7 @@ int checklines(char * response);
 int main(int argc, char **argv)
 {
     
-    int counter=argc-1;
-    
+   
     if (argc < 2)
     {
         printf("Please, send files\n");
@@ -51,7 +50,8 @@ int main(int argc, char **argv)
     }
 
     sleep(2);
-
+    int counter=argc-1;
+    printf("%d\n",argc);
     // Inicializo el semaforo
     char semName[50];
     sprintf(semName, "SEM_%d", argc);
