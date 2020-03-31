@@ -1,5 +1,4 @@
 #define _GNU_SOURCE
-
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -92,8 +91,6 @@ int main(int argc, char **argv)
     // printf("Despues de mostrar los archivos iniciales, quedan %d archivos\n",FilesRemaining);
     
     createSlaves(processes, initialFiles);
-
-    bool exitCondition = false;
 
     setvbuf(stdout, NULL, _IONBF, 0);
 
@@ -335,7 +332,7 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
 
 int checklines(char * response){
     int x=0;
-    for(int i=0; i<strlen(response);i++){
+    for(int i=0; (unsigned)i<strlen(response);i++){
         if(response[i]=='\n')
         x++;
     }

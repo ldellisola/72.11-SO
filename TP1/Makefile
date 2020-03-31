@@ -19,7 +19,7 @@
 
 # 
 CC = gcc
-CFLAGS = -std=c11 -Wall -Wextra -pedantic
+CFLAGS = -std=c99 -Wall -Wextra -pedantic -D_XOPEN_SOURCE=700
 LDFLAGS =  -lrt  -pthread -fsanitize=address
 OBJFILES = shmHelper.o semaphoreHelper.o  
 EXEC = SatSolver SatSlave SatView SHMTEST
