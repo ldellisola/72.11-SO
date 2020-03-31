@@ -36,6 +36,7 @@ typedef struct
 } ChildProcess_t;
 
 void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2]);
+int checklines(char * response);
 
 int main(int argc, char **argv)
 {
@@ -96,16 +97,16 @@ int main(int argc, char **argv)
     setvbuf(stdout, NULL, _IONBF, 0);
 
     char response[MAX];
-
+    int maxFDPlusOne = processes[SLAVES - 1].readFD + 1;
+    fd_set listeningFDs;
+        
     do
     {
 
         // Seteo el arreglo de FDs que el select va a estar escuchando. Esto se tiene que hacer siempre que se va a llamar select
-        fd_set listeningFDs;
         FD_ZERO(&listeningFDs);
 
-        int maxFDPlusOne = processes[SLAVES - 1].readFD + 1;
-
+        
         for (int i = 0; i < SLAVES; i++)
         {
             FD_SET(processes[i].readFD, &listeningFDs);
@@ -140,11 +141,11 @@ int main(int argc, char **argv)
                 perror("Reading from Slave");
                 exit(-1);
             }
-
+            write(STDOUT_FILENO, response, size);
             response[size] = 0;
-            counter--;
+            for(int i=checklines(response);i>0;i--)
+                counter--;
             printf("%d\n",counter);
-            // printf("Respondio PID: %d Mensaje: %s\n", processes[i].pid, response);
             // Lo guardo en memoria compartida
 
             shmWrite(response, size, &shmData);
@@ -154,7 +155,7 @@ int main(int argc, char **argv)
             // Le asigno el proximo archivo al slave
             // Veo si en la proxima ronda va a terminar. Si no va a terminar le mando otro archivo.
             
-            if (fileIndex<(argc-1))
+            if (fileIndex<=(argc-1))
             {
 
                 int writeFD = processes[i].writeFD;
@@ -302,4 +303,14 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
             break;
         }
     }
+}
+
+
+int checklines(char * response){
+    int x=0;
+    for(int i=0; i<strlen(response);i++){
+        if(response[i]=='\n')
+        x++;
+    }
+    return x;
 }
