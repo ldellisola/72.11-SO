@@ -39,7 +39,9 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
 
 int main(int argc, char **argv)
 {
+    
     int counter=argc-1;
+    
     if (argc < 2)
     {
         printf("Please, send files\n");
@@ -126,13 +128,13 @@ int main(int argc, char **argv)
             if (!FD_ISSET(processes[i].readFD, &listeningFDs))
                 break;
 
-            exitCondition = fileIndex == argc-1;
+            //exitCondition = (fileIndex == argc-1);
 
             int activeFD = processes[i].readFD;
 
             // printf("FD: %d \n", activeFD);
             int size = read(activeFD, response, MAX);
-            counter--;
+            
             if (size == -1)
             {
                 perror("Reading from Slave");
@@ -140,6 +142,8 @@ int main(int argc, char **argv)
             }
 
             response[size] = 0;
+            counter--;
+            printf("%d\n",counter);
             // printf("Respondio PID: %d Mensaje: %s\n", processes[i].pid, response);
             // Lo guardo en memoria compartida
 
@@ -150,7 +154,7 @@ int main(int argc, char **argv)
             // Le asigno el proximo archivo al slave
             // Veo si en la proxima ronda va a terminar. Si no va a terminar le mando otro archivo.
             
-            if (!exitCondition)
+            if (fileIndex<(argc-1))
             {
 
                 int writeFD = processes[i].writeFD;

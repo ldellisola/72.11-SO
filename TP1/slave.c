@@ -116,9 +116,8 @@ void runMinisat(char *file)
     char info[MAX * 2];
     n = snprintf(info, MAX, "PID: %d. File: %s. Number of Variables: %d. Number of Clauses: %d CPU TIME: %f %s \n", getpid(), file, v, c, t, s);
     // printf(info);
-    if(s[0]!=0)
+    //if(s[0]!=0)
     write(STDOUT_FILENO, info, n);
-
     int status = fclose(fp);
 
     if (status == -1)
