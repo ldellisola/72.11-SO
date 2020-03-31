@@ -39,14 +39,12 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
 
 int main(int argc, char **argv)
 {
-
+    int counter=argc-1;
     if (argc < 2)
     {
         printf("Please, send files\n");
         exit(1);
     }
-
-    printf("%d", argc);
 
     sleep(2);
 
@@ -88,7 +86,7 @@ int main(int argc, char **argv)
     }
 
     // printf("Despues de mostrar los archivos iniciales, quedan %d archivos\n",FilesRemaining);
-
+    
     createSlaves(processes, initialFiles);
 
     bool exitCondition = false;
@@ -128,11 +126,13 @@ int main(int argc, char **argv)
             if (!FD_ISSET(processes[i].readFD, &listeningFDs))
                 break;
 
+            exitCondition = fileIndex == argc-1;
 
             int activeFD = processes[i].readFD;
 
             // printf("FD: %d \n", activeFD);
             int size = read(activeFD, response, MAX);
+            counter--;
             if (size == -1)
             {
                 perror("Reading from Slave");
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
             }
 
             response[size] = 0;
-            //  printf("Respondio PID: %d Mensaje: %s\n", processes[i].pid, response);
+            // printf("Respondio PID: %d Mensaje: %s\n", processes[i].pid, response);
             // Lo guardo en memoria compartida
 
             shmWrite(response, size, &shmData);
@@ -150,37 +150,31 @@ int main(int argc, char **argv)
             // Le asigno el proximo archivo al slave
             // Veo si en la proxima ronda va a terminar. Si no va a terminar le mando otro archivo.
             
-            // printf("Quedan %d archivos\n",FilesRemaining);
-            exitCondition = FilesRemaining-- <=0;
-
             if (!exitCondition)
             {
+
                 int writeFD = processes[i].writeFD;
 
                 // printf("Contactandome con slave: %d\n", processes[i].pid);
                 int strSize = strlen(argv[fileIndex]);
 
-                if (write(writeFD, argv[fileIndex], strSize) == -1)
+                if (write(writeFD, argv[fileIndex++], strSize) == -1)
                 {
                     perror("Writing to Slave");
                     exit(-1);
                 }
-                
-                fileIndex++;
-
                 // printf("Me quedan %d arhcivos\n",FilesRemaining);
             }
             FD_CLR(processes[i].readFD, &listeningFDs);
         }
 
-    } while (!exitCondition);
+    } while (counter>0);
 
     // Mato a los esclavos
 // printf("KILL SLAVES\n");
     for (int i = 0; i < SLAVES; i++)
         if (close(processes[i].writeFD) == -1)
             perror("Closing childProces");
-
 
     // Mato a la vista
 
@@ -277,8 +271,7 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
                 perror("Converting SlaveToMaster into STDOUT");
                 exit(-1);
             }
-
-            char *c[4] = {SLAVE_EXEC, filesToSend[2 * i], filesToSend[2 * i + 1], NULL};
+            char *c[4] = {SLAVE_EXEC,filesToSend[2 * i], filesToSend[(2 * i) + 1],NULL};
             if (execvp(SLAVE_EXEC, c) == -1)
                 perror("Execvp error:");
             break;
