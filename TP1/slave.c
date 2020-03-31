@@ -108,9 +108,10 @@ void runMinisat(char *file)
     }
     ans[ansSize] = 0;
 
-    int v, c;
-    float t;
+    int v=-1, c=-1;
+    float t=-1.0;
     char s[15];
+    s[0]=0;
     sscanf(ans, "%d %d %f %s", &v, &c, &t, s);
     char info[MAX * 2];
     n = snprintf(info, MAX, "PID: %d. File: %s. Number of Variables: %d. Number of Clauses: %d CPU TIME: %f %s \n", getpid(), file, v, c, t, s);
