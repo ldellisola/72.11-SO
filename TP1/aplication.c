@@ -167,8 +167,7 @@ int main(int argc, char **argv)
 
             // Le asigno el proximo archivo al slave
             // Veo si en la proxima ronda va a terminar. Si no va a terminar le mando otro archivo.
-            
-            printf("MASTER -- Archivos procesados por %d: %d\n",processes[i].pid,processes[i].cant);
+            //printf("MASTER -- Archivos procesados por %d: %d\n",processes[i].pid,processes[i].cant);
 
             if (fileIndex<=(argc-1) && processes[i].cant >= INITIAL_FILES)
             {
@@ -186,8 +185,6 @@ int main(int argc, char **argv)
 
                 fileIndex++;
                 // printf("Me quedan %d arhcivos\n",FilesRemaining);
-            }else{
-                printf("MASTER -- No le envio archivos a %d\n",processes[i].pid);
             }
             FD_CLR(processes[i].readFD, &listeningFDs);
         }
