@@ -142,12 +142,19 @@ int main(int argc, char **argv)
                 perror("Reading from Slave");
                 exit(-1);
             }
-            // write(STDOUT_FILENO, response, size);
+            
             response[size] = 0;
+            write(STDOUT_FILENO, response, size);
+
+            int counterDiff = counter;
+
             for(int i=checklines(response);i>0;i--){
                 counter--;
-                processes[i].cant = processes[i].cant +1;
+                // processes[i].cant = processes[i].cant +1;
             }
+
+            processes[i].cant += counterDiff - counter;
+
 
             printf("MASTER -- Faltan: %d\n",counter);
             // Lo guardo en memoria compartida
@@ -171,11 +178,13 @@ int main(int argc, char **argv)
                 // printf("Contactandome con slave: %d\n", processes[i].pid);
                 int strSize = strlen(argv[fileIndex]);
 
-                if (write(writeFD, argv[fileIndex++], strSize) == -1)
+                if (write(writeFD, argv[fileIndex], strSize) == -1)
                 {
                     perror("Writing to Slave");
                     exit(-1);
                 }
+
+                fileIndex++;
                 // printf("Me quedan %d arhcivos\n",FilesRemaining);
             }else{
                 printf("MASTER -- No le envio archivos a %d\n",processes[i].pid);
