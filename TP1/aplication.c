@@ -128,7 +128,6 @@ int main(int argc, char **argv)
             if (!FD_ISSET(processes[i].readFD, &listeningFDs))
                 break;
 
-            exitCondition = fileIndex == argc-1;
 
             int activeFD = processes[i].readFD;
 
@@ -141,7 +140,7 @@ int main(int argc, char **argv)
             }
 
             response[size] = 0;
-            // printf("Respondio PID: %d Mensaje: %s\n", processes[i].pid, response);
+            //  printf("Respondio PID: %d Mensaje: %s\n", processes[i].pid, response);
             // Lo guardo en memoria compartida
 
             shmWrite(response, size, &shmData);
@@ -151,19 +150,24 @@ int main(int argc, char **argv)
             // Le asigno el proximo archivo al slave
             // Veo si en la proxima ronda va a terminar. Si no va a terminar le mando otro archivo.
             
+            // printf("Quedan %d archivos\n",FilesRemaining);
+            exitCondition = FilesRemaining-- <=0;
+
             if (!exitCondition)
             {
-
                 int writeFD = processes[i].writeFD;
 
                 // printf("Contactandome con slave: %d\n", processes[i].pid);
                 int strSize = strlen(argv[fileIndex]);
 
-                if (write(writeFD, argv[fileIndex++], strSize) == -1)
+                if (write(writeFD, argv[fileIndex], strSize) == -1)
                 {
                     perror("Writing to Slave");
                     exit(-1);
                 }
+                
+                fileIndex++;
+
                 // printf("Me quedan %d arhcivos\n",FilesRemaining);
             }
             FD_CLR(processes[i].readFD, &listeningFDs);
@@ -176,6 +180,7 @@ int main(int argc, char **argv)
     for (int i = 0; i < SLAVES; i++)
         if (close(processes[i].writeFD) == -1)
             perror("Closing childProces");
+
 
     // Mato a la vista
 

@@ -17,14 +17,16 @@
 # run:
 # 	./$(EXEC)
 
-
+#-fsanitize=address -pedantic
 CC = gcc
-CFLAGS = -std=c11 -Wall -Wextra -pedantic
-LDFLAGS = -fsanitize=address -lrt  -pthread
+CFLAGS = -std=c11 -Wall -Wextra 
+LDFLAGS =  -lrt  -pthread
 OBJFILES = shmHelper.o semaphoreHelper.o  
 EXEC = SatSolver SatSlave SatView SHMTEST
 
 all: $(EXEC)
+
+
 
 SatSlave: $(OBJFILES)
 	$(CC) $(CFLAGS) slave.c  -o SatSlave $(OBJFILES) $(LDFLAGS)
@@ -40,3 +42,5 @@ SHMTEST:$(OBJFILES)
 
 clean:
 	rm -f *.o $(EXEC)
+
+
