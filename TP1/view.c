@@ -20,20 +20,24 @@ void validateInput(int argc, char ** argv);
 
 int main(int argc, char ** argv){
 
-    validateInput(argc,argv);
+    //validateInput(argc,argv);
 
     setvbuf(stdout, NULL, _IONBF, 0);
     setvbuf(stdin, NULL, _IONBF, 0);
 
     // Configuro shared memory
-
+    
     char shmName[200];
-    sprintf(shmName,"shm_%s",argv[1]);
+    char num[10];
+    int size=read(STDIN_FILENO,num,10);
+    num[size]=0;
+    //printf("Numero %s \n",num);
+    sprintf(shmName,"SHM_%s",num);
     SHMData_t shmData = shmCreate(shmName,MAX * 50);
 
         // Configuro Semaforo
     char semName[200];
-    sprintf(semName,"sem_%s",argv[1]);
+    sprintf(semName,"SEM_%s",num);
     SemData_t semData = semaphoreOpen(semName);
 
 

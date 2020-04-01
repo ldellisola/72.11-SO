@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 
     int id = getpid();
 
-    fprintf(stderr, "SLAVE: %d -- REcieved Files: %s - %s\n", id, initialFiles[0], initialFiles[1]);
+    //fprintf(stderr, "SLAVE: %d -- REcieved Files: %s - %s\n", id, initialFiles[0], initialFiles[1]);
 
     bool exitCondition = false;
     int initialIndex = 0;
