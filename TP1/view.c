@@ -18,7 +18,7 @@ void validateInput(int argc, char ** argv);
 
 // FALTA IMPLEMENTAR LA SE:AL DE DESTRUCCION
 
-int main(int argc, char ** argv){
+int main(void){
 
     //validateInput(argc,argv);
 
@@ -39,7 +39,7 @@ int main(int argc, char ** argv){
     SemData_t semData = semaphoreOpen(semName);
 
 
-        // Configuro shared memory
+    // Configuro shared memory
     
     char shmName[200];
 
@@ -52,24 +52,19 @@ int main(int argc, char ** argv){
 
     // Loop principal
 
-    // printf("Configuro todo\n");
-
     bool exitCondition = false;
 
     do{
-        // printf("Espero en el semaforo\n");
         SemaphoreWait(&semData);
-        // printf("Leo input de memoria\n");
         char shmResponse[MAX];
-        shmRead(shmResponse,MAX,&shmData);
+        int size=shmRead(shmResponse,MAX,&shmData);
 
-
-        exitCondition =  shmResponse[0] == '\n' && shmResponse[1] == '\n' && shmResponse[2] == '\n';
+        exitCondition=(size==0);
 
         if(!exitCondition)
             printf(shmResponse);
         else{
-            printf("\n Muero \n");
+            printf("\nFinish.Bye. \n");
         }
 
         

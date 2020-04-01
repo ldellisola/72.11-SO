@@ -60,17 +60,13 @@ int main(int argc, char **argv)
     sprintf(shmName, "/SHM_%d", argc);
     SHMData_t shmData = shmCreate(shmName, 100 * MAX);
 
-
+    //Envio señal a la vista para que pueda conectarse
     printf("%d\n",argc);
-    sleep(10);   
+    sleep(2);   
+
     int fileIndex = 1;
-
     int FilesRemaining = argc - 1;
-
-    // printf("LLegaron %d archkivos\n",FilesRemaining);
-
     ChildProcess_t processes[SLAVES];
-
     char *initialFiles[SLAVES * INITIAL_FILES];
 
     // Preparo los archivos iniciales que le voy a mandar a los hijos, si tengo menos archivos que el doble de los esclavos,
@@ -90,8 +86,7 @@ int main(int argc, char **argv)
         fileIndex++;
     }
 
-    // printf("Despues de mostrar los archivos iniciales, quedan %d archivos\n",FilesRemaining);
-    
+    //Creo los slaves y los inicializo con 2 archivos cada uno
     createSlaves(processes, initialFiles);
 
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -102,60 +97,50 @@ int main(int argc, char **argv)
         
     do
     {
-
-        // Seteo el arreglo de FDs que el select va a estar escuchando. Esto se tiene que hacer siempre que se va a llamar select
+        //Limpio el arreglo de FDs
         FD_ZERO(&listeningFDs);
 
-        
+        // Seteo el arreglo de FDs que el select va a estar escuchando. 
+       
         for (int i = 0; i < SLAVES; i++)
         {
             FD_SET(processes[i].readFD, &listeningFDs);
         }
 
-        // printf("Esperando a slave\n");
+        // Espero que algún esclavo termine
         int retVal = select(maxFDPlusOne, &listeningFDs, NULL, NULL, NULL);
 
-        // printf("Respondieron %d slaves \n", retVal);
         if (retVal == -1)
         {
             perror("Master waiting for slave to speak");
             exit(-1);
         }
 
-        // Hay que ver si podemos obtener el FD que queremos a partir de la lista de fd_set que nos queda despues de select.
+        // Encuentro los hijos que hablaron y le copio el mensaje a la vista
         for (int i = 0; i < SLAVES; i++)
         {
 
             if (!FD_ISSET(processes[i].readFD, &listeningFDs))
                 continue;
-
-            //exitCondition = (fileIndex == argc-1);
-
             int activeFD = processes[i].readFD;
 
-            // printf("FD: %d \n", activeFD);
             int size = read(activeFD, response, MAX);
             
-            if (size == -1)
-            {
+            if (size == -1){
                 perror("Reading from Slave");
-                exit(-1);
-            }
+                exit(-1);}
             
             response[size] = 0;
-            //write(STDOUT_FILENO, response, size);
-
+            
             int counterDiff = counter;
 
+            //Como hay veces que un mismo hijo me envía dos respuestas, cuento cuantos delimitadores hay
             for(int i=checklines(response);i>0;i--){
                 counter--;
-                // processes[i].cant = processes[i].cant +1;
             }
 
             processes[i].cant += counterDiff - counter;
 
-
-            //printf("MASTER -- Faltan: %d\n",counter);
             // Lo guardo en memoria compartida
 
             shmWrite(response, size, &shmData);
@@ -166,14 +151,12 @@ int main(int argc, char **argv)
 
             // Le asigno el proximo archivo al slave
             // Veo si en la proxima ronda va a terminar. Si no va a terminar le mando otro archivo.
-            //printf("MASTER -- Archivos procesados por %d: %d\n",processes[i].pid,processes[i].cant);
 
             if (fileIndex<=(argc-1) && processes[i].cant >= INITIAL_FILES)
             {
 
                 int writeFD = processes[i].writeFD;
 
-                // printf("Contactandome con slave: %d\n", processes[i].pid);
                 int strSize = strlen(argv[fileIndex]);
 
                 if (write(writeFD, argv[fileIndex], strSize) == -1)
@@ -183,7 +166,6 @@ int main(int argc, char **argv)
                 }
 
                 fileIndex++;
-                // printf("Me quedan %d arhcivos\n",FilesRemaining);
             }
             FD_CLR(processes[i].readFD, &listeningFDs);
         }
@@ -192,18 +174,11 @@ int main(int argc, char **argv)
 
     // Mato a la vista
 
-    printf("MATO A LA VISTA\n");
-
-    shmWrite("MoritePuto",11,&shmData);
+    shmWrite("",0,&shmData);
     SemaphorePost(&semData);
-
-
-    shmWrite("\n\n\n",4,&shmData);
-    SemaphorePost(&semData);
-
 
     // Mato a los esclavos
-// printf("KILL SLAVES\n");
+
     for (int i = 0; i < SLAVES; i++)
         if (close(processes[i].writeFD) == -1)
             perror("Closing childProces");
@@ -306,7 +281,6 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
             c[0] = SLAVE_EXEC;
             for(int j = 0 ; j < INITIAL_FILES ; j++){
                 c[j+1] = filesToSend[i * INITIAL_FILES + j];
-                // fprintf("SLAVE: %d -- Preparo file: %n\n",getpid(),i * INITIAL_FILES + j);
             }
 
             c[INITIAL_FILES+1] = NULL;

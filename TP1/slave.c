@@ -27,11 +27,6 @@ int main(int argc, char **argv)
 
     setvbuf(stdout, NULL, _IONBF, 0);
 
-    // if(argc <= 1){
-    //     fprintf(stderr,"Invalid Arguments.\n");
-    //     return -1;
-    // }
-
     initialFiles = argv;
 
     // Me quedo solo con los archivos en este arreglo de strings.
@@ -42,10 +37,6 @@ int main(int argc, char **argv)
 
     srand(time(NULL));
 
-    int id = getpid();
-
-    //fprintf(stderr, "SLAVE: %d -- REcieved Files: %s - %s\n", id, initialFiles[0], initialFiles[1]);
-
     bool exitCondition = false;
     int initialIndex = 0;
     char file[MAX];
@@ -54,11 +45,9 @@ int main(int argc, char **argv)
         if (initialFiles[initialIndex] != NULL)
         {
             strncpy(file, initialFiles[initialIndex++], MAX);
-            //fprintf(stderr, "SLAVE: %d -- Loading Initial File: %s\n", id, file);
         }
         else
         {
-            //fprintf(stderr, "SLAVE: %d -- Waiting for file from master\n", id);
             // Leo del pipe
             int final = read(STDIN_FILENO, file, MAX);
 
@@ -71,7 +60,6 @@ int main(int argc, char **argv)
             exitCondition = (final == 0);
 
             file[final] = 0;
-            //fprintf(stderr, "SLAVE: %d -- Loading recieved File: %s\n", id, file);
         }
 
         if (!exitCondition)
