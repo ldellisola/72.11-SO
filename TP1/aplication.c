@@ -48,9 +48,8 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    sleep(2);
+
     int counter=argc-1;
-    printf("%d",argc);
     // Inicializo el semaforo
     char semName[50];
     sprintf(semName, "SEM_%d", argc);
@@ -60,7 +59,8 @@ int main(int argc, char **argv)
     char shmName[50];
     sprintf(shmName, "SHM_%d", argc);
     SHMData_t shmData = shmCreate(shmName, 100 * MAX);
-
+    printf("%d",argc);
+    sleep(2);   
     int fileIndex = 1;
 
     int FilesRemaining = argc - 1;
