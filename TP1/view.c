@@ -25,20 +25,29 @@ int main(int argc, char ** argv){
     setvbuf(stdout, NULL, _IONBF, 0);
     setvbuf(stdin, NULL, _IONBF, 0);
 
-    // Configuro shared memory
-    
-    char shmName[200];
+
     char num[10];
     int size=read(STDIN_FILENO,num,10);
     num[size]=0;
-    //printf("Numero %s \n",num);
-    sprintf(shmName,"SHM_%s",num);
-    SHMData_t shmData = shmCreate(shmName,MAX * 50);
 
-        // Configuro Semaforo
+
+    // Configuro Semaforo
     char semName[200];
-    sprintf(semName,"SEM_%s",num);
+    sprintf(semName,"/SEM_%s",num);
+
+    printf("SEMAPHORE: %s\n",semName);
     SemData_t semData = semaphoreOpen(semName);
+
+
+        // Configuro shared memory
+    
+    char shmName[200];
+
+    sprintf(shmName,"/SHM_%s",num);
+    
+    printf("SHARED MEMORY: %s\n",shmName);
+
+    SHMData_t shmData = shmOpen(shmName,MAX * 100);
 
 
     // Loop principal
@@ -54,7 +63,15 @@ int main(int argc, char ** argv){
         char shmResponse[MAX];
         shmRead(shmResponse,MAX,&shmData);
 
+
         exitCondition =  shmResponse[0] == '\n' && shmResponse[1] == '\n' && shmResponse[2] == '\n';
+
+        if(!exitCondition)
+            printf(shmResponse);
+        else{
+            printf("\n Muero \n");
+        }
+
         
     }while(!exitCondition);
     

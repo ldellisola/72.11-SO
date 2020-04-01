@@ -15,6 +15,9 @@ typedef struct
 
 // Configura el acceso a memoria compartida
 SHMData_t shmCreate(const char * shmName,  size_t shmSize);
+SHMData_t shmOpen(const char * shmName,  size_t shmSize);
+
+
 
 // Escribe una cantidad determinada de chars a la memoria compartida
 void shmWrite(char * buffer, int bSize, SHMData_t * data);

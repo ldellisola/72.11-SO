@@ -52,15 +52,17 @@ int main(int argc, char **argv)
     int counter=argc-1;
     // Inicializo el semaforo
     char semName[50];
-    sprintf(semName, "SEM_%d", argc);
+    sprintf(semName, "/SEM_%d", argc);
     SemData_t semData = semaphoreSetUp(semName);
 
     // Creo el archivo de memoria compartida y uso como nombre la cantidad de archivos que recibi
     char shmName[50];
-    sprintf(shmName, "SHM_%d", argc);
+    sprintf(shmName, "/SHM_%d", argc);
     SHMData_t shmData = shmCreate(shmName, 100 * MAX);
-    printf("%d",argc);
-    sleep(2);   
+
+
+    printf("%d\n",argc);
+    sleep(10);   
     int fileIndex = 1;
 
     int FilesRemaining = argc - 1;
@@ -188,16 +190,25 @@ int main(int argc, char **argv)
 
     } while (counter>0);
 
+    // Mato a la vista
+
+    printf("MATO A LA VISTA\n");
+
+    shmWrite("MoritePuto",11,&shmData);
+    SemaphorePost(&semData);
+
+
+    shmWrite("\n\n\n",4,&shmData);
+    SemaphorePost(&semData);
+
+
     // Mato a los esclavos
 // printf("KILL SLAVES\n");
     for (int i = 0; i < SLAVES; i++)
         if (close(processes[i].writeFD) == -1)
             perror("Closing childProces");
 
-    // Mato a la vista
 
-    shmWrite("\n\n\n",4,&shmData);
-    SemaphorePost(&semData);
 
 
     // Guardo el archivo de memoria compartida en un archivo real

@@ -28,13 +28,15 @@ int main(int argc, char ** argv){
 
     // Configuro Semaforo
     char semName[200];
-    sprintf(semName,"sem_%s",argv[1]);
+    sprintf(semName,"/SEM_%s",argv[1]);
+        printf("SEMAPHORE: %s\n",semName);
+
     SemData_t semData = semaphoreSetUp(semName);
 
     // Configuro shared memory
 
     char shmName[200];
-    sprintf(shmName,"shm_%s",argv[1]);
+    sprintf(shmName,"/SHM_%s",argv[1]);
     SHMData_t shmData = shmCreate(shmName,MAX * 50);
 
     // Loop principal
@@ -47,8 +49,15 @@ int main(int argc, char ** argv){
         printf("Escucho input del usuario\n");
         char buff[500];
         int a = read(STDIN_FILENO,buff,500);
-        printf("Escribo en memoria\n");
+                printf("Escribo en memoria\n");
+
+
+        if(buff[0]=='e' && buff[1] =='x'){
+            shmWrite("\n\n\n",4,&shmData);
+        }
+        else{
         shmWrite(buff,a,&shmData);
+        }
         printf("Activo el semaforo\n");
 
         SemaphorePost(&semData);

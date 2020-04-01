@@ -24,7 +24,11 @@ SHMData_t shmCreate(const char * shmName,  size_t shmSize ){
     strcpy(data.name,shmName);
     data.size = shmSize;
 
-    data.fd = shm_open(shmName,O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH);
+    for(int i = 0; data.name[i]!=0; i++)
+        if(data.name[i] == '\n')
+            data.name[i] = 0;
+
+    data.fd = shm_open(data.name,O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH);
 
     if(data.fd == -1){
         perror("Creating Shared Memory");
@@ -36,6 +40,43 @@ SHMData_t shmCreate(const char * shmName,  size_t shmSize ){
         perror("Truncating Shared Memory");
         exit(-1);
     }
+
+    data.map = (char *) mmap(NULL,shmSize, PROT_READ | PROT_WRITE, MAP_SHARED,data.fd,0);
+    if(data.map == (void *) -1){
+        perror("Mapping Shared memory to virtual memory");
+        exit(-1);
+    }
+
+    // Indice para escribir y leer a memoria compartida
+    data.readIndex = 0;
+    data.writeIndex = 0;
+
+    return data;
+}
+
+SHMData_t shmOpen(const char * shmName,  size_t shmSize ){
+
+    SHMData_t data;
+
+    strcpy(data.name,shmName);
+    data.size = shmSize;
+
+    for(int i = 0; data.name[i]!=0; i++)
+        if(data.name[i] == '\n')
+            data.name[i] = 0;
+
+    data.fd = shm_open(data.name,O_RDWR, S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH);
+
+    if(data.fd == -1){
+        perror("Creating Shared Memory");
+        exit(-1);
+    }
+
+
+    // if(ftruncate(data.fd,shmSize) == -1){
+    //     perror("Truncating Shared Memory");
+    //     exit(-1);
+    // }
 
     data.map = (char *) mmap(NULL,shmSize, PROT_READ | PROT_WRITE, MAP_SHARED,data.fd,0);
     if(data.map == (void *) -1){
