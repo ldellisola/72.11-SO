@@ -11,16 +11,7 @@
 
 #define MAX 1024
 
-// Funciones
-
-// Esta funcion valida el input del usuario y toma como parametros los mismo que le main.
-void validateInput(int argc, char ** argv);
-
-// FALTA IMPLEMENTAR LA SE:AL DE DESTRUCCION
-
 int main(void){
-
-    //validateInput(argc,argv);
 
     setvbuf(stdout, NULL, _IONBF, 0);
     setvbuf(stdin, NULL, _IONBF, 0);
@@ -58,10 +49,16 @@ int main(void){
         SemaphoreWait(&semData);
         char shmResponse[MAX];
         int size=shmRead(shmResponse,MAX,&shmData);
+        shmResponse[size] = 0;
 
-        exitCondition=(size==0);
 
-        if(!exitCondition)
+        exitCondition= size > 7 && shmResponse[size-1] == ';' && shmResponse[size-2] == 't'
+                        && shmResponse[size-3] == 'i' && shmResponse[size-4] == 'x'
+                        && shmResponse[size-5] == 'e' && shmResponse[size-6] == '&';   
+
+        if(exitCondition && size > 7)
+            shmResponse[size-6] = 0;
+        if(!exitCondition || size > 7)
             printf(shmResponse);
         else{
             printf("\nFinish.Bye. \n");
@@ -83,18 +80,3 @@ int main(void){
 
 }
 
-
-
-
-void validateInput(int argc, char ** argv){
-    if(argc != 2){
-        fprintf(stderr,"This program only takes 1 argumen.\n");
-        exit(-1);
-    }
-    // Atoi no es seguro, pero para nuestros propositos sirve por que el numero que tenemos que recibir siempre va a ser mayor que cero
-    // y atoi() siempre devuelve 0 si no puede convertir el string (ej: es una palabra). Otra alternativa seria usar strtol().
-    int number = atoi(argv[1]);
-    if( number <1){
-        fprintf(stderr,"Invalid SHM name: %d.\n",number);
-    }
-}

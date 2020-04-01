@@ -174,7 +174,7 @@ int main(int argc, char **argv)
 
     // Mato a la vista
 
-    shmWrite("",0,&shmData);
+    shmWrite("&exit;",7,&shmData);
     SemaphorePost(&semData);
 
     // Mato a los esclavos
