@@ -17,9 +17,10 @@
 # run:
 # 	./$(EXEC)
 
-# 
+# .PHONY: all clean
+
 CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -pedantic -D_XOPEN_SOURCE=700
+CFLAGS = -std=c99 -Wall -Wextra -pedantic -g -D_XOPEN_SOURCE=700
 LDFLAGS =  -lrt  -pthread -fsanitize=address
 OBJFILES = shmHelper.o semaphoreHelper.o  
 EXEC = SatSolver SatSlave SatView SHMTEST
@@ -43,4 +44,5 @@ SHMTEST:$(OBJFILES)
 clean:
 	rm -f *.o $(EXEC)
 
+.PHONY: all clean
 
