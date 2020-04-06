@@ -2,51 +2,38 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "semaphoreHelper.h"
 
-#include <errno.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <unistd.h>
-// Shared memory
-#include <sys/mman.h>
 #include <fcntl.h>
-
 #include <sys/stat.h>
 
 SemData_t semaphoreSetUp(const char *name)
 {
-
     SemData_t data;
-
-    strncpy(data.name, name, 500);
+    strncpy(data.name, name, 1024);
 
     for (int i = 0; data.name[i] != 0; i++)
         if (data.name[i] == '\n')
             data.name[i] = 0;
 
+    char path[1024];
 
-    char path[500];
-
-    sprintf(path, "/dev/shm%s",data.name );
+    sprintf(path, "/dev/shm%s", data.name);
 
     sem_unlink(name);
-    data.id = sem_open(data.name, O_CREAT | O_RDWR, 0777, 0); //S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH , 0);
-
-
-    
+    data.id = sem_open(data.name, O_CREAT | O_RDWR, 0777, 0);
 
     if (data.id == SEM_FAILED)
     {
-        
         perror("Creating Semaphore");
 
         if (access(path, F_OK) != -1)
-    {
-        printf("File: %s Doesnt exist\n", path);
-    }else{
-            printf("File: %s Exist!\n",path);
-        }
+            printf("File: %s Doesnt exist\n", path);
+        else
+            printf("File: %s Exist!\n", path);
+
         exit(-1);
     }
 
@@ -55,32 +42,28 @@ SemData_t semaphoreSetUp(const char *name)
 
 SemData_t semaphoreOpen(const char *name)
 {
-
     SemData_t data;
-
-    strncpy(data.name, name, 500);
+    strncpy(data.name, name, 1024);
 
     for (int i = 0; data.name[i] != 0; i++)
         if (data.name[i] == '\n')
             data.name[i] = 0;
 
-                    char path[500];
+    char path[1024];
 
-        sprintf(path, "/dev/shm%s", data.name);
+    sprintf(path, "/dev/shm%s", data.name);
 
-    data.id = sem_open(data.name, O_RDWR, 0777, 0); // S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH , 0);
+    data.id = sem_open(data.name, O_RDWR, 0777, 0);
 
     if (data.id == SEM_FAILED)
     {
         perror("Creating Semaphore");
 
-
         if (access(path, F_OK) != -1)
-        {
             printf("File: %s Doesnt exist\n", path);
-        }else{
-            printf("File: %s Exist!\n",path);
-        }
+        else
+            printf("File: %s Exist!\n", path);
+
         exit(-1);
     }
 
@@ -89,12 +72,12 @@ SemData_t semaphoreOpen(const char *name)
 
 void semaphoreDestroy(SemData_t *data)
 {
-
     if (sem_close(data->id) != 0)
     {
         perror("Closing Semaphore");
         exit(-1);
     }
+
     if (sem_unlink(data->name) < 0)
     {
         perror("Unlinking Semaphore");
@@ -102,12 +85,21 @@ void semaphoreDestroy(SemData_t *data)
     }
 }
 
-void SemaphoreWait(SemData_t *data)
+void semaphoreClose(SemData_t *data)
+{
+    if (sem_close(data->id) != 0)
+    {
+        perror("Closing Semaphore");
+        exit(-1);
+    }
+}
+
+void semaphoreWait(SemData_t *data)
 {
     sem_wait(data->id);
 }
 
-void SemaphorePost(SemData_t *data)
+void semaphorePost(SemData_t *data)
 {
     sem_post(data->id);
 }

@@ -14,7 +14,7 @@
 *                               Constantes                                      *
 *********************************************************************************/
 // Define el tama;o de los strings que vamos a utilizar por defecto.
-#define MAX 1000
+#define MAX 1024
 
 // Sirven para hacer mas legible el uso de nameless pipes, indicando si el elemento del
 // arreglo es un file descriptor de lectura o escritura.
@@ -48,13 +48,13 @@ typedef struct
 
 // Crea a una cantidad determinada (por el define SLAVES) de procesos esclavos a los cuales les envio
 // una cantidad determinada (por el define INTIAL_FILES) de archivos iniciales por linea de comando.
-
+//
 //      - processes:    Es un arreglo de una estructura que almacena informacion sobre los slaves
 //      - filesToSend:  Es un arreglo del path a los archivos iniciales que se le van a enviar
 void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * INITIAL_FILES]);
 
 // Inicializa la memoria compartida, los semaforos y a los esclavos para poder continuar con la ejecucion del programa
-
+//
 //      - shmData: Es un puntero a una estructura que almacena informacion sobre la memoria compartida
 //      - semData: Es un puntero a una estructura que almacena informacion sobre los semaforos
 //      - argc:    Es el numero de argumentos que recibio el programa
@@ -62,7 +62,7 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * I
 int initialize(SHMData_t *shmData, SemData_t *semData, ChildProcess_t processes[SLAVES], int argc, char **argv);
 
 // Destruye y cierra los recursos utilizados por el programa
-
+//
 //      - shmData:     Es un puntero a una estructura que almacena informacion sobre la memoria compartida
 //      - semData:     Es un puntero a una estructura que almacena informacion sobre los semaforos
 //      - processes:   Es un arreglo de una estructura que almacena informacion sobre los slaves
@@ -73,20 +73,20 @@ void finalize(SHMData_t *shmData, SemData_t *semData, ChildProcess_t processes[S
 *********************************************************************************/
 
 // Cuenta la cantida de veces que se repite el caracter \n en un string
-
+//
 //      - response: string en el cual se van a buscar los caracteres.
 int checklines(char *response);
 
 // Busca el File Descriptor mas alto por los cuales los procesos slave escriben a master. Esta funcion es necesaria
 // para poder ejecutar la funcion select correctamente.
-
+//
 //      - processes:   Es un arreglo de una estructura que almacena informacion sobre los slaves
 //      - lenght:      Longitud del arreglo de procesos
 int findHigherFD(ChildProcess_t processes[SLAVES], int lenght);
 
 // Esta funcion crea un set de file descriptors necesarios para el uso de select, y luego agrega a los file descriptors
 // de los procesos slave a este set.
-
+//
 //      - processes:   Es un arreglo de una estructura que almacena informacion sobre los slaves
 fd_set selectSetUp(ChildProcess_t processes[SLAVES]);
 
@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 
             shmWrite(response, size, &shmData);
 
-            SemaphorePost(&semData);
+            semaphorePost(&semData);
 
             // Le asigno el proximo archivo al slave
             // Veo si en la proxima ronda va a terminar. Si no va a terminar le mando otro archivo.
@@ -220,7 +220,7 @@ void finalize(SHMData_t *shmData, SemData_t *semData, ChildProcess_t processes[S
     // Mato a la vista
 
     shmWrite("&exit;", 7, shmData);
-    SemaphorePost(semData);
+    semaphorePost(semData);
 
     // Mato a los esclavos
 
