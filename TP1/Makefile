@@ -1,44 +1,47 @@
-# CXX = gcc
-# CXXFLAGS = -std=c99 -Wall -Wextra -pedantic -g -fsanitize=address
-# LDFLAGS =  -fsanitize=address
-
-# EXEC = solve slave
-
-# all: $(EXEC)
-
-# slave: 
-# 	$(CXX) slave.c $(CXXFLAGS) -o $@ $(LBLIBS)
-# solve: 
-# 	$(CXX) aplicacion.c $(CXXFLAGS) -o $@ $(LBLIBS)
-
-# clean:
-# 	rm -rf *.o $(EXEC)
-
-# run:
-# 	./$(EXEC)
-
-# 
 CC = gcc
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -D_XOPEN_SOURCE=700
 LDFLAGS =  -lrt  -pthread -fsanitize=address
-OBJFILES = shmHelper.o semaphoreHelper.o  
-EXEC = SatSolver SatSlave SatView SHMTEST
+EXEC = SatSolver SatSlave SatView 
+
+LIB_OBJ = shmHelper.o semaphoreHelper.o
+LIB_HDR = shmHelper.h semaphoreHelper.h
+LIB_SRC = shmHelper.c semaphoreHelper.c
+
+SOLVE_OBJ = aplication.o
+SOLVE_SRC = aplication.c
+ 
+SLAVE_OBJ = slave.o
+SLAVE_SRC = slave.c
+
+VIEW_OBJ = view.o
+VIEW_SRC = view.c
+
 
 all: $(EXEC)
 
+SatSlave: $(SLAVE_OBJ) $(LIB_OBJ) $(LIB_HDR) 
+	$(CC) $(CFLAGS) $(LIB_OBJ) $(SLAVE_OBJ)  -o SatSlave  $(LDFLAGS) $(LIB_HDR)
+
+SatSolver: $(SOLVE_OBJ)  $(LIB_OBJ) $(LIB_HDR) 
+	$(CC) $(CFLAGS) $(LIB_OBJ) $(SOLVE_OBJ) -o SatSolver $(LDFLAGS) $(LIB_HDR)
+
+SatView: $(VIEW_OBJ) $(LIB_OBJ) $(LIB_HDR)
+	$(CC) $(CFLAGS) $(LIB_OBJ) $(VIEW_OBJ) -o SatView  $(LDFLAGS) $(LIB_HDR)
+
+$(LIB_OBJ): $(LIB_SRC) $(LIB_HDR)
+	$(CC) $(CFLAGS) -c $(LIB_SRC) $(LDFLAGS)
+
+$(SOLVE_OBJ): $(SOLVE_SRC)
+	$(CC) $(CFLAGS) -c $(SOLVE_SRC) $(LDFLAGS)
+
+$(SLAVE_OBJ): $(SLAVE_SRC)
+	$(CC) $(CFLAGS) -c $(SLAVE_SRC) $(LDFLAGS)
+
+$(VIEW_OBJ): $(VIEW_SRC)
+	$(CC) $(CFLAGS) -c $(VIEW_SRC) $(LDFLAGS)
 
 
-SatSlave: $(OBJFILES)
-	$(CC) $(CFLAGS) slave.c  -o SatSlave $(OBJFILES) $(LDFLAGS)
 
-SatSolver: $(OBJFILES)
-	$(CC) $(CFLAGS) aplication.c -o SatSolver $(OBJFILES) $(LDFLAGS)
-
-SatView: $(OBJFILES)
-	$(CC) $(CFLAGS) view.c -o SatView $(OBJFILES) $(LDFLAGS)
-
-SHMTEST:$(OBJFILES)
-	$(CC) $(CFLAGS) test.c -o SHMTEST $(OBJFILES) $(LDFLAGS)
 
 clean:
 	rm -f *.o $(EXEC)
