@@ -41,6 +41,11 @@ $(VIEW_OBJ): $(VIEW_SRC)
 	$(CC) $(CFLAGS) -c $(VIEW_SRC) $(LDFLAGS)
 
 
+valgrind: $(EXEC)
+	valgrind -v ./SatSolver sat/* 
+
+cppcheck: $(EXEC)
+	cppcheck --quiet --enable=all --force --inconclusive $(SLAVE_SRC) $(SOLVE_SRC) $(VIEW_SRC) $(LIB_SRC) $(LIB_HDR)
 
 
 clean:
