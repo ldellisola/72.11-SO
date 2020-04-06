@@ -16,6 +16,7 @@
 #define MAX 1024
 
 void runMinisat(char *file);
+void getFirstFiles(int argc, char ** initialFiles);
 
 // Parametros
 //      Programa
@@ -30,16 +31,14 @@ int main(int argc, char **argv)
     initialFiles = argv;
 
     // Me quedo solo con los archivos en este arreglo de strings.
-    for (int i = 1; i < argc; i++)
-        initialFiles[i - 1] = initialFiles[i];
-
-    initialFiles[argc - 1] = NULL;
-
+    getFirstFiles(argc,initialFiles);
+    
     srand(time(NULL));
 
     bool exitCondition = false;
     int initialIndex = 0;
     char file[MAX];
+
     do
     {
         if (initialFiles[initialIndex] != NULL)
@@ -61,18 +60,21 @@ int main(int argc, char **argv)
 
             file[final] = 0;
         }
-
         if (!exitCondition)
             runMinisat(file);
-
-
-            
 
     } while (!exitCondition);
 
     return 0;
 }
 
+void getFirstFiles(int argc, char ** initialFiles){
+       for (int i = 1; i < argc; i++)
+        initialFiles[i - 1] = initialFiles[i];
+
+    initialFiles[argc - 1] = NULL;
+
+}
 void runMinisat(char *file)
 {
     char inst[MAX];
