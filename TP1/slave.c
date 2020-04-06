@@ -15,7 +15,7 @@
 
 #define MAX 1024
 
-void runMinisat(char *file);
+int runMinisat(char *file,char * info);
 void getFirstFiles(int argc, char ** initialFiles);
 
 // Parametros
@@ -60,9 +60,11 @@ int main(int argc, char **argv)
 
             file[final] = 0;
         }
-        if (!exitCondition)
-            runMinisat(file);
-
+        if (!exitCondition){
+            char info[2 * MAX];
+            int n=runMinisat(file,info);
+            write(STDOUT_FILENO, info, n);
+            }
     } while (!exitCondition);
 
     return 0;
@@ -75,7 +77,7 @@ void getFirstFiles(int argc, char ** initialFiles){
     initialFiles[argc - 1] = NULL;
 
 }
-void runMinisat(char *file)
+int runMinisat(char *file, char * info)
 {
     char inst[MAX];
     snprintf(inst, MAX, "minisat %s |grep -o -e 'Number of.*[0-9]\\+' -e 'CPU time.*' -e '.*SATISFIABLE' | grep -o -e '[0-9|.]*' -o -e '.*SATISFIABLE' | xargs", file);
@@ -103,11 +105,8 @@ void runMinisat(char *file)
     char s[15];
     s[0]=0;
     sscanf(ans, "%d %d %f %s", &v, &c, &t, s);
-    char info[MAX * 2];
+
     n = snprintf(info, MAX, "PID: %d. File: %s. Number of Variables: %d. Number of Clauses: %d CPU TIME: %f %s \n", getpid(), file, v, c, t, s);
-    // printf(info);
-    //if(s[0]!=0)
-    write(STDOUT_FILENO, info, n);
     int status = fclose(fp);
 
     if (status == -1)
@@ -115,4 +114,5 @@ void runMinisat(char *file)
         perror("Fclose error:");
         exit(-1);
     }
+    return n;
 }
