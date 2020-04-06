@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -pedantic -D_XOPEN_SOURCE=700
+CFLAGS = -std=c99 -Wall -Wextra -pedantic -D_XOPEN_SOURCE=700 -g
 LDFLAGS =  -lrt  -pthread -fsanitize=address
 EXEC = SatSolver SatSlave SatView 
 

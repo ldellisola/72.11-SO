@@ -257,8 +257,7 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
                 perror("Forbiding Slave to WRITE to Master on MasterToSlave pipe");
                 exit(-1);
             }
-            int dupnum = 0;
-            if ((dupnum = dup2(MasterToSlave[READ], STDIN_FILENO)) == -1)
+            if (dup2(MasterToSlave[READ], STDIN_FILENO) == -1)
             {
                 perror("Converting MasterToSlave into STDIN");
                 exit(-1);
@@ -270,7 +269,7 @@ void createSlaves(ChildProcess_t processes[SLAVES], char *filesToSend[SLAVES * 2
                 perror("Forbiding Slave to READ from Master on SlaveToMaster pipe");
                 exit(-1);
             }
-            if ((dupnum = dup2(SlaveToMaster[WRITE], STDOUT_FILENO)) == -1)
+            if (dup2(SlaveToMaster[WRITE], STDOUT_FILENO) == -1)
             {
                 perror("Converting SlaveToMaster into STDOUT");
                 exit(-1);
