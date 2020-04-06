@@ -26,7 +26,6 @@ int main(void){
     char semName[200];
     sprintf(semName,"/SEM_%s",num);
 
-    printf("SEMAPHORE: %s\n",semName);
     SemData_t semData = semaphoreOpen(semName);
 
 
@@ -36,8 +35,6 @@ int main(void){
 
     sprintf(shmName,"/SHM_%s",num);
     
-    printf("SHARED MEMORY: %s\n",shmName);
-
     SHMData_t shmData = shmOpen(shmName,MAX * 100);
 
 
@@ -60,9 +57,7 @@ int main(void){
             shmResponse[size-6] = 0;
         if(!exitCondition || size > 7)
             printf(shmResponse);
-        else{
-            printf("\nFinish.Bye. \n");
-        }
+
 
         
     }while(!exitCondition);
