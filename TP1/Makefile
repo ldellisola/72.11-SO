@@ -44,6 +44,6 @@ $(VIEW_OBJ): $(VIEW_SRC)
 
 
 clean:
-	rm -f *.o $(EXEC)
+	rm -f $(LIB_OBJ) $(SLAVE_OBJ) $(SOLVE_OBJ) $(VIEW_OBJ) $(EXEC)
 
 
