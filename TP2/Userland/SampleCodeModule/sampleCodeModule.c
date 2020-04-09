@@ -46,7 +46,7 @@ int main() {
 			menu();
 			while(((selector=readKey())!='1') && (selector!='2'));
 			clearConsole();
-			if(selector == '2')
+			if(selector == '1')
 				printf("HI! Ask \"man\" for a command menu\n");
 		}
 
