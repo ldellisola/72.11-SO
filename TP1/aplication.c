@@ -231,7 +231,7 @@ void finalize(SHMData_t *shmData, SemData_t *semData, ChildProcess_t processes[S
     // Guardo el archivo de memoria compartida en un archivo real
 
     FILE *outputFile = fopen(OUTPUT_FILE, "w+");
-    if (outputFile == NULL) 
+    if (outputFile == NULL)
     {
         perror("Creating output file");
         exit(-1);
