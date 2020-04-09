@@ -1,5 +1,4 @@
 #include "include/String.h"
-#include <stdarg.h>
 
 void snprintf(char * string, int size, char * format, va_list args);
 void handleFormat(char type,int * k,char * string,int size,va_list args);

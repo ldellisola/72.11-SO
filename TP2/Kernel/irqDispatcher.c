@@ -195,7 +195,7 @@ void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdPara
 			if(buffer[1] == 0)
 			   putCharColor(*buffer,0xFF0000,0x0000);
 			else
-				printfColor(buffer,0xFF0000,0x0000);
+				printfColor(0xFF0000,0x0000,buffer);
             break;
         }
 		case FD_STDIN: break;

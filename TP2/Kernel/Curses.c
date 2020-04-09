@@ -20,7 +20,7 @@ void printf(const char * format,...){
 
 }
 
-void printfColor(const char * format,int fontColor, int backgroundColor,...){
+void printfColor(int fontColor, int backgroundColor,const char * format,...){
     
     char string[MAXBUFFER];
     for(int i=0;i<MAXBUFFER;i++)

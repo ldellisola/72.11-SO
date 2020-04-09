@@ -5,7 +5,7 @@
 void ThrowCustomException(char * str){
     PrintExceptionDetails(str,0,0);
 
-    printfColor("\n\n\nPress any key to continue",0xFF0000,0xFFFFFF);
+    printfColor(0xFF0000,0xFFFFFF,"\n\n\nPress any key to continue");
 
 	do{
 		readKey();
@@ -27,7 +27,7 @@ void PrintExceptionDetails(char * name, uint64_t * stackPointer, uint64_t * inst
 
 
 
-	printfColor("EXCEPTION: %s | IP: 0X%X\n",WHITE,RED,name,reg.rip);
+	printfColor(WHITE,RED,name,reg.rip,"EXCEPTION: %s | IP: 0X%X\n");
 
 	printf("RAX: 0X%X | RBX: 0X%X | RCX: 0X%X | RDX: 0X%X\n",reg.rax,reg.rbx,reg.rcx,reg.rdx);
 
