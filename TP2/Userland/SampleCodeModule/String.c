@@ -122,7 +122,7 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 		p2--;
 	}
 
-	return digits;
+	//return digits;
 	
 }
 
@@ -157,7 +157,7 @@ int strcmp(char * s1,char * s2){
     return 0; 
 }
 
-void formatString(char * string, int size,char format,...){
+void formatString(char * string, int size,char * format,...){
 	va_list args;
 	va_start(args,format);
 	snprintf(string,size,format,args);

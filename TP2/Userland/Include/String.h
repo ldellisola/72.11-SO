@@ -20,7 +20,7 @@ void snprintf(char * string, int size, char * format, va_list args);
 
 void handleFormat(char type,int * k,char * string,int size,va_list args);
 
-void formatString(char * string, int size,char format,...);
+void formatString(char * string, int size,char * format,...);
 
 int strcmp(char * s1,char * s2);
 
