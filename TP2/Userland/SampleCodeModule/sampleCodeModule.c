@@ -50,7 +50,7 @@ int main() {
 				printf("HI! Ask \"man\" for a command menu\n");
 		}
 
-		if(selector == '2'){
+		if(selector == '1'){
 
 			
 			switch(runTerminal()){
