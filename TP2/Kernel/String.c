@@ -72,7 +72,7 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 		p2--;
 	}
 
-	return digits;
+	//return digits;
 	
 }
 

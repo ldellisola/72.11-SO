@@ -18,7 +18,7 @@ int quotient(int a, int b){
 }
 
 int man(){
-    printf("\ngame\nexit\ntime\nman\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\n");
+    printf("\nexit\ntime\nman\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\n");
     return 0;
 }
 
@@ -59,7 +59,7 @@ int explainCommand(char * command){
     }else{
         printf("That command does not exist!\n");
     }
-
+    return 0;
 }
 
 int invalidOpcode(){
