@@ -44,7 +44,7 @@ int GetYear(){
 int getTime(int id){
     int time = 0;
 
-    read(FD_TIME,id,&time,0,0);
+    read(FD_TIME,(void *)id, (void *)&time,0,0);
 
     return time;
 }
@@ -53,7 +53,7 @@ int getTime(int id){
 uint64_t getTicks(){
     uint64_t ticks = 0;
 
-    read(FD_TIMER,&ticks,0,0,0);
+    read(FD_TIMER,(void *) &ticks,0,0,0);
     return ticks;
 
 }
