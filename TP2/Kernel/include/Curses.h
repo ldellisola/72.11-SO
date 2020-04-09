@@ -15,6 +15,7 @@ void putChar(char ch);
 void putCharColor(char ch, int fontColor, int backgroundColor);
 
 
+int getChar();
 
 
 

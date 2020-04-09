@@ -73,7 +73,7 @@ int main() {
 	
 	int position=70;
 	int y=50;
-	printfColorAt("BYE!",0xFF44FF,0x00,position,y);
+	printfColorAt(0xFF44FF,0x00,position,y,"BYE!");
 	return 0xDEA;
 }
 

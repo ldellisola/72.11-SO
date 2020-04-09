@@ -1,6 +1,7 @@
 #include "include/Curses.h"
 #include "include/String.h"
 #include "include/font.h"
+#include "include/keyboard.h"
 #include <ConsoleDriver.h>
 
 #define MAXBUFFER 500
@@ -57,6 +58,13 @@ void putCharColor(char ch, int fontColor, int backgroundColor){
     printCharColor(temp);
 }
    
+
+int getChar()
+{
+    return returnKey();
+}
+
+
 
 
 
