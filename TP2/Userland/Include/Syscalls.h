@@ -18,21 +18,14 @@
 #define DELETE_CURRENT_CHAR 1
 #define DELETE_ALL_DISPLAY 3
 
-// typedef struct{
-//     char ch;
-//     int fontColor;
-//     int backgroundColor;
-//     int x;
-//     int y;
-// }ColorChar;
+
 
 extern void write(int fd, void * first, void *second, void * third, void * forth );
 
 extern void read(int fd, void * first, void *second, void * third, void * forth);
 
 extern void delete(int fd, void * first, void *second, void * third, void * forth);
-//extern void printAt(int *pos ,int lenght,int height,int fontColor);
 
-//extern void writeColor(ColorChar * buff );
+
 
 #endif

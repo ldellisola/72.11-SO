@@ -20,15 +20,15 @@ void menu(){
 	
 	int position=67;
 	int y=30;
-	printfColorAt("TPE DE PC",0xFF44FF,0x00,position,y);
+	printfColorAt(0xFF44FF,0x00,position,y,"TPE DE PC");
     setSize(init*2);
 	getBpp(&aux);
     y+=charHeight*aux+3;
-    printfColorAt("58025,Dellisola   58489,Torrusio   59820,PUIG",0xFFFFFF,0x00,position,y);
+    printfColorAt(0xFFFFFF,0x00,position,y,"58025,Dellisola   58489,Torrusio   59820,PUIG");
     y+=charHeight*aux+3;
-    printfColorAt("1) Terminal",0xFFFFFF,0x00,position*4+30,y);
+    printfColorAt(0xFFFFFF,0x00,position*4+30,y,"1) Terminal");
 	y+=charHeight+20;
-	printfColorAt("2) Exit",0xFFFFFF,0x00,position*3+20,y);
+	printfColorAt(0xFFFFFF,0x00,position*3+20,y,"2) Exit");
     setSize(init);
 
 }

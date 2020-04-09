@@ -1,5 +1,4 @@
 #include <stdarg.h>
-#include <stdbool.h>
 #include "../Include/String.h"
 #include <stdarg.h>
 
@@ -258,4 +257,20 @@ int stringToHexa(char *buff){
 		aux=aux*16+c;
 	}
 	return aux;
+}
+
+
+
+int countCharacterRepetitions(const char * str, char ch){
+
+    int counter = 0;
+    for(int i = 0; str[i] != 0 ; i++ ){
+        
+        counter += str[i] == ch ;
+
+        if(i > 0 && str[i-1] == '\\' && str[i] == ch )
+            counter--;
+    }
+
+    return counter;
 }

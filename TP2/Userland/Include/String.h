@@ -1,7 +1,6 @@
 #ifndef STRINGH
 #define STRINGH
 #include <stdarg.h>
-
 #include <stdint.h>
 
 
@@ -29,7 +28,12 @@ int stringToInt(char * buff);
 
 void HexToStringSPECIAL(char * buffer, int buffSize, uint64_t num);
 
-
+// Esta funcion cuenta la cantidad de veces que se repite un caracter dentro de un string, teniendo en cuenta si ese
+// Caracter esta escapado o no
+//
+//		- str: 	String donde se va a buscar la informacion
+//		- ch:	Caracter a buscar
+int countCharacterRepetitions(const char * str, char ch);
 
 
 #endif
