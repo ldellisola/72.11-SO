@@ -41,10 +41,6 @@ int explainCommand(char * command){
         printf("Command:\n        printMem [Argument_1]\n");
         printf("It prints on screen the first 32 bytes of memory from any given memory position.\n");
     }
-    else if(strcmp(command,"game")){
-        printf("Command:\n        game\n");
-        printf("It unpauses/starts the game arachnoid.\n");
-    }
     else if(strcmp(command,"exit")){
         printf("Command:\n        exit\n");
         printf("It exits the program.\n");

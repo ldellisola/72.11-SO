@@ -63,3 +63,8 @@ Sat*
 .bash_history
 *.txt
 TP1/strace_out
+
+*.ibin
+*.img
+*.qcow2
+*.vmdk
