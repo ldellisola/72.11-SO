@@ -19,6 +19,7 @@ GLOBAL _irq83Handler
 
 
 GLOBAL _irq85Handler
+GLOBAL _irq86Handler
 
 
 GLOBAL _exception0Handler
@@ -184,6 +185,10 @@ _irq83Handler:
 ; CustomExceptions
 _irq85Handler:
 	irqHandlerMaster 85h
+
+; Sbrk
+_irq86Handler:
+	irqHandlerMaster 86h
 
 
 ;USB

@@ -34,6 +34,7 @@
 void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
+void dispatchSbrk(intptr_t increment, void * buffer);
 
 
 static void int_20();
@@ -60,8 +61,9 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 		case 0x82:
 			dispatchDelete(firstParam,secondParam,thirdParam,fourthParam,fifthParam);
 			break;
-
-	
+		case 0x86:
+			dispatchSbrk(firstParam, secondParam);
+			break;
 	}
 }
 
@@ -76,7 +78,9 @@ void int_21(){
 }
 
 
-
+void dispatchSbrk(intptr_t increment, void * buffer) { 
+	sbrk_handler(increment, buffer);
+}
 
 
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
