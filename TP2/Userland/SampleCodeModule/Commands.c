@@ -4,6 +4,8 @@
 #include "../Include/String.h"
 #include "../Include/Curses.h"
 #include "../Include/Time.h"
+#include "../Include/MemManager.h"
+
 
 extern void __UD2__();
 

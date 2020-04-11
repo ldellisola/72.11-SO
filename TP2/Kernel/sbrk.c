@@ -1,5 +1,5 @@
+#include "include/sbrk.h"
 #include <stdlib.h>
-#include <stdint.h>
 
 static void * const sampleDataModuleAddress = (void*)0x600000;
 static void * const maxAddress = (void*) 0x700000;
@@ -16,5 +16,7 @@ void sbrk_handler(intptr_t increment, void * buffer){
                 buffer = topAddress;
                 topAddress += increment;
         }
-        buffer = NULL;
+        else{
+                buffer = NULL;
+        }
 }
