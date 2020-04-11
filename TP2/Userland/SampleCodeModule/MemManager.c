@@ -1,5 +1,6 @@
 
 #include "../Include/MemManager.h"
+#include "../Include/Syscalls.h"
 typedef char ALIGN[16];
 
 union header {
@@ -19,7 +20,8 @@ header_t *get_free_block(size_t size);
 
 void * sbrk(int increment) {
 	void * resp;
-	sbrk_asm(increment, resp);
+	printf("DEBUG: por ejecutar SBRK asm\n");
+	sbrk_asm(increment, &resp);
 	// No entiendo este printf. 
 	printf("Se llamo a sbrk con un size de %d, el puntero retorno %p\n", increment, resp);
 	return resp;

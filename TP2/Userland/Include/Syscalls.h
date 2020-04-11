@@ -31,8 +31,8 @@ extern void write(int fd, void * first, void *second, void * third, void * forth
 extern void read(int fd, void * first, void *second, void * third, void * forth);
 
 extern void delete(int fd, void * first, void *second, void * third, void * forth);
-//extern void printAt(int *pos ,int lenght,int height,int fontColor);
 
-//extern void writeColor(ColorChar * buff );
+extern 	int sbrk_asm(int increment, void ** resp);
+
 
 #endif
