@@ -1,6 +1,5 @@
 #include "include/sbrk.h"
 #include <stdlib.h>
-
 static void * const sampleDataModuleAddress = (void*)0x600000;
 static void * const maxAddress = (void*) 0x700000;
 void * topAddress = NULL;

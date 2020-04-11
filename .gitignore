@@ -76,3 +76,6 @@ TP2/Image/x64BareBonesImage.vmdk
 TP2/Userland/0000-sampleCodeModule.bin
 TP2/Userland/0001-sampleDataModule.bin
 TP2/Kernel/kernel.bin
+TP2/Bootloader/BMFS/bmfs.bin
+*.bin
+*.sys

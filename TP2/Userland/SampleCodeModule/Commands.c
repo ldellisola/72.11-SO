@@ -151,9 +151,9 @@ int time(){
 }
 
 int malloc_test() {
-    char * test = (char *) malloc(512*1024);
+    char * test = (char *) malloc(10*1024);
     fillString(test);
-    printf("el resultado fue %s \n",test);
+    printf("El resultado fue %s \n",test);
     return 0;
 }
 
