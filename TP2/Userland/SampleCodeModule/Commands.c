@@ -147,3 +147,14 @@ int time(){
     return 0;
 
 }
+
+int malloc_test() {
+    char * test = (char *) malloc(512*1024);
+    fillString(test);
+    printf("el resultado fue %s \n",test);
+    return 0;
+}
+
+void fillString(char * test) {
+    test = "works:D";
+}

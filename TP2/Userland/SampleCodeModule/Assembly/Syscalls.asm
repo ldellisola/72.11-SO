@@ -1,7 +1,7 @@
 GLOBAL read
 GLOBAL write
 GLOBAL delete
-GLOBAL sbrk
+GLOBAL sbrk_asm
 
 section .text:
 
@@ -51,7 +51,7 @@ write:
         leave
         ret
 
- sbrk:
+ sbrk_asm:
         enter 0,0
 
         mov r15, rdx    ; guardo el valor

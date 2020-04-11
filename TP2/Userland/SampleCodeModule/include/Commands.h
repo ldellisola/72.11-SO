@@ -20,6 +20,9 @@ int man();
 
 int explainCommand(char * command);
 
+int malloc_test();
+void fillString(char * test);
+
 
 
 
