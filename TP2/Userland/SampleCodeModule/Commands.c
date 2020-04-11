@@ -158,5 +158,11 @@ int malloc_test() {
 }
 
 void fillString(char * test) {
-    test = "works:D";
+
+    char * str = "works:D";
+    for(int i = 0 ; str[i]!= 0; i++){
+        test[i] = str[i];
+    }
+
+
 }

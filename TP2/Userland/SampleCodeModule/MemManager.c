@@ -20,10 +20,10 @@ header_t *get_free_block(size_t size);
 
 void * sbrk(int increment) {
 	void * resp;
-	printf("DEBUG: por ejecutar SBRK asm\n");
+	// printf("DEBUG: por ejecutar SBRK asm\n");
 	sbrk_asm(increment, &resp);
 	// No entiendo este printf. 
-	printf("Se llamo a sbrk con un size de %d, el puntero retorno %p\n", increment, resp);
+	// printf("Se llamo a sbrk con un size de %d, el puntero retorno %p\n", increment, resp);
 	return resp;
 }
 
@@ -46,7 +46,7 @@ void *malloc(size_t size)
 	block = sbrk(total_size);
 
 	if (block == (void*) -1) {
-		printf("DEBUG: Corto en el medio\n");
+		// printf("DEBUG: Corto en el medio\n");
 		// pthread_mutex_unlock(&global_malloc_lock);
 		return NULL;
 	}

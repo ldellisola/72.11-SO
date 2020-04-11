@@ -11,17 +11,13 @@ void sbrk_handler(intptr_t increment, void ** buffer){
         if (topAddress == NULL) {
                 topAddress = sampleDataModuleAddress;
         }
-
-        printf("KERNEL: Memoria tope actual: 0x%x\n",topAddress);
         
         if (topAddress + increment <= maxAddress) {
         
                 *buffer = topAddress;
                 topAddress += increment;
-                printf("KERNEL: Aumento en %d el tope de la memoria\n",increment);
         }
         else{
-                printf("KERNEL: 0x%x + 0x%x es mayor al tope de memoria: 0x%x\n",increment,topAddress,maxAddress);
                 *buffer = NULL;
         }
 

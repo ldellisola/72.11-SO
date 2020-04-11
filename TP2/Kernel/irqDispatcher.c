@@ -64,7 +64,6 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 			break;
 		case 0x86:{
 		
-			printf("KERNEL: Ejecutando SBRK\n");
 			dispatchSbrk(firstParam, secondParam);
 			break;
 		}
