@@ -63,3 +63,16 @@ Sat*
 .bash_history
 *.txt
 TP1/strace_out
+TP2/Image/packedKernel.bin
+TP2/.vscode/settings.json
+TP2/Image/packedKernel.bin
+TP2/Image/x64BareBonesImage.img
+TP2/Image/x64BareBonesImage.qcow2
+TP2/Image/x64BareBonesImage.vmdk
+TP2/Image/packedKernel.bin
+TP2/Image/x64BareBonesImage.img
+TP2/Image/x64BareBonesImage.qcow2
+TP2/Image/x64BareBonesImage.vmdk
+TP2/Userland/0000-sampleCodeModule.bin
+TP2/Userland/0001-sampleDataModule.bin
+TP2/Kernel/kernel.bin

@@ -1,4 +1,5 @@
-#include <stdlib.h>
+
+#include "../Include/MemManager.h"
 typedef char ALIGN[16];
 
 union header {
@@ -13,14 +14,14 @@ typedef union header header_t;
 header_t *head, *tail;
 // pthread_mutex_t global_malloc_lock;
 
-void *malloc(size_t size);
-void * sbrk(int increment);
+
 header_t *get_free_block(size_t size);
 
 void * sbrk(int increment) {
 	void * resp;
 	sbrk_asm(increment, resp);
-	printf("se llamó a sbrk con un size de %d, el puntero retornó %s", increment, resp);
+	// No entiendo este printf. 
+	printf("se llamo a sbrk con un size de %d, el puntero retorno %s", increment, resp);
 	return resp;
 }
 

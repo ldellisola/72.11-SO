@@ -11,6 +11,7 @@
 #include <font.h>
 #include <VideoDriver.h>
 #include <ConsoleDriver.h>
+#include <sbrk.h>
 
 
 
