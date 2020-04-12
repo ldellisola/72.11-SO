@@ -151,20 +151,28 @@ int time(){
 }
 
 int malloc_test() {
-    char * test = (char *) malloc(10*1024);
-    printf("TEST: Mi direccion es %x \n",test);
+    printf("TEST PIDE 100:");
+    char * test = (char *) malloc(100);
+    printf("Mi direccion es %x \n",test);
+    printf("TEST0 PIDE 10:");
+    char * test0= (char *) malloc(10);
+    printf("Mi direccion es %x \n",test0);
     free(test);
-    test = (char *) malloc(10*1024);
-    printf("TEST: Mi direccion es %x \n",test);
-    char * test1 = (char *) malloc(10*1024);
-    printf("TEST1: Mi direccion es %x \n",test1);
-    char * test2= (char *) malloc(10*1024);
-    printf("TEST2: Mi direccion es %x \n",test2);
+    printf("TEST PIDE 2:");
+    test = (char *) malloc(2);
+    printf("Mi direccion es %x \n",test);
+    printf("TEST1 PIDE 5:");
+    char * test1 = (char *) malloc(5);
+    printf("Mi direccion es %x \n",test1);
     free(test);
     free(test1);
-    test = (char *) malloc(10*1024*2);
-    printf("TEST pidiendo mas: Mi direccion es %x \n",test);
-
+    printf("TEST2 PIDE 10:");
+    char * test2= (char *) malloc(10);
+    printf("Mi direccion es %x \n",test2);
+    free(test);
+    free(test1);
+    free(test2);
+    free(test0);
     return 0;
 }
 
