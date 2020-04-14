@@ -23,3 +23,21 @@ void sbrk_handler(intptr_t increment, void ** buffer){
 
         return;
 }
+
+
+int brk_handler( void * addr){
+        if (topAddress == NULL) {
+                topAddress = sampleDataModuleAddress;
+        }
+        
+        // No puede reservar mas memoria que la que tiene asignada el proceso, o
+        // un valor menor al que tiene ya asignado
+        if(addr > maxAddress  || addr < topAddress)
+        {
+                return -1;
+        }
+        
+        topAddress = addr;
+        return 0;
+
+}

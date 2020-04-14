@@ -1,6 +1,10 @@
 
 #include "../Include/MemManager.h"
 #include "../Include/Syscalls.h"
+
+#ifndef ENABLE_BUDDY
+
+
 typedef char ALIGN[16];
 
 union header {
@@ -18,14 +22,7 @@ header_t *head, *tail;
 
 header_t *get_free_block(size_t size);
 
-void * sbrk(int increment) {
-	void * resp;
-	// printf("DEBUG: por ejecutar SBRK asm\n");
-	sbrk_asm(increment, &resp);
-	// No entiendo este printf. 
-	// printf("Se llamo a sbrk con un size de %d, el puntero retorno %p\n", increment, resp);
-	return resp;
-}
+
 
 
 void *malloc(size_t size)
@@ -105,3 +102,5 @@ void free(void *block)
 	header->s.is_free = 1;
 	// pthread_mutex_unlock(&global_malloc_lock);
 }
+
+#endif
