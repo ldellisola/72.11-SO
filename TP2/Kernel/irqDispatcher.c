@@ -35,7 +35,7 @@
 void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
-void dispatchSbrk(intptr_t increment, void ** buffer);
+void dispatchSbrk(int increment, void ** buffer);
 
 
 static void int_20();
@@ -82,7 +82,7 @@ void int_21(){
 }
 
 
-void dispatchSbrk(intptr_t increment, void ** buffer) { 
+void dispatchSbrk(int increment, void ** buffer) { 
 	sbrk_handler(increment, buffer);
 }
 

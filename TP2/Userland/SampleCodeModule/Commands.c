@@ -152,8 +152,19 @@ int time(){
 
 int malloc_test() {
     char * test = (char *) malloc(10*1024);
-    fillString(test);
-    printf("El resultado fue %s \n",test);
+    printf("TEST: Mi direccion es %x \n",test);
+    free(test);
+    test = (char *) malloc(10*1024);
+    printf("TEST: Mi direccion es %x \n",test);
+    char * test1 = (char *) malloc(10*1024);
+    printf("TEST1: Mi direccion es %x \n",test1);
+    char * test2= (char *) malloc(10*1024);
+    printf("TEST2: Mi direccion es %x \n",test2);
+    free(test);
+    free(test1);
+    test = (char *) malloc(10*1024*2);
+    printf("TEST pidiendo mas: Mi direccion es %x \n",test);
+
     return 0;
 }
 

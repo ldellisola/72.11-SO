@@ -23,14 +23,12 @@ header_t *head, *tail;
 header_t *get_free_block(size_t size);
 
 
-
-
 void *malloc(size_t size)
 {
 	size_t total_size;
 	void *block;
 	header_t *header;
-	if (!size)
+	if (size<=0)
 		return NULL;
 	// pthread_mutex_lock(&global_malloc_lock);
 	header = get_free_block(size);
@@ -43,7 +41,6 @@ void *malloc(size_t size)
 	block = sbrk(total_size);
 
 	if (block == (void*) -1) {
-		// printf("DEBUG: Corto en el medio\n");
 		// pthread_mutex_unlock(&global_malloc_lock);
 		return NULL;
 	}
@@ -63,10 +60,22 @@ void *malloc(size_t size)
 header_t *get_free_block(size_t size)
 {
 	header_t *curr = head;
+	header_t *next;
+	int flag;
 	while(curr) {
-		if (curr->s.is_free && curr->s.size >= size)
-			return curr;
-		curr = curr->s.next;
+		flag=1;
+		if (curr->s.is_free) {
+			if(curr->s.size >= size)
+				return curr;
+			else if((next=curr->s.next)!=NULL && next->s.is_free){
+				curr->s.size+=next->s.size;
+				curr->s.next=next->s.next;	
+				flag=0;
+			}
+
+		}
+		if(flag)
+			curr = curr->s.next;
 	}
 	return NULL;
 }
@@ -95,7 +104,8 @@ void free(void *block)
 				tmp = tmp->s.next;
 			}
 		}
-		sbrk(0 - sizeof(header_t) - header->s.size);
+		int x=(0 - sizeof(header_t)) - header->s.size;
+		sbrk(x);
 		// pthread_mutex_unlock(&global_malloc_lock);
 		return;
 	}

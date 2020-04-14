@@ -7,12 +7,12 @@ void * topAddress = NULL;
 
 
 // sbrk_handler() increments the end of DataSeg and return the beginning of the allocked space 
-void sbrk_handler(intptr_t increment, void ** buffer){
+void sbrk_handler(int increment, void ** buffer){
         if (topAddress == NULL) {
                 topAddress = sampleDataModuleAddress;
         }
         
-        if (topAddress + increment <= maxAddress) {
+        if ((topAddress + increment) <= maxAddress) {
         
                 *buffer = topAddress;
                 topAddress += increment;
@@ -20,7 +20,6 @@ void sbrk_handler(intptr_t increment, void ** buffer){
         else{
                 *buffer = NULL;
         }
-
         return;
 }
 
