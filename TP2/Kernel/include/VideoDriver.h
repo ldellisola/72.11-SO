@@ -1,9 +1,6 @@
 #ifndef VIDEO_DRIVER_H
 #define VIDEO_DRIVER_H
 
-
-// Estas lineas generan un warning indicando que no estan siendo usadas pero es un falso positivo 
-// ya que se usan en otros archivos
 static unsigned int SCREEN_WIDTH = 1024;
 static unsigned int SCREEN_HEIGHT = 768;
 

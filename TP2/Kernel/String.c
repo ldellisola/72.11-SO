@@ -1,4 +1,5 @@
 #include "include/String.h"
+#include <stdarg.h>
 
 void snprintf(char * string, int size, char * format, va_list args);
 void handleFormat(char type,int * k,char * string,int size,va_list args);
@@ -71,7 +72,7 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 		p2--;
 	}
 
-	//return digits;
+	return digits;
 	
 }
 

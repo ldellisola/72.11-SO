@@ -17,7 +17,7 @@ void putChar(char ch);
 
 int readKey();
 
-void printfColorAt(int fontColor, int backgroundColor,int x,int y,const char * format,...);
+void printfColorAt(const char * format,int fontColor, int backgroundColor,int x,int y,...);
 
 #endif
 

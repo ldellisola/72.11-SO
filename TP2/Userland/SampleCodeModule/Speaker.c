@@ -4,7 +4,7 @@
 
 void playSound(int frecuency){
 
-    write(FD_SPEAKER,(void *)frecuency,0,0,0);
+    write(FD_SPEAKER,frecuency,0,0,0);
 
 }
 
