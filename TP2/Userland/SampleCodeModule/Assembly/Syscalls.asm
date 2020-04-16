@@ -2,7 +2,6 @@ GLOBAL read
 GLOBAL write
 GLOBAL delete
 GLOBAL sbrk_asm
-GLOBAL brk_asm
 
 section .text:
 
@@ -61,23 +60,8 @@ write:
         mov rdx, rcx    ;tercer arg
         mov rcx, r15    ;segundo arg
         mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        mov rax, rdi    ; fd        int 82h
         int 86h
-
-        leave
-        ret
-
- brk_asm:
-        enter 0,0
-
-        mov r15, rdx    ; guardo el valor
-
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
-        int 87h
 
         leave
         ret

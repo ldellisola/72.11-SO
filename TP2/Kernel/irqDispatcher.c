@@ -67,7 +67,6 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 			dispatchSbrk(firstParam, secondParam);
 			break;
 		}
-		case 0x87: dispatchBRK(firstParam, (int*)secondParam);
 	}
 }
 
@@ -86,13 +85,24 @@ void dispatchSbrk(int increment, void ** buffer) {
 	sbrk_handler(increment, buffer);
 }
 
-void dispatchBRK(void * ptr,int * retValue){
-
-	*retValue = brk_handler(ptr);
-}
-
 
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
+
+	switch(fd){
+		case FD_STDOUT: { break;}
+		case FD_STDERR: { break;}
+		case FD_STDIN: { 
+
+			char * buffer = (char *) firstParam;
+            int bufferSize = secondParam;
+			int i = 0;		
+			int temp;
+			do{
+				temp = returnKey();
+				
+				if( temp != -1 ){
+					buffer[i++]=temp;
+				}
 
 	switch(fd){
 		case FD_STDOUT: { break;}
