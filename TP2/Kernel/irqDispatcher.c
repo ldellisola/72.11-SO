@@ -67,6 +67,7 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 			dispatchSbrk(firstParam, secondParam);
 			break;
 		}
+		case 0x87: dispatchBRK(firstParam, (int*)secondParam);
 	}
 }
 
@@ -83,6 +84,11 @@ void int_21(){
 
 void dispatchSbrk(int increment, void ** buffer) { 
 	sbrk_handler(increment, buffer);
+}
+
+void dispatchBRK(void * ptr,int * retValue){
+
+	*retValue = brk_handler(ptr);
 }
 
 

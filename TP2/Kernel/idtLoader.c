@@ -33,6 +33,7 @@ void load_idt() {
   setup_IDT_entry(0x81,(uint64_t)&_irq81Handler);
   setup_IDT_entry(0x82,(uint64_t)&_irq82Handler);
   setup_IDT_entry(0x86,(uint64_t)&_irq86Handler);
+  setup_IDT_entry(0x87,(uint64_t)&_irq87Handler);
 
   
 
