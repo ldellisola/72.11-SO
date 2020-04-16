@@ -121,6 +121,9 @@ int interpretCommand(){
         int a = stringToInt(param1), b = stringToInt(param2);
         quotient(a,b);
     }
+    else if (strcmp(command,"malloctest")) {
+        malloc_test();
+    }
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    
     

@@ -4,6 +4,8 @@
 #include "../Include/String.h"
 #include "../Include/Curses.h"
 #include "../Include/Time.h"
+#include "../Include/MemManager.h"
+
 
 extern void __UD2__();
 
@@ -141,5 +143,33 @@ int time(){
     int seconds = GetSeconds();
     printf("%d/%d/%d %d:%d:%d \n",dayofMonth,month,year,hour, minutes,seconds);   
     return 0;
+
+}
+
+int malloc_test() {
+    char * test = (char *) malloc(10*1024);
+    printf("TEST: Mi direccion es %x \n",test);
+    free(test);
+    test = (char *) malloc(10*1024);
+    printf("TEST: Mi direccion es %x \n",test);
+    char * test1 = (char *) malloc(10*1024);
+    printf("TEST1: Mi direccion es %x \n",test1);
+    char * test2= (char *) malloc(10*1024);
+    printf("TEST2: Mi direccion es %x \n",test2);
+    free(test);
+    free(test1);
+    test = (char *) malloc(10*1024*2);
+    printf("TEST pidiendo mas: Mi direccion es %x \n",test);
+
+    return 0;
+}
+
+void fillString(char * test) {
+
+    char * str = "works:D";
+    for(int i = 0 ; str[i]!= 0; i++){
+        test[i] = str[i];
+    }
+
 
 }

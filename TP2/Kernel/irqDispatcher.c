@@ -11,6 +11,7 @@
 #include <font.h>
 #include <VideoDriver.h>
 #include <ConsoleDriver.h>
+#include <sbrk.h>
 
 #define FD_STDOUT (0x01)
 #define FD_STDERR (0x02)
@@ -31,6 +32,13 @@ void dispatchWrite(int fd, void *firstParam, void *secondParam, void *thirdParam
 void dispatchDelete(int fd, void *firstParam, void *secondParam, void *thirdParam, void *fourthParam);
 void dispatchRead(int fd, void *firstParam, void *secondParam, void *thirdParam, void *fourthParam);
 
+
+void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
+void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
+void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
+void dispatchSbrk(int increment, void ** buffer);
+
+
 static void int_20();
 static void int_21();
 
@@ -42,18 +50,15 @@ void irqDispatcher(uint64_t irq, void *firstParam, void *secondParam, void *thir
 	case 0:
 		int_20();
 		break;
-	case 1:
-		int_21();
-		break;
-	case 0x80:
-		dispatchRead((int)firstParam, secondParam, thirdParam, fourthParam, fifthParam);
-		break;
-	case 0x81:
-		dispatchWrite((int)firstParam, secondParam, thirdParam, fourthParam, fifthParam);
-		break;
-	case 0x82:
-		dispatchDelete((int)firstParam, secondParam, thirdParam, fourthParam, fifthParam);
-		break;
+		case 0x82:
+			dispatchDelete(firstParam,secondParam,thirdParam,fourthParam,fifthParam);
+			break;
+		case 0x86:{
+		
+			dispatchSbrk(firstParam, secondParam);
+			break;
+		}
+		case 0x87: dispatchBRK(firstParam, (int*)secondParam);
 	}
 }
 
@@ -71,34 +76,17 @@ void int_21()
 void dispatchRead(int fd, void *firstParam, void *secondParam, void *thirdParam, void *fourthParam)
 {
 
-	switch (fd)
-	{
-	case FD_STDOUT:
-	{
-		break;
-	}
-	case FD_STDERR:
-	{
-		break;
-	}
-	case FD_STDIN:
-	{
+void dispatchSbrk(int increment, void ** buffer) { 
+	sbrk_handler(increment, buffer);
+}
 
-		char *buffer = (char *)firstParam;
-		int bufferSize = (int) secondParam;
-		int i = 0;
-		int temp;
-		do
-		{
-			temp = returnKey();
+void dispatchBRK(void * ptr,int * retValue){
 
-			if (temp != -1)
-			{
-				buffer[i++] = temp;
-			}
+	*retValue = brk_handler(ptr);
+}
 
-		} while (temp != -1 && i < bufferSize - 1);
-		buffer[i] = 0;
+
+void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 
 		break;
 	}

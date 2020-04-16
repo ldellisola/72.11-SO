@@ -26,6 +26,14 @@ extern void read(int fd, void * first, void *second, void * third, void * forth)
 
 extern void delete(int fd, void * first, void *second, void * third, void * forth);
 
+extern 	int sbrk_asm(int increment, void ** resp);
+
+extern int brk_asm(void * address, int* retValue);
+
+
+int brk(void * address);
+
+void * sbrk(int increment);
 
 
 #endif

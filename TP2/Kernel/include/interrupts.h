@@ -23,6 +23,9 @@ void _irq83Handler(void * firstParam,void * secondParam,void * thirdParam,void *
 
 
 void _irq85Handler(void * ptr, void * timeid);
+void _irq86Handler(void * increment, void* buffer);
+void _irq87Handler(void * address , int * retValue);
+
 
 
 
