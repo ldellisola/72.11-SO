@@ -21,7 +21,7 @@ GLOBAL _irq83Handler
 GLOBAL _irq85Handler
 GLOBAL _irq86Handler
 GLOBAL _irq87Handler
-
+GLOBAL _irq88Handler
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
@@ -195,6 +195,9 @@ _irq86Handler:
 _irq87Handler:
 	irqHandlerMaster 87h
 
+;mem_state
+_irq88Handler:
+	irqHandlerMaster 88h
 
 ;USB
 _irq05Handler:

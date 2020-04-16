@@ -1,6 +1,6 @@
 GLOBAL infoReg
 GLOBAL __UD2__
-
+GLOBAL __MEM__
 
 EXTERN printRegisters
 

@@ -71,6 +71,17 @@ int invalidOpcode(){
     return 0;
 }
 
+int printMemoryState(){
+    void * first=NULL;
+    void * last=NULL;
+    void *next=NULL;
+
+    memory_state(&first,&last,&next);
+    printf("\n \n Memory starts at: 0x%x and finishes at : 0x%x\n",first,last);
+    printf("Proxima memoria libre: 0x%x\n",next);
+    return 0;
+}
+
 int printMem(uint64_t memDirection){
 
     char rawMem[32];
@@ -150,11 +161,14 @@ int malloc_test() {
     printf("TEST PIDE 100:");
     char * test = (char *) malloc(100);
     printf("Mi direccion es %x \n",test);
+    printMemoryState();
     printf("TEST 0 PIDE 10:");
     char * test0= (char *) malloc(10);
     printf("Mi direccion es %x \n",test0);
+    printMemoryState();
     printf("\nTEST LIBERA 100\n\n");
     free(test);
+    printMemoryState();
     printf("TEST PIDE 2\n");
     test = (char *) malloc(2);
     printf("Mi direccion es %x \n",test);
