@@ -1,15 +1,11 @@
 #include "include/Debugger.h"
 #include <deviceInfo.h>
 #include <Curses.h>
-#include "include/ConsoleDriver.h"
-#include "include/keyboard.h"
-#include "include/String.h"
-
 
 void ThrowCustomException(char * str){
     PrintExceptionDetails(str,0,0);
 
-    printfColor(0xFF0000,0xFFFFFF,"\n\n\nPress any key to continue");
+    printfColor("\n\n\nPress any key to continue",0xFF0000,0xFFFFFF);
 
 	do{
 		readKey();
@@ -22,13 +18,16 @@ void ThrowCustomException(char * str){
 #define RED 0xFF0000
 
 void PrintExceptionDetails(char * name, uint64_t * stackPointer, uint64_t * instructionPointer){
+
+
+	char temp[17]={'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0',0};
     
 	Registers reg;
     getRegisters(&reg,stackPointer,instructionPointer);
 
 
 
-	printfColor(WHITE,RED,name,reg.rip,"EXCEPTION: %s | IP: 0X%X\n");
+	printfColor("EXCEPTION: %s | IP: 0X%X\n",WHITE,RED,name,reg.rip);
 
 	printf("RAX: 0X%X | RBX: 0X%X | RCX: 0X%X | RDX: 0X%X\n",reg.rax,reg.rbx,reg.rcx,reg.rdx);
 
@@ -51,14 +50,14 @@ bool assertEqual(void * val1, void * val2){
         char temp2 [20];
 
         append("Values EQUAL:  ",temp,100);
-        IntToString(temp2,20,(uint64_t)val1);
+        IntToString(temp2,20,val1);
         
         append(temp2,temp,100);
         
         for(int i = 0 ; i < 20 ;i++)
             temp2[i] = 0;
         
-        IntToString(temp2,20,(uint64_t)val2);
+        IntToString(temp2,20,val2);
 
         append(" == ",temp,100);
 
@@ -78,14 +77,14 @@ bool assertNotEqual(void * val1, void * val2){
         char temp2 [20];
 
         append("Values NOT EQUAL:  ",temp,75);
-        IntToString(temp2,20,(uint64_t) val1);
+        IntToString(temp2,20,val1);
         
         append(temp2,temp,100);
         
         for(int i = 0 ; i < 20 ;i++)
             temp2[i] = 0;
         
-        IntToString(temp2,20,(uint64_t)val2);
+        IntToString(temp2,20,val2);
 
         append(" != ",temp,100);
 

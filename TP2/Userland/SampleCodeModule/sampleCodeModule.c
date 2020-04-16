@@ -5,9 +5,11 @@
 
 #include "include/Terminal.h"
 #include "../Include/Curses.h"
+#include "include/Game.h"
+#include "include/gamePrinter.h"
 #include <stdlib.h>
 #include "../Include/deviceInfo.h"
-/*void menu(){
+void menu(){
 	unsigned int init;
 	unsigned int aux;
 	unsigned int charHeight;
@@ -90,21 +92,5 @@ int main() {
 	int y=50;
 	printfColorAt("BYE!",0xFF44FF,0x00,position,y);
 	return 0xDEA;
-}*/
-
-
-int main() {
-	clearConsole();
-	printf("HI! Ask \"man\" for a command menu\n");
-	runTerminal();
-	clearConsole();
-
-	unsigned int init=0;
-	getBpp(&init);
-	setSize(6*init);
-	
-	int position=70;
-	int y=50;
-	printfColorAt(0xFF44FF,0x00,position,y,"Bye!");
-	return 0xDEA;
 }
+
