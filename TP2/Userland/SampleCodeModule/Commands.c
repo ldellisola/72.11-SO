@@ -158,30 +158,37 @@ int time(){
 }
 
 int malloc_test() {
+
+    printMemoryState();
     printf("TEST PIDE 100:");
     char * test = (char *) malloc(100);
     printf("Mi direccion es %x \n",test);
     printMemoryState();
-    printf("TEST 0 PIDE 10:");
+    
+    printf("\nTEST 0 PIDE 10:");
     char * test0= (char *) malloc(10);
     printf("Mi direccion es %x \n",test0);
     printMemoryState();
-    printf("\nTEST LIBERA 100\n\n");
+    printf("\nTEST LIBERA 100\n");
     free(test);
     printMemoryState();
-    printf("TEST PIDE 2\n");
+    printf("\nTEST PIDE 2\n");
     test = (char *) malloc(2);
     printf("Mi direccion es %x \n",test);
-    printf("TEST 1 PIDE 5:");
+    printMemoryState();
+    printf("\nTEST 1 PIDE 5:");
     char * test1 = (char *) malloc(5);
     printf("Mi direccion es %x \n",test1);
-    printf("\nTEST LIBERA 2\n\n");
-    printf("\nTEST 1 LIBERA 5\n\n");    
+    printMemoryState();
+    printf("\nTEST LIBERA 2\n");
+    printf("\nTEST 1 LIBERA 5\n");    
     free(test);
     free(test1);
-    printf("TEST 2 PIDE 10:");
+    printMemoryState();
+    printf("\nTEST 2 PIDE 10:");
     char * test2= (char *) malloc(10);
     printf("Mi direccion es %x \n",test2);
+    printMemoryState();
     free(test);
     free(test1);
     free(test2);
