@@ -3,7 +3,6 @@
 #include "../Include/Curses.h"
 #include "include/Commands.h"
 #include "../Include/String.h"
-#include "include/Game.h"
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -110,10 +109,6 @@ int interpretCommand(){
         return 0;
         }
         printMem(a);
-    }
-    else if(strcmp(command,"game") && !hasParam1 && !hasParam2){
-        clearConsole();
-        return 2;
     }
     else if(strcmp(command,"exit") && !hasParam1 && !hasParam2)
         return 1;

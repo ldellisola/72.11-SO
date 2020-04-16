@@ -2,14 +2,15 @@
 #include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
-#include <idtLoader.h>
 #include <Curses.h>
 #include <VideoDriver.h>
 #include <font.h>
 #include <keyboard.h>
 #include <Debugger.h>
 
-#include <Curses.h>
+#include <ConsoleDriver.h>
+#include <font.h>
+
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -42,7 +43,8 @@ void * getStackBase()
 
 void * initializeKernelBinary()
 {
-	char buffer[10];
+	// Lo saque yo por que me tiraba warning, ni idea que hace pero parece que no lo llama
+	//char buffer[10];
 
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
@@ -56,11 +58,12 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
-#include <ConsoleDriver.h>
-#include <font.h>
+
+#include <idtLoader.h>
 
 int main()
 {	
+	// No se que no reconoce a esa basura en el warning
 	load_idt();
 	startVideoDriver();
 	initializeConsoleDriver(CHAR_HEIGHT,CHAR_WIDTH, SCREEN_HEIGHT,SCREEN_WIDTH); 

@@ -1,5 +1,4 @@
 #include <stdarg.h>
-#include <stdbool.h>
 #include "../Include/String.h"
 #include <stdarg.h>
 
@@ -123,7 +122,7 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 		p2--;
 	}
 
-	return digits;
+	//return digits;
 	
 }
 
@@ -158,7 +157,7 @@ int strcmp(char * s1,char * s2){
     return 0; 
 }
 
-void formatString(char * string, int size,char format,...){
+void formatString(char * string, int size,char * format,...){
 	va_list args;
 	va_start(args,format);
 	snprintf(string,size,format,args);
@@ -264,4 +263,20 @@ int stringToHexa(char *buff){
 		aux=aux*16+c;
 	}
 	return aux;
+}
+
+
+
+int countCharacterRepetitions(const char * str, char ch){
+
+    int counter = 0;
+    for(int i = 0; str[i] != 0 ; i++ ){
+        
+        counter += str[i] == ch ;
+
+        if(i > 0 && str[i-1] == '\\' && str[i] == ch )
+            counter--;
+    }
+
+    return counter;
 }
