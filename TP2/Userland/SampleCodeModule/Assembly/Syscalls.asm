@@ -3,6 +3,7 @@ GLOBAL write
 GLOBAL delete
 GLOBAL sbrk_asm
 GLOBAL brk_asm
+GLOBAL memory_state
 
 section .text:
 
@@ -78,6 +79,21 @@ write:
         mov rbx, rsi    ;primer arg
         mov rax, rdi    ; fd        
         int 87h
+
+        leave
+        ret
+
+memory_state:
+        enter 0,0
+
+        mov r15, rdx    ; guardo el valor
+
+        mov r9, r8      ;cuarto arg
+        mov rdx, rcx    ;tercer arg
+        mov rcx, r15    ;segundo arg
+        mov rbx, rsi    ;primer arg
+        mov rax, rdi    ; fd        
+        int 88h
 
         leave
         ret

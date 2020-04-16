@@ -124,6 +124,9 @@ int interpretCommand(){
     else if (strcmp(command,"malloctest")) {
         malloc_test();
     }
+    else if (strcmp(command,"mem")) {
+        printMemoryState();
+    }
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    
     

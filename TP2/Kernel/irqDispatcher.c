@@ -36,7 +36,7 @@ void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdPara
 void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchSbrk(int increment, void ** buffer);
-
+void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
 
 static void int_20();
 static void int_21();
@@ -67,7 +67,14 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 			dispatchSbrk(firstParam, secondParam);
 			break;
 		}
-		case 0x87: dispatchBRK(firstParam, (int*)secondParam);
+		case 0x87:{ 
+			dispatchBRK(firstParam, (int*)secondParam);
+			break;
+			}
+		case 0x88:{ 
+			dispatchMemState(firstParam, secondParam,thirdParam);
+			break;
+			}	
 	}
 }
 
@@ -91,6 +98,9 @@ void dispatchBRK(void * ptr,int * retValue){
 	*retValue = brk_handler(ptr);
 }
 
+void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam){
+	mem_state(firstParam,secondParam,thirdParam);
+}
 
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 

@@ -36,6 +36,7 @@ extern 	int sbrk_asm(int increment, void ** resp);
 
 extern int brk_asm(void * address, int* retValue);
 
+extern void memory_state(void ** first, void ** last, void ** next);
 
 int brk(void * address);
 
