@@ -44,5 +44,9 @@ int brk_handler( void * addr){
 void mem_state(void ** firstParam,void ** secondParam,void ** thirdParam){
         *firstParam=sampleDataModuleAddress;
         *secondParam=maxAddress;
+        if(topAddress!=NULL)
         *thirdParam=topAddress;
+        else
+        *thirdParam=sampleDataModuleAddress;
+        
 }
