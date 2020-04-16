@@ -5,6 +5,7 @@
 #ifndef ENABLE_BUDDY
 
 
+#include "../Include/Curses.h"
 typedef char ALIGN[16];
 
 union header {
@@ -65,10 +66,20 @@ header_t *get_free_block(size_t size)
 	while(curr) {
 		flag=1;
 		if (curr->s.is_free) {
-			if(curr->s.size >= size)
+			if(curr->s.size == size|| (curr->s.size>size && curr->s.size-sizeof(header_t)<size)){
 				return curr;
+			}
+			else if(curr->s.size > size){
+				header_t * new=(char *)(curr+1)+size;
+				new->s.size=(curr->s.size)-size-sizeof(header_t);
+				new->s.next=curr->s.next;
+				new->s.is_free=1;
+				curr->s.size=size;
+				curr->s.next=new;
+				return curr;
+			}	
 			else if((next=curr->s.next)!=NULL && next->s.is_free){
-				curr->s.size+=next->s.size;
+				curr->s.size+=next->s.size+sizeof(header_t);
 				curr->s.next=next->s.next;	
 				flag=0;
 			}
