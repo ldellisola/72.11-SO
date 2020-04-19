@@ -3,6 +3,7 @@
 #include "../Include/Curses.h"
 #include "include/Commands.h"
 #include "../Include/String.h"
+#include "../Include/Syscalls.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include "include/Exec.h"
@@ -130,6 +131,12 @@ int interpretCommand(){
     }
     else if(strcmp(command,"exec")){
         exec("try",0,malloc_test,0);
+    }
+        else if(strcmp(command,"kill") && hasParam1){
+        int pid=stringToInt(param1);    
+        kill_process(&pid);
+        if(pid==-1)
+            printf("No es un proceso %d, no esta permitida esa acción\n",pid);
     }
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    

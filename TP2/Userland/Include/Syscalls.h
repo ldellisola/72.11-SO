@@ -44,5 +44,6 @@ void * sbrk(int increment);
 
 extern void create_process(char * name,int * state,void * function);
 
+extern void kill_process(int * pid);
 
 #endif

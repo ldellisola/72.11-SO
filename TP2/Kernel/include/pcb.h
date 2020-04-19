@@ -22,5 +22,6 @@ typedef struct{
 }pcb;
 
 pcb * create(char * name, int * state, function * function);
-void * kill(pcb * process);
+
+int kill(int * pid);
 #endif

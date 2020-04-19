@@ -5,6 +5,7 @@ GLOBAL sbrk_asm
 GLOBAL brk_asm
 GLOBAL memory_state
 GLOBAL create_process
+GLOBAL kill_process
 
 section .text:
 
@@ -110,6 +111,21 @@ create_process:
         mov rbx, rsi    ;primer arg
         mov rax, rdi    ; fd        
         int 89h
+
+        leave
+        ret
+
+kill_process:
+        enter 0,0
+
+        mov r15, rdx    ; guardo el valor
+
+        mov r9, r8      ;cuarto arg
+        mov rdx, rcx    ;tercer arg
+        mov rcx, r15    ;segundo arg
+        mov rbx, rsi    ;primer arg
+        mov rax, rdi    ; fd        
+        int 90h
 
         leave
         ret

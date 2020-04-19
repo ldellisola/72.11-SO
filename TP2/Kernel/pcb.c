@@ -33,5 +33,17 @@ pcb * create(char * name, int * state, function * function){
     //pcbs[i].pb=??
     return &pcbs[i];
 }
+int kill(int * pid){
+    for(int i=0;i<CANT;i++){
+        if(pcbs[i].pid==*pid){
+            pcbs[i].state=KILL;            
+            //¿como libero memoria del stack? mm...
+            cant--;
+            return pcbs[i].priority;
+        }
+    }
+    *pid=-1;
+    return -1;
+}
 
     
