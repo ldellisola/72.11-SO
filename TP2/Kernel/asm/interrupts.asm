@@ -22,6 +22,7 @@ GLOBAL _irq85Handler
 GLOBAL _irq86Handler
 GLOBAL _irq87Handler
 GLOBAL _irq88Handler
+GLOBAL _irq89Handler
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
@@ -199,6 +200,9 @@ _irq87Handler:
 _irq88Handler:
 	irqHandlerMaster 88h
 
+;create_process
+_irq89Handler:
+	irqHandlerMaster 89h
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5

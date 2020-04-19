@@ -26,7 +26,7 @@ void _irq85Handler(void * ptr, void * timeid);
 void _irq86Handler(void * increment, void* buffer);
 void _irq87Handler(void * address , int * retValue);
 void _irq88Handler(void * address , int * retValue);
-
+void _irq89Handler(void * firstParam,void * secondParam,void * thirdParam);
 
 
 

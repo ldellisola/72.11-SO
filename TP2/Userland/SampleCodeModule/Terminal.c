@@ -5,6 +5,7 @@
 #include "../Include/String.h"
 #include <stdlib.h>
 #include <stdbool.h>
+#include "include/Exec.h"
 
 
 /***************************************************************/
@@ -126,6 +127,9 @@ int interpretCommand(){
     }
     else if (strcmp(command,"mem")) {
         printMemoryState();
+    }
+    else if(strcmp(command,"exec")){
+        exec("try",0,malloc_test,0);
     }
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    

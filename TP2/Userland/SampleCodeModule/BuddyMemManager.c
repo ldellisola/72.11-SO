@@ -41,7 +41,7 @@
  * heaps will have multiple allocations, so the real maximum allocation limit
  * is at most 1gb.
  */
-#define MAX_ALLOC_LOG2 31
+#define MAX_ALLOC_LOG2 18
 #define MAX_ALLOC ((size_t)1 << MAX_ALLOC_LOG2)
 
 /*

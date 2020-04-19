@@ -42,5 +42,7 @@ int brk(void * address);
 
 void * sbrk(int increment);
 
+extern void create_process(char * name,int * state,void * function);
+
 
 #endif

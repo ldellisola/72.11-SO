@@ -12,7 +12,8 @@
 #include <VideoDriver.h>
 #include <ConsoleDriver.h>
 #include <sbrk.h>
-
+#include <pcb.h>
+#include <Scheduler.h>
 
 
 #define FD_STDOUT 				(0x01)
@@ -37,6 +38,7 @@ void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdPar
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchSbrk(int increment, void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
+void dispatchCreateProcess(char * firstParam, int * secondParam,function * thirdParam);
 
 static void int_20();
 static void int_21();
@@ -74,7 +76,11 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 		case 0x88:{ 
 			dispatchMemState(firstParam, secondParam,thirdParam);
 			break;
-			}	
+			}
+		case 0x89:{ 
+			dispatchCreateProcess(firstParam, secondParam,thirdParam);
+			break;
+			}		
 	}
 }
 
@@ -100,6 +106,10 @@ void dispatchBRK(void * ptr,int * retValue){
 
 void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam){
 	mem_state(firstParam,secondParam,thirdParam);
+}
+
+void dispatchCreateProcess(char * firstParam, int * secondParam,function * thirdParam){
+	createProcess(firstParam,secondParam,thirdParam);
 }
 
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){

@@ -61,7 +61,7 @@ int explainCommand(char * command){
     }else{
         printf("That command does not exist!\n");
     }
-
+    return 0;
 }
 
 int invalidOpcode(){

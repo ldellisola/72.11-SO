@@ -1,7 +1,6 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include "../Include/String.h"
-#include <stdarg.h>
 
 int strlen(char * str){
     int i = 0;
