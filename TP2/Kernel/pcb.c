@@ -3,22 +3,23 @@
 #include "include/Curses.h"
 #include "include/String.h"
 
-#define CANT 20
+#define MAX 20
 #define STACK 10000
 #define NULL 0
-static int pid=0;
+static int pid=1;
 
-pcb pcbs[CANT];
+pcb pcbs[MAX];
 int cant=0;
 
 pcb * create(char * name, int * state, function * function){
-    if(cant==CANT){
+    if(cant==MAX){
         *state=-1;
         return NULL;
     }
 
     int i;
-    for(i=0;i<CANT && pcbs[i].state!=KILL;i++);
+    cant++;
+    for(i=0;i<MAX && pcbs[i].state!=KILL;i++);
     CopyString(name,pcbs[i].name,strlen(name));
     pcbs[i].pid=pid++;
     pcbs[i].priority=1;
@@ -33,14 +34,17 @@ pcb * create(char * name, int * state, function * function){
     //pcbs[i].pb=??
     return &pcbs[i];
 }
+
 int kill(int * pid){
-    for(int i=0;i<CANT;i++){
-        if(pcbs[i].pid==*pid){
+    if(*pid!=0){
+    for(int i=0;i<MAX;i++){
+        if(pcbs[i].pid==*pid && pcbs[i].state!=KILL){
             pcbs[i].state=KILL;            
             //¿como libero memoria del stack? mm...
             cant--;
             return pcbs[i].priority;
         }
+    }
     }
     *pid=-1;
     return -1;

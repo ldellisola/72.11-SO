@@ -21,10 +21,12 @@ void createProcess(char * name, int * state, function * function){
         sbrk_handler(sizeof(process),&priorities[1].first);
         priorities[1].last=priorities[1].first;
         priorities[1].first->pcb=new;
+        priorities[1].first->next=priorities[1].first;
+        priorities[1].first->prev=priorities[1].first;
     }
     
     else{
-        sbrk_handler(sizeof(process),priorities[1].last);
+        sbrk_handler(sizeof(process),&priorities[1].last);
         
         priorities[1].last->prev=priorities[1].first->prev->next;
         priorities[1].last->next=priorities[1].first;
@@ -45,7 +47,6 @@ void killProcess(int * pid){
 
         priorities[pr].cant--;
         process * process=priorities[pr].first;
-
         if(priorities[pr].cant==0){
             priorities[pr].first=NULL;
             priorities[pr].last=NULL;
@@ -56,6 +57,7 @@ void killProcess(int * pid){
         while(process->pcb->pid!=*pid){
             process=process->next;
         }
+
         process->prev->next=process->next;
         process->next->prev=process->prev;
         //free process

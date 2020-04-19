@@ -136,7 +136,7 @@ int interpretCommand(){
         int pid=stringToInt(param1);    
         kill_process(&pid);
         if(pid==-1)
-            printf("No es un proceso %d, no esta permitida esa acción\n",pid);
+            printf("No es un proceso %s, no esta permitida esa accion\n",param1);
     }
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    
