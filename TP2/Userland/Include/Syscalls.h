@@ -51,4 +51,8 @@ extern void nice_process(int * pid,int prior);
 extern void block_process(int * pid);
 
 extern void ps();
+
+extern void get_pid(int * ret);
+
+int getpid();
 #endif

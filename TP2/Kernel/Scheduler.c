@@ -99,3 +99,7 @@ void deleteQueue(int * pid, int pr,process ** process){
         (*process)->prev->next=(*process)->next;
         (*process)->next->prev=(*process)->prev;
 }
+
+int getpid(){
+    return curr->pcb->pid;
+}

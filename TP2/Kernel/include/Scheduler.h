@@ -23,4 +23,6 @@ void blockProcess(int * pid);
 
 void niceProcess(int * pid, int priority);
 
+int getpid();
+
 #endif

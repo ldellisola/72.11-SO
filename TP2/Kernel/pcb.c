@@ -13,9 +13,9 @@ int cant=0;
 
 int findProcess(int pid);
 
-pcb * create(char * name, int * state, function * function){
+pcb * create(char * name, int * status, function * function){
     if(cant==MAX){
-        *state=-1;
+        *status=-1;
         return NULL;
     }
 
@@ -30,7 +30,7 @@ pcb * create(char * name, int * state, function * function){
     
     pcbs[i].stack=stack;
     pcbs[i].state=READY;
-    pcbs[i].status=*state;
+    pcbs[i].status=*status;
     //pcbs[i].registers=getRegisters(&pcbs[i].registers??,stack,??);
     //pcbs[i].pb=??
     return &pcbs[i];

@@ -7,8 +7,8 @@
 
 
 
-int exec(char * name, int state, int ** func,int argc,...){
-    int bridge=state;
+int exec(char * name, int status, int ** func,int argc,...){
+    int bridge=status;
      char * args[argc];
 
     if(argc!=0){

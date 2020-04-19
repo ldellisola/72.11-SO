@@ -9,6 +9,7 @@ GLOBAL kill_process
 GLOBAL block_process
 GLOBAL nice_process
 GLOBAL ps
+GLOBAL get_pid
 
 section .text:
 
@@ -176,3 +177,18 @@ ps:
 
         leave
         ret        
+
+get_pid:
+        enter 0,0
+
+        mov r15, rdx    ; guardo el valor
+
+        mov r9, r8      ;cuarto arg
+        mov rdx, rcx    ;tercer arg
+        mov rcx, r15    ;segundo arg
+        mov rbx, rsi    ;primer arg
+        mov rax, rdi    ; fd        
+        int 94h
+
+        leave
+        ret

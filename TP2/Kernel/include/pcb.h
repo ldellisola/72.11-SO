@@ -2,6 +2,8 @@
 #define PCB_H
 #include "deviceInfo.h"
 
+#define MAX_NAME 50
+
 
 typedef struct{
     int (*function)();
@@ -9,19 +11,20 @@ typedef struct{
     char ** args;
 }function;
 typedef enum {KILL,READY,BLOCK}State;
+typedef enum {FOREGROUND,BACKGROUND}Status;
 
 typedef struct{
-    char * name;
+    char name[MAX_NAME];
     int pid;
     int priority;
     void * stack;
     void * bp; //base pointer
-    int status; //foreground  background
+    Status status; //foreground  background
     Registers registers;
     State state; 
 }pcb;
 
-pcb * create(char * name, int * state, function * function);
+pcb * create(char * name, int * status, function * function);
 
 int kill(int * pid);
 

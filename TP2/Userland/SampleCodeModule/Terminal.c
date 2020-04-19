@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "include/Exec.h"
+#include "include/Process.h"
+
 
 
 /***************************************************************/
@@ -131,7 +133,16 @@ int interpretCommand(){
         printMemoryState();
     }
     else if(strcmp(command,"exec")){
-        exec("try",0,malloc_test,0);
+        int status=0;
+        if(hasParam1 && strcmp(param1,"&"))
+            status=1;
+        exec("try",status,malloc_test,0);
+    }
+        else if(strcmp(command,"loop")){
+        int status=0;
+        if(hasParam1 && strcmp(param1,"&"))
+            status=1;
+        exec(command,status,loop,0);
     }
         else if(strcmp(command,"kill") && hasParam1){
         int pid=stringToInt(param1);    

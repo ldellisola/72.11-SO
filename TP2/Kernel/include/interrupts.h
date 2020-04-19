@@ -31,6 +31,7 @@ void _irq90Handler(int * firstParam);
 void _irq91Handler(int * firstParam,int secondParam);
 void _irq92Handler(int * firstParam);
 void _irq93Handler(int * firstParam);
+void _irq94Handler(int * firstParam);
 
 void _exception0Handler(void);
 void _exception6Handler(void);

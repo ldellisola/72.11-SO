@@ -15,3 +15,9 @@ int brk(void * ptr){
     brk_asm(ptr,&ret);
     return ret;
 }
+
+int getpid(){
+	int ret;
+	get_pid(&ret);
+	return ret;
+}

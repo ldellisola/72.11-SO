@@ -43,6 +43,7 @@ void dispatchKillProcess(int * firstParam);
 void dispatchBlockProcess(int * firstParam);
 void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
+void dispatchGetPid(int * ret);
 
 static void int_20();
 static void int_21();
@@ -101,6 +102,10 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 			dispatchPs();
 			break;
 			}					
+		case 0x94:{ 
+			dispatchGetPid(firstParam);
+			break;
+			}
 	}
 }
 
@@ -144,6 +149,10 @@ void dispatchNiceProcess(int * firstParam,int secondParam){
 }
 void dispatchPs(){
 	ps();
+}
+
+void dispatchGetPid(int * ret){
+	*ret=getpid();
 }
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 
