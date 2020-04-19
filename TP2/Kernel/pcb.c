@@ -1,5 +1,5 @@
 #include "include/pcb.h"
-#include "include/sbrk.h"
+#include "include/MemManager.h"
 #include "include/Curses.h"
 #include "include/String.h"
 
@@ -10,6 +10,8 @@ static int pid=1;
 
 pcb pcbs[MAX];
 int cant=0;
+
+int findProcess(int pid);
 
 pcb * create(char * name, int * state, function * function){
     if(cant==MAX){
@@ -24,8 +26,7 @@ pcb * create(char * name, int * state, function * function){
     pcbs[i].pid=pid++;
     pcbs[i].priority=1;
 
-    void * stack;
-    sbrk_handler(10000,&stack);
+    void * stack=malloc(10000);
     
     pcbs[i].stack=stack;
     pcbs[i].state=READY;
@@ -36,18 +37,59 @@ pcb * create(char * name, int * state, function * function){
 }
 
 int kill(int * pid){
-    if(*pid!=0){
-    for(int i=0;i<MAX;i++){
-        if(pcbs[i].pid==*pid && pcbs[i].state!=KILL){
-            pcbs[i].state=KILL;            
-            //¿como libero memoria del stack? mm...
-            cant--;
-            return pcbs[i].priority;
-        }
+    int i=findProcess(*pid);
+    if(i!=-1){
+        pcbs[i].state=KILL;
+        free(pcbs[i].stack);
+        return pcbs[i].priority;
     }
+    *pid=-1;
+    return -1;
+}
+int nice(int * pid, int pr){
+    int i=findProcess(*pid);
+    if(i!=-1){
+        int prevpr=pcbs[i].priority;
+        pcbs[i].priority=pr;
+        return prevpr;
     }
     *pid=-1;
     return -1;
 }
 
+void block(int * pid){
+    int i=findProcess(*pid);
+    if(i!=-1){
+     if(pcbs[i].state==READY)   
+           pcbs[i].state=BLOCK;
+      else
+        pcbs[i].state=READY;
+    }else 
+        *pid=-1;
+}
+
+int findProcess(int pid){
+    int i;
+    
+    if(pid!=0)
+        for(i=0;i<MAX && pcbs[i].pid!=pid;i++);
+    
+    if(pid==0||i==MAX||pcbs[i].state==KILL)
+        return -1;
+
+    return i;
+}
+
+void ps(){
+    printf("nombre  pid prioridad stack  bp  status registros estado\n");
+    for(int i=0;i<MAX;i++){
+        if(pcbs[i].state!=KILL){
+        printf("%s      %d     %d       --    --     %d     --      ",pcbs[i].name,pcbs[i].pid,pcbs[i].priority,pcbs[i].status);
+            if(pcbs[i].state==READY)
+                printf("ready\n");
+            else 
+                printf("block\n");            
+        }
+    }
+}
     

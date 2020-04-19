@@ -28,7 +28,9 @@ void _irq87Handler(void * address , int * retValue);
 void _irq88Handler(void * address , int * retValue);
 void _irq89Handler(void * firstParam,void * secondParam,void * thirdParam);
 void _irq90Handler(int * firstParam);
-
+void _irq91Handler(int * firstParam,int secondParam);
+void _irq92Handler(int * firstParam);
+void _irq93Handler(int * firstParam);
 
 void _exception0Handler(void);
 void _exception6Handler(void);

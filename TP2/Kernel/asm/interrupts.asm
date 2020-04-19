@@ -24,6 +24,9 @@ GLOBAL _irq87Handler
 GLOBAL _irq88Handler
 GLOBAL _irq89Handler
 GLOBAL _irq90Handler
+GLOBAL _irq91Handler
+GLOBAL _irq92Handler
+GLOBAL _irq93Handler
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
@@ -208,6 +211,19 @@ _irq89Handler:
 ;kill_process
 _irq90Handler:
 	irqHandlerMaster 90h	
+
+;nice_process
+_irq91Handler:
+	irqHandlerMaster 91h	
+
+;block_process
+_irq92Handler:
+	irqHandlerMaster 92h	
+
+;ps
+_irq93Handler:
+	irqHandlerMaster 93h	
+
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5

@@ -24,4 +24,10 @@ typedef struct{
 pcb * create(char * name, int * state, function * function);
 
 int kill(int * pid);
+
+void block (int *pid);
+
+int nice(int * pid, int pr);
+
+void ps();
 #endif

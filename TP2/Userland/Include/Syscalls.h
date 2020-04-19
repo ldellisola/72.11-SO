@@ -46,4 +46,9 @@ extern void create_process(char * name,int * state,void * function);
 
 extern void kill_process(int * pid);
 
+extern void nice_process(int * pid,int prior);
+
+extern void block_process(int * pid);
+
+extern void ps();
 #endif

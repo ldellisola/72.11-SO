@@ -13,7 +13,14 @@ typedef struct Priority{
     process * last;
 } Priority;
 
+void roundRobin();
+
 void createProcess(char * name, int * state, function * function);
 
 void killProcess(int * pid);
+
+void blockProcess(int * pid);
+
+void niceProcess(int * pid, int priority);
+
 #endif

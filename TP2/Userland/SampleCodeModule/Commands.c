@@ -19,8 +19,8 @@ int quotient(int a, int b){
     return 0;
 }
 
-int man(){
-    printf("\nmalloctest\nexit\ntime\nman\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\n");
+int help(){
+    printf("\nmalloctest\ntime\nhelp\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\nblocl\nkill\nnice\nloop\nmem\n\nexit");
     return 0;
 }
 
@@ -30,8 +30,8 @@ int explainCommand(char * command){
         printf("Command:\n        time\n");
         printf("It shows the current date and time.\n");
     }
-    else if(strcmp(command,"man")){
-        printf("Command:\n        man ?[Argument_1]\n");
+    else if(strcmp(command,"help")){
+        printf("Command:\n        help ?[Argument_1]\n");
         printf("It enumerates all the commands available on this shell\n");
         printf("If there's an argument, it will tell you the funcition of that command\n");
     }

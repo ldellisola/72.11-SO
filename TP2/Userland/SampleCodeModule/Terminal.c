@@ -98,9 +98,9 @@ int interpretCommand(){
     }
     if(strcmp(command,"time") && !hasParam1 && !hasParam2)
         time();
-    else if(strcmp(command,"man") && !hasParam1 && !hasParam2)
-        man();
-    else if(strcmp(command,"man") && hasParam1 && !hasParam2)
+    else if(strcmp(command,"help") && !hasParam1 && !hasParam2)
+        help();
+    else if(strcmp(command,"help") && hasParam1 && !hasParam2)
         explainCommand(param1);
     else if(strcmp(command,"infoReg") && !hasParam1 && !hasParam2)
         infoReg();
@@ -113,6 +113,7 @@ int interpretCommand(){
         printMem(a);
     }
     else if(strcmp(command,"exit") && !hasParam1 && !hasParam2)
+        //kill_process(0);
         return 1;
     else if(strcmp(command,"invalidOpcode") && !hasParam1 && !hasParam2){
         invalidOpcode();
@@ -138,6 +139,26 @@ int interpretCommand(){
         if(pid==-1)
             printf("No es un proceso %s, no esta permitida esa accion\n",param1);
     }
+       else if(strcmp(command,"nice") && hasParam1 && hasParam2){
+        int pid=stringToInt(param1);   
+        int prior=stringToInt(param2); 
+        if(prior<0 || prior>2)
+            printf("No es una prioridad aceptada, seleccione 0-1-2\n");
+        else 
+           nice_process(&pid,prior);
+        if(pid==-1)
+            printf("No es un proceso %s, no esta permitida esa accion\n",param1);
+    }
+       else if(strcmp(command,"block") && hasParam1){
+       int pid=stringToInt(param1);    
+       block_process(&pid);
+        if(pid==-1)
+            printf("No es un proceso %s, no esta permitida esa accion\n",param1);
+    }
+     else if (strcmp(command,"ps")) {
+        ps();
+    }
+
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    
     

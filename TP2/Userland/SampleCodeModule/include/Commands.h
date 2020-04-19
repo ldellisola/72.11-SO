@@ -16,7 +16,7 @@ int quotient(int a, int b);
 
 int invalidOpcode();
 
-int man();
+int help();
 
 int explainCommand(char * command);
 
