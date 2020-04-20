@@ -6,7 +6,7 @@
 #define MAX 20
 #define STACK 10000
 #define NULL 0
-static int pid=1;
+static int pid=0;
 
 pcb pcbs[MAX];
 int cant=0;
@@ -36,25 +36,23 @@ pcb * create(char * name, int * status, function * function){
     return &pcbs[i];
 }
 
-int kill(int * pid){
+void kill(int * pid){
     int i=findProcess(*pid);
     if(i!=-1){
         pcbs[i].state=KILL;
         free(pcbs[i].stack);
-        return pcbs[i].priority;
+        return;
     }
     *pid=-1;
-    return -1;
 }
-int nice(int * pid, int pr){
+
+void nice(int * pid, int pr){
     int i=findProcess(*pid);
     if(i!=-1){
-        int prevpr=pcbs[i].priority;
         pcbs[i].priority=pr;
-        return prevpr;
+        return;
     }
     *pid=-1;
-    return -1;
 }
 
 void block(int * pid){
