@@ -23,6 +23,10 @@ void roundRobin(){
     }
 }
 
+process * GetCurrentProcess(){
+    return curr;
+}
+
 void * createProcess(char * name, int * state, function_t * function){
     
     DEBUG("Creando proceso: %s",name)
@@ -59,7 +63,8 @@ void niceProcess(int * pid, int priority){
 }
     
 void insertQueue(process * procs){
-        priority.last=procs;
+    
+    priority.last=procs;
     if(priority.first==NULL){
         
         priority.first=priority.last;

@@ -14,6 +14,7 @@
 #include <sbrk.h>
 #include <pcb.h>
 #include <Scheduler.h>
+#include <stdlib.h>
 
 
 #define FD_STDOUT 				(0x01)
@@ -45,7 +46,7 @@ void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
 void dispatchGetPid(int * ret);
 
-static void int_20();
+static void * int_20(uint64_t * currentSP);
 static void int_21();
 
 
@@ -54,9 +55,13 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 
 
 	switch (irq) {
-		case 0:
-			int_20();
+		case 0:{
+			 
+			DEBUG("%s","Timer tick Interrupt")
+			//void * po =  int_20(firstParam);
+			return NULL;
 			break;
+		}
 		case 1:
 			int_21();
 			break;
@@ -114,8 +119,38 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 	return 0;
 }
 
-void int_20() {
-	timer_handler();
+
+void * int_20(uint64_t * currentSP) {
+	
+
+	DEBUG("Current SP: 0x%d",currentSP)
+
+
+	process * p = GetCurrentProcess();
+
+	if(p != NULL){
+		p->pcb->sp = currentSP;
+	}
+	
+
+	DEBUG("%s","Buscando nuevo proceso")
+	roundRobin();
+
+	p = GetCurrentProcess();
+
+	if(p != NULL){
+		DEBUG("New SP: 0x%d",currentSP)
+
+		return p->pcb->sp;
+	}
+	else
+	{
+		return NULL;
+	}
+	
+
+
+	DEBUG("New SP: 0x%d",currentSP)
 }
 
 void int_21(){
