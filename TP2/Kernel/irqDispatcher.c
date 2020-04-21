@@ -38,7 +38,7 @@ void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdPar
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchSbrk(int increment, void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
-void dispatchCreateProcess(char * firstParam, int * secondParam,function * thirdParam);
+void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
 void dispatchKillProcess(int * firstParam);
 void dispatchBlockProcess(int * firstParam);
 void dispatchNiceProcess(int * firstParam,int secondParam);
@@ -83,6 +83,7 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 			break;
 			}
 		case 0x89:{ 
+			DEBUG("%s","LLego syscall CREATE Process")
 			dispatchCreateProcess(firstParam, secondParam,thirdParam);
 			break;
 			}
@@ -133,7 +134,7 @@ void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam)
 	mem_state(firstParam,secondParam,thirdParam);
 }
 
-void dispatchCreateProcess(char * firstParam, int * secondParam,function * thirdParam){
+void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
 	createProcess(firstParam,secondParam,thirdParam);
 }
 void dispatchKillProcess(int * firstParam){

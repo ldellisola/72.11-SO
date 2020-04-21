@@ -3,6 +3,7 @@
 
 #include <stdarg.h>
 
+#define DEBUG(mod,val) printfColor("KERNEL - DEBUG - "#mod,0xFF3300,0,val); putCharColor('\n',0xFF3300,0);
 
 
 

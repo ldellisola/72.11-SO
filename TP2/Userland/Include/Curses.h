@@ -4,7 +4,6 @@
 #include <stdarg.h>
 
 
-
 void clearConsole();
 
 void RemoveLastCharFromDisplay();
@@ -18,6 +17,9 @@ void putChar(char ch);
 int readKey();
 
 void printfColorAt(const char * format,int fontColor, int backgroundColor,int x,int y,...);
+
+#define DEBUG(mod,val) printfError("USER - DEBUG - "#mod,val); putChar('\n');
+
 
 #endif
 

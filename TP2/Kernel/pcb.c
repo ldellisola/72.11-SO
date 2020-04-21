@@ -13,7 +13,7 @@ int cant=0;
 
 int findProcess(int pid);
 
-pcb * create(char * name, int * status, function * function){
+pcb * create(char * name, int * status, function_t * function){
     if(cant==MAX){
         *status=-1;
         return NULL;
@@ -26,13 +26,52 @@ pcb * create(char * name, int * status, function * function){
     pcbs[i].pid=pid++;
     pcbs[i].priority=1;
 
-    void * stack=malloc(10000);
+    uint64_t * stack=malloc(10000);
+
+    for(int i = 10000-1 ; i >=0 ;i--){
+        stack[i]=10000-1 - i;
+    }
     
     pcbs[i].stack=stack;
     pcbs[i].state=READY;
     pcbs[i].status=*status;
-    //pcbs[i].registers=getRegisters(&pcbs[i].registers??,stack,??);
-    //pcbs[i].pb=??
+
+    // Set up stack
+
+    pcb * proc = &pcbs[i];
+
+    proc->sp = stack + 10000 - 1;
+
+    *(proc->sp--) = function->function; //rip
+
+    *(proc->sp--) = 0x8;// CS
+
+    *(proc->sp--) = 0x202; // flags
+
+    proc->bp = proc->sp + 3;
+    *(proc->sp--) = proc->sp + 3;// pongo el sp al tope del stack?? PREGUNTAR
+    
+    *(proc->sp--) = 0; //ss
+
+    *(proc->sp--) = 0; //rax
+    *(proc->sp--) = 0; //rbx
+    *(proc->sp--) = 0; //rcx
+    *(proc->sp--) = 0; //rdx
+    *(proc->sp--) = proc->bp; //rbp
+    *(proc->sp--) = function->argc; //rdi
+    *(proc->sp--) = function->args; // rsi
+    *(proc->sp--) = 0; //r8
+    *(proc->sp--) = 0; //r9
+    *(proc->sp--) = 0; //r10
+    *(proc->sp--) = 0; //r11
+    *(proc->sp--) = 0; //r12
+    *(proc->sp--) = 0; //r13
+    *(proc->sp--) = 0; //r14
+    *(proc->sp--) = 0; //r15
+
+
+
+
     return &pcbs[i];
 }
 

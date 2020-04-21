@@ -2,7 +2,7 @@
 #include "../Include/Time.h"
 #include "../Include/String.h"
 #include "../Include/Syscalls.h"
-
+#include "include/Exec.h"
 #include "include/Terminal.h"
 #include "../Include/Curses.h"
 #include <stdlib.h>
@@ -38,18 +38,20 @@ static int selector = -1;
 
 int main() {
 	//iría exec("terminal",0,runTerminal,0);
-	printf("HI! Ask \"help\" for a command menu\n");
-	runTerminal();
+	// printf("HI! Ask \"help\" for a command menu\n");
+	// runTerminal();
+	DEBUG("%s","Por correr terminal")
+	exec("terminal",0,runTerminal,0);
+	DEBUG("%s","Saliendo de terminal")
+	// clearConsole();
 
-	clearConsole();
-
-	unsigned int init;
-	getBpp(&init);
-	setSize(6*init);
+	// unsigned int init;
+	// getBpp(&init);
+	// setSize(6*init);
 	
-	int position=70;
-	int y=50;
-	printfColorAt("BYE!",0xFF44FF,0x00,position,y);
+	// int position=70;
+	// int y=50;
+	// printfColorAt("BYE!",0xFF44FF,0x00,position,y);
 	return 0xDEA;
 }
 

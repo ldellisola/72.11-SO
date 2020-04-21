@@ -1,6 +1,7 @@
-#include <stdio.h>
+// #include <stdio.h>/
 #include "include/Scheduler.h"
 #include "include/MemManager.h"
+#include "include/Curses.h"
 
 #define quantum 20/1000
 #define INIT_QUEUE 1
@@ -12,7 +13,7 @@ int currPr=0;
 void insertQueue(process * process);
 void deleteQueue(int * pid,process ** process);
 
-void RoundRobin(){
+void roundRobin(){
     curr=priority.first;
     while(priority.cant!=0){
         if(curr->pcb->state!=BLOCK){}
@@ -22,8 +23,9 @@ void RoundRobin(){
     }
 }
 
-void createProcess(char * name, int * state, function * function){
+void createProcess(char * name, int * state, function_t * function){
     
+    DEBUG("Creando proceso: %s","name")
     pcb * new=create(name,state,function);
     priority.cant++;  
     if(new!=NULL){
