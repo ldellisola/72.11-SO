@@ -79,3 +79,4 @@ TP2/Kernel/kernel.bin
 TP2/Bootloader/BMFS/bmfs.bin
 *.bin
 *.sys
+TP2/.gdb_history

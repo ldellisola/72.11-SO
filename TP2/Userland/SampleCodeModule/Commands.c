@@ -20,7 +20,7 @@ int quotient(int a, int b){
 }
 
 int help(){
-    printf("\nmalloctest\ntime\nhelp\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\nblocl\nkill\nnice\nloop\nmem\n\nexit");
+    printf("\nCOMMANDS\n\nmalloctest\ntime\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\nblock\nkill\nnice\nloop\nmem\n\nTESTS\n\ntestMem\n\nhelp\nexit\n");
     return 0;
 }
 
