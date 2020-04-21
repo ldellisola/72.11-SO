@@ -42,9 +42,7 @@ int main() {
 	// runTerminal();
 	DEBUG("%s","Por correr terminal")
 	exec("terminal",0,runTerminal,0);
-	DEBUG("%s","Saliendo de terminal y entrando en loop")
-
-	while(1);
+	DEBUG("%s","Saliendo de terminal")
 	// clearConsole();
 
 	// unsigned int init;

@@ -26,8 +26,6 @@ void load_idt() {
 
   setup_IDT_entry (0x00, (uint64_t)&_exception0Handler);
   setup_IDT_entry (0x06, (uint64_t)&_exception6Handler);
-  setup_IDT_entry (0x0E, (uint64_t)&_exception0EHandler);
-  setup_IDT_entry (0x0D, (uint64_t)&_exception0DHandler);
 
   setup_IDT_entry (0x20, (uint64_t)&_irq00Handler);
   setup_IDT_entry (0x21, (uint64_t)&_irq01Handler);

@@ -32,9 +32,6 @@ GLOBAL _irq94Handler
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 
-GLOBAL _exception0EHandler
-GLOBAL _exception0DHandler
-
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -156,30 +153,6 @@ picSlaveMask:
 ;8254 Timer (Timer Tick)
 _irq00Handler:
 	irqHandlerMaster 0
-	;pushState
-
-	
-	;mov rsi,rsp ; Primer Param
-	;mov rdi, 0h; Tipo de Interrupcion
-	
-	;call irqDispatcher
-
-	;cmp rax,0
-
-	;jz .skip
-
-	;mov rsp, rax
-
-;.skip:
-
-
-	; signal pic EOI (End of Interrupt)
-	;mov al, 20h
-	;out 20h, al
-
-	;popState
-	;iretq
-	;irqHandlerMaster 0
 
 ;Keyboard
 _irq01Handler:
@@ -234,8 +207,34 @@ _irq88Handler:
 
 ;create_process
 _irq89Handler:
-	irqHandlerMaster 89h
+	;irqHandlerMaster 89h
+	pushState
 
+	
+	mov r9, r9 ; Quinto Param
+	mov r8, rdx ; Cuarto Param
+	mov rcx,rcx ; Tercer Param
+	mov rdx,rbx ; Segundo Param
+	mov rsi,rax ; Primer Param
+	mov rdi, 89h; Tipo de Interrupcion
+	
+	call irqDispatcher
+
+	cmp rax,0
+
+	jz .skip
+
+	mov rsp, rax
+
+.skip:
+
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
+
+	popState
+	iretq
 
 ;kill_process
 _irq90Handler:
@@ -270,10 +269,6 @@ _exception0Handler:
 _exception6Handler:
 	exceptionHandler 6
 
-_exception0EHandler:
-	exceptionHandler 0Eh
-_exception0DHandler:
-	exceptionHandler 0Dh
 
 ; Excepciones custom
 

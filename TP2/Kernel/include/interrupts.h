@@ -10,7 +10,7 @@
 
 #include "idtLoader.h"
 
-void _irq00Handler(void * ptr);
+void _irq00Handler(void);
 void _irq01Handler(void);
 void _irq02Handler(void);
 void _irq03Handler(void);
@@ -35,8 +35,6 @@ void _irq94Handler(int * firstParam);
 
 void _exception0Handler(void);
 void _exception6Handler(void);
-void _exception0EHandler(void);
-void _exception0DHandler(void);
 
 
 void _cli(void);
