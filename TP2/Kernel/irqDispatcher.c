@@ -38,7 +38,7 @@ void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdPar
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchSbrk(int increment, void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
-void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
+void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
 void dispatchKillProcess(int * firstParam);
 void dispatchBlockProcess(int * firstParam);
 void dispatchNiceProcess(int * firstParam,int secondParam);
@@ -50,7 +50,7 @@ static void int_21();
 
 
 
-void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * thirdParam,void * fourthParam,void * fifthParam) {
+void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * thirdParam,void * fourthParam,void * fifthParam) {
 
 
 	switch (irq) {
@@ -84,7 +84,9 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 			}
 		case 0x89:{ 
 			DEBUG("%s","LLego syscall CREATE Process")
-			dispatchCreateProcess(firstParam, secondParam,thirdParam);
+			uint64_t * p = dispatchCreateProcess(firstParam, secondParam,thirdParam);
+			DEBUG("Nuevo SP: 0x%x",p)
+			return p;
 			break;
 			}
 		case 0x90:{ 
@@ -108,6 +110,8 @@ void irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * th
 			break;
 			}
 	}
+
+	return 0;
 }
 
 void int_20() {
@@ -134,8 +138,8 @@ void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam)
 	mem_state(firstParam,secondParam,thirdParam);
 }
 
-void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
-	createProcess(firstParam,secondParam,thirdParam);
+void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
+	return createProcess(firstParam,secondParam,thirdParam);
 }
 void dispatchKillProcess(int * firstParam){
 	killProcess(firstParam);

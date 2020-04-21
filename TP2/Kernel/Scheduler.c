@@ -23,9 +23,9 @@ void roundRobin(){
     }
 }
 
-void createProcess(char * name, int * state, function_t * function){
+void * createProcess(char * name, int * state, function_t * function){
     
-    DEBUG("Creando proceso: %s","name")
+    DEBUG("Creando proceso: %s",name)
     pcb * new=create(name,state,function);
     priority.cant++;  
     if(new!=NULL){
@@ -35,8 +35,9 @@ void createProcess(char * name, int * state, function_t * function){
         //checkear status
         //bloquear al que esta corriendo y correr a este
         
-        
+        return new->sp;
     }
+    return NULL;
 
 }    
 void killProcess(int * pid){

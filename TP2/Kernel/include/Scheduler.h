@@ -15,7 +15,7 @@ typedef struct Priority{
 
 void roundRobin();
 
-void createProcess(char * name, int * state, function_t * function);
+void * createProcess(char * name, int * state, function_t * function);
 
 void killProcess(int * pid);
 

@@ -1,5 +1,6 @@
 #include "include/MemManager.h"
 #include "include/sbrk.h"
+#include "include/Curses.h"
 #ifdef ENABLE_BUDDY
 
 /*
@@ -288,6 +289,7 @@ static int lower_bucket_limit(size_t bucket) {
 void *malloc(size_t request) {
   size_t original_bucket, bucket;
 
+
   /*
    * Make sure it's possible for an allocation of this size to succeed. There's
    * a hard-coded limit on the maximum allocation size because of the way this
@@ -425,6 +427,7 @@ void free(void *ptr) {
   if (!ptr) {
     return;
   }
+
 
   /*
    * We were given the address returned by "malloc" so get back to the actual
