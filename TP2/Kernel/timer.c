@@ -5,7 +5,7 @@
 #include <Scheduler.h>
 
 static unsigned long ticks = 0;
-
+int priority=0;
 
 
 void * timer_handler(void * ptr) {
@@ -15,11 +15,13 @@ void * timer_handler(void * ptr) {
 	int quantumtime = 1;
 	
 
-	if(ticks % (18 * 5) != 0)
+	if(priority!= 0){
+		priority--;	
 		return ptr;
+	}	
 	DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x",ptr)
 
-
+	
 
 	if(old != NULL){
 
@@ -28,12 +30,11 @@ void * timer_handler(void * ptr) {
 
 	// DEBUG("SP Actual: 0X%x",old->pcb->sp)
 
-	
 
 	roundRobin();
 
 	process * new = GetCurrentProcess();
-	
+	priority=new->pcb->priority;
 	if(new == NULL)
 		return ptr;
 	DEBUG("SP Nuevo: 0X%x",new->pcb->sp)

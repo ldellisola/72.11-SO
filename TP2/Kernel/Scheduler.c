@@ -16,7 +16,8 @@ void deleteQueue(int * pid,process ** process);
 void roundRobin(){
 
     if(priority.cant == 0){
-        DEBUG("No process%s","")
+        DEBUG("No process%s","");
+
         curr = NULL;
         return ;
     }
@@ -26,12 +27,14 @@ void roundRobin(){
         return;
     }
         
-    curr=priority.first;
+   curr=curr->next;
 
+   /* curr=priority.first;
     process * newLast = priority.first;
 
     priority.first = priority.first->next;
     priority.first->prev = NULL;
+
 
     process * oldLast = priority.last;
 
@@ -39,7 +42,7 @@ void roundRobin(){
     newLast->prev = oldLast;    
 
     priority.last = newLast;
-
+*/
 
 
 
@@ -61,8 +64,8 @@ void * createProcess(char * name, int * state, function_t * function){
     
     DEBUG("Creando proceso: %s",name)
     pcb * new=create(name,state,function);
-    priority.cant++;  
     if(new!=NULL){
+        priority.cant++;  
         process * procs=(process *) malloc(sizeof(process));
         procs->pcb=new;
         insertQueue(procs);
