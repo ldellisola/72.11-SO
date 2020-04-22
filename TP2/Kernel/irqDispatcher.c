@@ -45,7 +45,7 @@ void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
 void dispatchGetPid(int * ret);
 
-static void int_20();
+static void * int_20(void * ptr);
 static void int_21();
 
 
@@ -54,9 +54,11 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 
 
 	switch (irq) {
-		case 0:
-			int_20();
+		case 0:{
+			void * ptrsp = int_20(firstParam);
+			return ptrsp;
 			break;
+		}
 		case 1:
 			int_21();
 			break;
@@ -113,9 +115,10 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 
 	return 0;
 }
+void * int_20(void * ptr) {
+	void * ptr2 = timer_handler(ptr);
 
-void int_20() {
-	timer_handler();
+	return ptr2;
 }
 
 void int_21(){
