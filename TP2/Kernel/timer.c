@@ -11,19 +11,24 @@ static unsigned long ticks = 0;
 void * timer_handler(void * ptr) {
 	ticks++;
 
-	if(ticks % (18 * 10) != 0)
+	process * old = GetCurrentProcess();
+	int quantumtime = 1;
+	
+
+	if(ticks % (18 * 5) != 0)
 		return ptr;
 	DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x",ptr)
 
 
-	process * old = GetCurrentProcess();
 
-	if(old == NULL)
-		return ptr;
+	if(old != NULL){
+
+		old->pcb->sp = ptr;
+	}
 
 	// DEBUG("SP Actual: 0X%x",old->pcb->sp)
 
-	old->pcb->sp = ptr;
+	
 
 	roundRobin();
 

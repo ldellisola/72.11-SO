@@ -21,8 +21,10 @@ void roundRobin(){
         return ;
     }
 
-    if(priority.cant == 1)
+    if(priority.cant == 1){
+        curr = priority.first;
         return;
+    }
         
     curr=priority.first;
 
@@ -98,7 +100,6 @@ void insertQueue(process * procs){
         priority.first->next=priority.first;
         priority.first->prev=priority.first;
 
-        curr = priority.first;
     }
     
     else{
