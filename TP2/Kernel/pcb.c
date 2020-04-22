@@ -13,7 +13,7 @@ int cant = 0;
 
 int findProcess(int pid);
 
-pcb *create(char *name, int *status, function_t *function)
+pcb *create(char *name, int *status, function_t *function,int pidp)
 {
     if (cant == MAX)
     {
@@ -28,6 +28,7 @@ pcb *create(char *name, int *status, function_t *function)
     CopyString(name, pcbs[i].name, strlen(name));
     pcbs[i].pid = pid++;
     pcbs[i].priority = 1;
+    pcbs[i].pidP=pidp;
 
     uint64_t *stack = malloc(0x1000);
 
@@ -123,11 +124,10 @@ int findProcess(int pid)
 {
     int i;
 
-    if (pid != 0)
-        for (i = 0; i < MAX && pcbs[i].pid != pid; i++)
+    for (i = 0; i < MAX && pcbs[i].pid != pid; i++)
             ;
 
-    if (pid == 0 || i == MAX || pcbs[i].state == KILL)
+    if (i == MAX || pcbs[i].state == KILL)
         return -1;
 
     return i;
@@ -140,7 +140,7 @@ void ps()
     {
         if (pcbs[i].state != KILL)
         {
-            printf("%s      %d     %d       --    --     %d     --      ", pcbs[i].name, pcbs[i].pid, pcbs[i].priority, pcbs[i].status);
+            printf("%s    %d     %d       --    --     %d     --      ", pcbs[i].name, pcbs[i].pid, pcbs[i].priority, pcbs[i].status);
             if (pcbs[i].state == READY)
                 printf("ready\n");
             else

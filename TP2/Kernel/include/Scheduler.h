@@ -24,7 +24,7 @@ void SaveExitAddress(void * add);
 
 bool HasStoppedExcecution();
 
-void * createProcess(char * name, int * state, function_t * function);
+void * createProcess(char * name, int * status, function_t * function);
 
 void * killProcess(int * pid);
 

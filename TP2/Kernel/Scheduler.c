@@ -29,9 +29,11 @@ void roundRobin(){
         curr = priority.first;
         return;
     }
-        
-   curr=curr->next;
-
+    
+    do{
+        curr=curr->next;
+    }while(curr->pcb->state==BLOCK);
+    
 }
 
 process * GetCurrentProcess(){
@@ -51,10 +53,16 @@ void * GetExitAddress(){
     return exitAddress;
 }
 
-void * createProcess(char * name, int * state, function_t * function){
+void * createProcess(char * name, int * status, function_t * function){
     
     //DEBUG("Creando proceso: %s",name)
-    pcb * new=create(name,state,function);
+    int pidP;
+    if(priority.cant==0){
+        pidP=22;
+    }else{
+        pidP=curr->pcb->pid;
+    }
+    pcb * new=create(name,status,function,pidP);
     if(new!=NULL){
         priority.cant++;  
         process * procs=(process *) malloc(sizeof(process));
@@ -62,7 +70,10 @@ void * createProcess(char * name, int * state, function_t * function){
         insertQueue(procs);
         //checkear status
         //bloquear al que esta corriendo y correr a este
-        
+        if(*status==0 && pidP!=22){
+            int pid=curr->pcb->pid;
+            curr->pcb->state=BLOCK;
+        }
         return new->sp;
     }
     return NULL;
@@ -79,6 +90,8 @@ void * killProcess(int * pid){
         priority.cant--;
         process * process=priority.first;
         deleteQueue(pid,&process);
+        int pidP=process->pcb->pidP;
+        block(&pidP);
         free(process);
     }  
 

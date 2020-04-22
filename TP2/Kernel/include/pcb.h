@@ -21,11 +21,12 @@ typedef struct{
     uint64_t * bp; //base pointer
     uint64_t * sp;
     Status status; //foreground  background
+    int pidP;
     // Registers registers;
     State state; 
 }pcb;
 
-pcb * create(char * name, int * status, function_t * function);
+pcb * create(char * name, int * status, function_t * function,int pidp);
 
 void kill(int * pid);
 

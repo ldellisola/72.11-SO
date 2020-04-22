@@ -134,13 +134,7 @@ int interpretCommand(){
     else if (strcmp(command,"mem")) {
         printMemoryState();
     }
-    else if(strcmp(command,"exec")){
-        int status=0;
-        if(hasParam1 && strcmp(param1,"&"))
-            status=1;
-        exec("try",status,malloc_test,0);
-    }
-        else if(strcmp(command,"loop")){
+     else if(strcmp(command,"loop")){
         int status=0;
         if(hasParam1 && strcmp(param1,"&"))
             status=1;
@@ -148,25 +142,37 @@ int interpretCommand(){
     }
         else if(strcmp(command,"kill") && hasParam1){
         int pid=stringToInt(param1);    
+        if(pid==0)
+            printf("No tiene permiso para acceder a ese proceso\n");
+        else 
         kill_process(&pid);
         if(pid==-1)
             printf("No es un proceso %s, no esta permitida esa accion\n",param1);
-    }
+        }
        else if(strcmp(command,"nice") && hasParam1 && hasParam2){
         int pid=stringToInt(param1);   
-        int prior=stringToInt(param2); 
+        if(pid==0)
+            printf("No tiene permiso para acceder a ese proceso\n");
+        else{
+         int prior=stringToInt(param2); 
         if(prior<0 || prior>2)
             printf("No es una prioridad aceptada, seleccione 0-1-2\n");
         else 
            nice_process(&pid,prior);
+        
         if(pid==-1)
             printf("No es un proceso %s, no esta permitida esa accion\n",param1);
+        }
     }
        else if(strcmp(command,"block") && hasParam1){
        int pid=stringToInt(param1);    
+        if(pid==0)
+            printf("No tiene permiso para acceder a ese proceso\n");
+        else{
        block_process(&pid);
         if(pid==-1)
             printf("No es un proceso %s, no esta permitida esa accion\n",param1);
+        }
     }
      else if (strcmp(command,"ps")) {
         ps();

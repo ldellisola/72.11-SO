@@ -4,10 +4,9 @@
 
 #include <Scheduler.h>
 
-#define UNINITIALIZED (-9999)
 
 static unsigned long ticks = 0;
-static int priorityCounter = UNINITIALIZED;
+static int priorityCounter = 0;
 
 void *timer_handler(void *ptr)
 {
@@ -22,7 +21,12 @@ void *timer_handler(void *ptr)
 	{
 		return ptr;
 	}
-	// DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x", ptr)
+	if(priorityCounter != 0)
+	{
+		priorityCounter--;
+		return ptr;
+	}
+	 //DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x", ptr)
 	
 	process *old = GetCurrentProcess();
 
