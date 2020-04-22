@@ -1,8 +1,8 @@
 GLOBAL read
 GLOBAL write
 GLOBAL delete
-GLOBAL sbrk_asm
-GLOBAL brk_asm
+GLOBAL _malloc
+GLOBAL _free
 GLOBAL memory_state
 GLOBAL create_process
 GLOBAL kill_process
@@ -59,7 +59,7 @@ write:
         leave
         ret
 
- sbrk_asm:
+ _malloc:
         enter 0,0
 
         mov r15, rdx    ; guardo el valor
@@ -74,7 +74,7 @@ write:
         leave
         ret
 
- brk_asm:
+ _free:
         enter 0,0
 
         mov r15, rdx    ; guardo el valor

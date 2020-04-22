@@ -32,9 +32,9 @@ extern void read(int fd, void * first, void *second, void * third, void * forth)
 
 extern void delete(int fd, void * first, void *second, void * third, void * forth);
 
-extern 	int sbrk_asm(int increment, void ** resp);
+extern 	int _malloc(int increment, void ** resp);
 
-extern int brk_asm(void * address, int* retValue);
+extern int _free(void ** address);
 
 extern void memory_state(void ** first, void ** last, void ** next);
 

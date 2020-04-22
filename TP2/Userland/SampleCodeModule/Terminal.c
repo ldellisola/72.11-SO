@@ -178,7 +178,10 @@ int interpretCommand(){
         ps();
     }
     else if (strcmp(command,"testMem")) {
-        test_mm();
+        int status=0;
+        if(hasParam1 && strcmp(param1,"&"))
+            status=1;
+        exec(command,status,test_mm,0);
     }
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    

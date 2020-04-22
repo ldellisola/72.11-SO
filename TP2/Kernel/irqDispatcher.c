@@ -1,4 +1,5 @@
 #include "../include/timer.h"
+#include <MemManager.h>
 #include <stdint.h>
 #include <Curses.h>
 #include <String.h>
@@ -11,7 +12,6 @@
 #include <font.h>
 #include <VideoDriver.h>
 #include <ConsoleDriver.h>
-#include <sbrk.h>
 #include <pcb.h>
 #include <Scheduler.h>
 
@@ -36,7 +36,8 @@
 void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
-void dispatchSbrk(int increment, void ** buffer);
+void dispatchMalloc(int increment, void ** buffer);
+void dispatchFree(void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
 void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
 void * dispatchKillProcess(int * firstParam);
@@ -73,11 +74,11 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 		case 0x86:{
 		
-			dispatchSbrk(firstParam, secondParam);
+			dispatchMalloc(firstParam, secondParam);
 			break;
 		}
 		case 0x87:{ 
-			dispatchBRK(firstParam, (int*)secondParam);
+			dispatchFree(firstParam);
 			break;
 			}
 		case 0x88:{ 
@@ -128,13 +129,13 @@ void int_21(){
 }
 
 
-void dispatchSbrk(int increment, void ** buffer) { 
-	sbrk_handler(increment, buffer);
+void dispatchMalloc(int increment, void ** buffer) { 
+	*buffer=malloc(increment);
 }
 
-void dispatchBRK(void * ptr,int * retValue){
+void dispatchFree(void ** ptr){
 
-	*retValue = brk_handler(ptr);
+	free(*ptr);
 }
 
 void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam){
