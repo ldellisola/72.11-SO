@@ -10,6 +10,9 @@ Priority priority;
 process * curr=0;
 int currPr=0;
 
+void * exitAddress = NULL;
+bool hasExited = false;
+
 void insertQueue(process * process);
 void deleteQueue(int * pid,process ** process);
 
@@ -29,29 +32,6 @@ void roundRobin(){
         
    curr=curr->next;
 
-   /* curr=priority.first;
-    process * newLast = priority.first;
-
-    priority.first = priority.first->next;
-    priority.first->prev = NULL;
-
-
-    process * oldLast = priority.last;
-
-    oldLast->next = newLast;
-    newLast->prev = oldLast;    
-
-    priority.last = newLast;
-*/
-
-
-
-    // while(priority.cant!=0){
-    //     if(curr->pcb->state!=BLOCK){}
-    //         //run
-    //     else
-    //         curr=curr->next;
-    // }
 }
 
 process * GetCurrentProcess(){
@@ -59,6 +39,17 @@ process * GetCurrentProcess(){
     return curr;
 }
 
+void SaveExitAddress(void * add){
+    exitAddress = add;
+}
+
+bool HasStoppedExcecution(){
+    return hasExited;
+}
+
+void * GetExitAddress(){
+    return exitAddress;
+}
 
 void * createProcess(char * name, int * state, function_t * function){
     
@@ -77,7 +68,12 @@ void * createProcess(char * name, int * state, function_t * function){
     return NULL;
 
 }    
-void killProcess(int * pid){
+void * killProcess(int * pid){
+    hasExited = false;
+
+    if(*pid == 0)
+        hasExited = true;
+
     kill(pid);  
     if(*pid!=-1){
         priority.cant--;
@@ -85,6 +81,13 @@ void killProcess(int * pid){
         deleteQueue(pid,&process);
         free(process);
     }  
+
+    if(hasExited)
+        return exitAddress;
+    else
+        return NULL;
+
+
 }  
 
 void blockProcess(int * pid){

@@ -1,6 +1,8 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 #include "pcb.h"
+#include <stdbool.h>
+
 
 typedef struct process{
     pcb * pcb;
@@ -17,9 +19,14 @@ void roundRobin();
 
 process * GetCurrentProcess();
 
+void SaveExitAddress(void * add);
+
+
+bool HasStoppedExcecution();
+
 void * createProcess(char * name, int * state, function_t * function);
 
-void killProcess(int * pid);
+void * killProcess(int * pid);
 
 void blockProcess(int * pid);
 

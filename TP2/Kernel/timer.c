@@ -5,54 +5,52 @@
 #include <Scheduler.h>
 
 static unsigned long ticks = 0;
-int priority=0;
+int priorityCounter = 0;
 
-
-void * timer_handler(void * ptr) {
+void *timer_handler(void *ptr)
+{
 	ticks++;
 
-	process * old = GetCurrentProcess();
-	int quantumtime = 1;
-	
-
-	if(priority!= 0){
-		priority--;	
+	if(HasStoppedExcecution()){
 		return ptr;
-	}	
-	DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x",ptr)
+	}
 
+
+	if(ticks %(18 * 3) != 0 )// if (priorityCounter != 0)
+	{
+		priorityCounter--;
+		return ptr;
+	}
+	DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x", ptr)
 	
+	process *old = GetCurrentProcess();
 
-	if(old != NULL){
-
+	if (old != NULL)
+	{
 		old->pcb->sp = ptr;
 	}
+	 else
+	 	SaveExitAddress(ptr);
 
 	// DEBUG("SP Actual: 0X%x",old->pcb->sp)
 
-
 	roundRobin();
 
-	process * new = GetCurrentProcess();
-	priority=new->pcb->priority;
-	if(new == NULL)
+	process *new = GetCurrentProcess();
+	priorityCounter = new->pcb->priority;
+	if (new == NULL)
 		return ptr;
-	DEBUG("SP Nuevo: 0X%x",new->pcb->sp)
-
+	DEBUG("SP Nuevo: 0X%x", new->pcb->sp)
 
 	return new->pcb->sp;
-
 }
 
-int ticks_elapsed() {
+int ticks_elapsed()
+{
 	return ticks;
 }
 
-int seconds_elapsed() {
+int seconds_elapsed()
+{
 	return ticks / 18;
 }
-
-
-
-
-

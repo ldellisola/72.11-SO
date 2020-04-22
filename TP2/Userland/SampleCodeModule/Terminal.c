@@ -114,9 +114,11 @@ int interpretCommand(){
         }
         printMem(a);
     }
-    else if(strcmp(command,"exit") && !hasParam1 && !hasParam2)
-        //kill_process(0);
+    else if(strcmp(command,"exit") && !hasParam1 && !hasParam2){
+        int pid = 0;
+        kill_process(&pid);
         return 1;
+    }
     else if(strcmp(command,"invalidOpcode") && !hasParam1 && !hasParam2){
         invalidOpcode();
         }

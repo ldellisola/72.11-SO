@@ -43,10 +43,57 @@ int main() {
 	DEBUG("%s","Por correr terminal")
 	exec("terminal",0,runTerminal,0);
 
-	while (1)
-	{
-		/* code */
-	}
+	
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
 	
 
 	DEBUG("%s","Saliendo de terminal")
