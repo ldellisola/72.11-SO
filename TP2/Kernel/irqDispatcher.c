@@ -87,7 +87,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 		case 0x89:{ 
 			//DEBUG("%s","LLego syscall CREATE Process")
 			uint64_t * p = dispatchCreateProcess(firstParam, secondParam,thirdParam);
-			DEBUG("Nuevo SP: 0x%x",p)
+			//DEBUG("Nuevo SP: 0x%x",p)
 			return p;
 			break;
 			}

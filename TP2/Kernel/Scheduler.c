@@ -19,7 +19,7 @@ void deleteQueue(int * pid,process ** process);
 void roundRobin(){
 
     if(priority.cant == 0){
-        DEBUG("No process%s","");
+        // DEBUG("No process%s","");
 
         curr = NULL;
         return ;
@@ -53,7 +53,7 @@ void * GetExitAddress(){
 
 void * createProcess(char * name, int * state, function_t * function){
     
-    DEBUG("Creando proceso: %s",name)
+    //DEBUG("Creando proceso: %s",name)
     pcb * new=create(name,state,function);
     if(new!=NULL){
         priority.cant++;  

@@ -76,7 +76,7 @@ pcb *create(char *name, int *status, function_t *function)
     *(proc->sp--) = 0;              //r14
     *(proc->sp) = 123;              //r15
 
-    DEBUG("Stacj pointer en: 0x%x", proc->sp)
+    //DEBUG("Stacj pointer en: 0x%x", proc->sp)
     //DEBUG("Stacj pointer Contiene a %d", *proc->sp)
 
     return &pcbs[i];

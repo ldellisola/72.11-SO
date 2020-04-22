@@ -20,6 +20,9 @@ void printfColorAt(const char * format,int fontColor, int backgroundColor,int x,
 
 #define DEBUG(mod,val) printfError("USER - DEBUG - "#mod,val); putChar('\n');
 
+// #undef DEBUG(mod,val)
+
+// #define DEBUG(mod,val) ;
 
 #endif
 

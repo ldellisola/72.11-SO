@@ -61,13 +61,13 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	load_idt();
 	startVideoDriver();
 	initializeConsoleDriver(CHAR_HEIGHT,CHAR_WIDTH, SCREEN_HEIGHT,SCREEN_WIDTH); 
 
 	// printf("SCREEN H: %d, W: %d\n", SCREEN_WIDTH, SCREEN_WIDTH);
 
-			
+				load_idt();
+
 	((EntryPoint)sampleCodeModuleAddress)();
 	
 

@@ -4,8 +4,10 @@
 
 #include <Scheduler.h>
 
+#define UNINITIALIZED (-9999)
+
 static unsigned long ticks = 0;
-int priorityCounter = 0;
+static int priorityCounter = UNINITIALIZED;
 
 void *timer_handler(void *ptr)
 {
@@ -15,13 +17,12 @@ void *timer_handler(void *ptr)
 		return ptr;
 	}
 
-
-	if(ticks %(18 * 3) != 0 )// if (priorityCounter != 0)
+	// DEBUG("PRIOTITY: %d",priorityCounter)
+	if(ticks %(2)!= 0)//if (priorityCounter != 0)
 	{
-		priorityCounter--;
 		return ptr;
 	}
-	DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x", ptr)
+	// DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x", ptr)
 	
 	process *old = GetCurrentProcess();
 
@@ -36,11 +37,14 @@ void *timer_handler(void *ptr)
 
 	roundRobin();
 
+
 	process *new = GetCurrentProcess();
+
 	priorityCounter = new->pcb->priority;
+
 	if (new == NULL)
 		return ptr;
-	DEBUG("SP Nuevo: 0X%x", new->pcb->sp)
+	// DEBUG("SP Nuevo: 0X%x", new->pcb->sp)
 
 	return new->pcb->sp;
 }
