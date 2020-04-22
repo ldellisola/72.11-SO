@@ -42,11 +42,11 @@ pcb *create(char *name, int *status, function_t *function)
     // Set up stack
     pcb *proc = &pcbs[i];
 
-    DEBUG("Stack TOP en 0X%x", stack);
+    //DEBUG("Stack TOP en 0X%x", stack);
 
     proc->sp = stack + 0x1000 - 1;
 
-    DEBUG("Stack Base en 0X%x", proc->sp);
+    //DEBUG("Stack Base en 0X%x", proc->sp);
 
     *(proc->sp--) = 0; //ss
 
@@ -77,7 +77,7 @@ pcb *create(char *name, int *status, function_t *function)
     *(proc->sp) = 123;              //r15
 
     DEBUG("Stacj pointer en: 0x%x", proc->sp)
-    DEBUG("Stacj pointer Contiene a %d", *proc->sp)
+    //DEBUG("Stacj pointer Contiene a %d", *proc->sp)
 
     return &pcbs[i];
 }

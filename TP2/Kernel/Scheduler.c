@@ -21,8 +21,9 @@ void roundRobin(){
         return ;
     }
 
-
-
+    if(priority.cant == 1)
+        return;
+        
     curr=priority.first;
 
     process * newLast = priority.first;

@@ -11,9 +11,9 @@ static unsigned long ticks = 0;
 void * timer_handler(void * ptr) {
 	ticks++;
 
-	if(ticks %36 != 0)
+	if(ticks % (18 * 10) != 0)
 		return ptr;
-	DEBUG("%s","Intentando de cambiar de proceso")
+	DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x",ptr)
 
 
 	process * old = GetCurrentProcess();
@@ -21,7 +21,7 @@ void * timer_handler(void * ptr) {
 	if(old == NULL)
 		return ptr;
 
-	DEBUG("Proceso Actual: %s",old->pcb->name)
+	// DEBUG("SP Actual: 0X%x",old->pcb->sp)
 
 	old->pcb->sp = ptr;
 
@@ -31,7 +31,7 @@ void * timer_handler(void * ptr) {
 	
 	if(new == NULL)
 		return ptr;
-			DEBUG("Proceso Nuevo: %s",new->pcb->name)
+	DEBUG("SP Nuevo: 0X%x",new->pcb->sp)
 
 
 	return new->pcb->sp;

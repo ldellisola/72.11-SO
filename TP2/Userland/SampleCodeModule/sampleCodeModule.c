@@ -42,7 +42,15 @@ int main() {
 	// runTerminal();
 	DEBUG("%s","Por correr terminal")
 	exec("terminal",0,runTerminal,0);
+
+	while (1)
+	{
+		/* code */
+	}
+	
+
 	DEBUG("%s","Saliendo de terminal")
+
 	// clearConsole();
 
 	// unsigned int init;
