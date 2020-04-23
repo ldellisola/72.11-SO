@@ -58,7 +58,7 @@ void * createProcess(char * name, int * status, function_t * function){
     //DEBUG("Creando proceso: %s",name)
     int pidP;
     if(priority.cant==0){
-        pidP=22;
+        pidP=-1;
     }else{
         pidP=curr->pcb->pid;
     }
@@ -70,9 +70,12 @@ void * createProcess(char * name, int * status, function_t * function){
         insertQueue(procs);
         //checkear status
         //bloquear al que esta corriendo y correr a este
-        if(*status==0 && pidP!=22){
+        if(*status==0 && pidP!=-1){
             int pid=curr->pcb->pid;
             curr->pcb->state=BLOCK;
+        }
+        else if(pidP==-1){
+            new->priority=2;
         }
         return new->sp;
     }

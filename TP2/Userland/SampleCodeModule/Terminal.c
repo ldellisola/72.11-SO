@@ -179,7 +179,7 @@ int interpretCommand(){
     }
     else if (strcmp(command,"testMem")) {
         int status=0;
-        if(hasParam1 && strcmp(param1,"&"))
+        if(strcmp(param1,"&"))
             status=1;
         exec(command,status,test_mm,0);
     }

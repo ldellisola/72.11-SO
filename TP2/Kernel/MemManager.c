@@ -4,7 +4,6 @@
 #ifndef ENABLE_BUDDY
 
 
-#include "../Include/Curses.h"
 typedef char ALIGN[16];
 
 union header {
