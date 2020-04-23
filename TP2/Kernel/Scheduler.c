@@ -93,8 +93,10 @@ void * killProcess(int * pid){
         priority.cant--;
         process * process=priority.first;
         deleteQueue(pid,&process);
+        if(process->pcb->status==0){
         int pidP=process->pcb->pidP;
-        block(&pidP);
+        block(pidP);
+}        
         free(process);
     }  
 
