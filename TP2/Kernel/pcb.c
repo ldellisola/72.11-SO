@@ -30,7 +30,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcbs[i].priority = 1;
     pcbs[i].pidP=pidp;
 
-    uint64_t *stack = malloc(0x1000);
+    uint64_t *stack = malloc(0x300 * sizeof(uint64_t));
 
     // for(int i = 0x1000-1 ; i >=0 ;i--){
     //     stack[i]=0x1000-1 - i;
@@ -40,14 +40,13 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcbs[i].state = READY;
     pcbs[i].status = *status;
 
+
     // Set up stack
     pcb *proc = &pcbs[i];
 
-    //DEBUG("Stack TOP en 0X%x", stack);
 
-    proc->sp = stack + 0x1000 - 1;
+    proc->sp = stack + 0x300 - 1;
 
-    //DEBUG("Stack Base en 0X%x", proc->sp);
 
     *(proc->sp--) = 0; //ss
 
@@ -60,25 +59,40 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
 
     *(proc->sp--) = function->function; //rip
 
+
     *(proc->sp--) = 0; //rax
 
+
     *(proc->sp--) = 0;              //rbx
+
     *(proc->sp--) = 0;              //rcx
+
     *(proc->sp--) = 0;              //rdx
+
     *(proc->sp--) = proc->bp;       //rbp
+
     *(proc->sp--) = function->argc; //rdi
-    *(proc->sp--) = function->args; // rsi
+
+    *(proc->sp--) = function->args; // rsi        
+
     *(proc->sp--) = 0;              //r8
+
     *(proc->sp--) = 0;              //r9
+
+
     *(proc->sp--) = 0;              //r10
+
     *(proc->sp--) = 0;              //r11
+
     *(proc->sp--) = 0;              //r12
+
     *(proc->sp--) = 0;              //r13
+
     *(proc->sp--) = 0;              //r14
+
     *(proc->sp) = 123;              //r15
 
-    //DEBUG("Stacj pointer en: 0x%x", proc->sp)
-    //DEBUG("Stacj pointer Contiene a %d", *proc->sp)
+    DEBUG("RIP 0x%x", *(proc->sp + 15))
 
     return &pcbs[i];
 }

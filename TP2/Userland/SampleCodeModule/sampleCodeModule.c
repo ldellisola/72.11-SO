@@ -40,11 +40,29 @@ int main() {
 	//iría exec("terminal",0,runTerminal,0);
 	// printf("HI! Ask \"help\" for a command menu\n");
 	// runTerminal();
-	// DEBUG("%s","Por correr terminal")
+	 DEBUG("%s","Por correr terminal")
 	exec("terminal",0,runTerminal,0);
 
 	
 
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
+	for(long i = 99999999; i > 0 ; i--);
 	for(long i = 99999999; i > 0 ; i--);
 	for(long i = 99999999; i > 0 ; i--);
 	

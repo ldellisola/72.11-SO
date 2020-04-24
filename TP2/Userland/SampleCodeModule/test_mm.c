@@ -3,8 +3,8 @@
 #include "include/test_util.h"
 #include "include/Commands.h"
 
-#define MAX_BLOCKS 128
-#define MAX_MEMORY 20000 //Should be around 80% of memory managed by the MM
+#define MAX_BLOCKS 10
+#define MAX_MEMORY 2000 //Should be around 80% of memory managed by the MM
 
 typedef struct MM_rq{
   void *address;
@@ -16,7 +16,14 @@ void test_mm(){
   uint8_t rq;
   uint32_t total;
 
+    DEBUG("TEST MEM%s","")
+
+
   while (1){
+
+    
+
+
     rq = 0;
     total = 0;
     // Request as many blocks as we can

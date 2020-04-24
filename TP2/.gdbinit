@@ -1,6 +1,4 @@
-
-# Como lo corremos afuera de docker no deberia haber problema
-target remote 127.0.0.1:1234
+target remote 192.168.0.14:1234
 add-symbol-file Kernel/kernel.elf 0x100000
 add-symbol-file Userland/0000-sampleCodeModule.elf 0x400000
 
@@ -8,7 +6,7 @@ python
 
 # GDB dashboard - Modular visual interface for GDB in Python.
 #
-# https://github.com/cyrus-and/gdb-dashboard
+# https://add-symbol-file Userland/0000-sampleCodeModule.elf 0x400000 github.com/cyrus-and/gdb-dashboard
 
 
 
