@@ -4,7 +4,7 @@
 #include "include/Commands.h"
 
 #define MAX_BLOCKS 10
-#define MAX_MEMORY 2000 //Should be around 80% of memory managed by the MM
+#define MAX_MEMORY 115000 //Should be around 80% of memory managed by the MM
 
 typedef struct MM_rq{
   void *address;

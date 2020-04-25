@@ -4,7 +4,7 @@
 #include "include/String.h"
 
 #define MAX 20
-#define STACK 10000
+#define STACK 0x150
 #define NULL 0
 static int pid = 0;
 
@@ -30,7 +30,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcbs[i].priority = 1;
     pcbs[i].pidP=pidp;
 
-    uint64_t *stack = malloc(0x300 * sizeof(uint64_t));
+    uint64_t *stack = malloc(STACK * sizeof(uint64_t));
 
     // for(int i = 0x1000-1 ; i >=0 ;i--){
     //     stack[i]=0x1000-1 - i;
@@ -45,7 +45,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcb *proc = &pcbs[i];
 
 
-    proc->sp = stack + 0x300 - 1;
+    proc->sp = stack + STACK - 1;
 
 
     *(proc->sp--) = 0; //ss
