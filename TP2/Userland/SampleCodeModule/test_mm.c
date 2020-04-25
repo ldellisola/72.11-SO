@@ -16,7 +16,7 @@ void test_mm(){
   uint8_t rq;
   uint32_t total;
 
-    DEBUG("TEST MEM%s","")
+    //DEBUG("TEST MEM%s","")
 
 
   while (1){
@@ -47,6 +47,8 @@ void test_mm(){
       if (mm_rqs[i].address != NULL)
         if(!memcheck(mm_rqs[i].address, i, mm_rqs[i].size))
           printf("ERROR!\n"); // TODO: Port this call as required
+        else 
+          printf("Ok\n");  
     }    
     // Free
     for (i = 0; i < rq; i++){

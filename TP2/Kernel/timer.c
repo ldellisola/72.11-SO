@@ -17,7 +17,7 @@ void *timer_handler(void *ptr)
 	}
 
 	// DEBUG("PRIOTITY: %d",priorityCounter)
-	if(ticks %(18 * 1) != 0)//if (priorityCounter != 0)
+	if(ticks %(2*1) != 0)//if (priorityCounter != 0)
 	{
 		return ptr;
 	}
@@ -26,7 +26,7 @@ void *timer_handler(void *ptr)
 		priorityCounter--;
 		return ptr;
 	}
-	 DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x", ptr)
+	 //DEBUG("Intentando de cambiar de proceso. Viene SP 0x%x", ptr)
 	
 	process *old = GetCurrentProcess();
 
@@ -48,7 +48,7 @@ void *timer_handler(void *ptr)
 
 	if (new == NULL)
 		return ptr;
-	 DEBUG("SP Nuevo: 0X%x", new->pcb->sp)
+	 //DEBUG("SP Nuevo: 0X%x", new->pcb->sp)
 
 	return new->pcb->sp;
 }

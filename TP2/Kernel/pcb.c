@@ -92,7 +92,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
 
     *(proc->sp) = 123;              //r15
 
-    DEBUG("RIP 0x%x", *(proc->sp + 15))
+    //DEBUG("RIP 0x%x", *(proc->sp + 15))
 
     return &pcbs[i];
 }
