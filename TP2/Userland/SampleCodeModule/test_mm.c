@@ -47,8 +47,12 @@ void test_mm(){
       if (mm_rqs[i].address != NULL)
         if(!memcheck(mm_rqs[i].address, i, mm_rqs[i].size)){
           printf("ERROR!\n"); // TODO: Port this call as required
-          printf("%s %d\n",mm_rqs[i].address,i);
           }
+        else
+        {
+          printf("ok! %d\n",i);
+        }
+          
     }    
     // Free
     for (i = 0; i < rq; i++){
