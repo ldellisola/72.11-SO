@@ -17,7 +17,7 @@ void *timer_handler(void *ptr)
 	}
 
 	// DEBUG("PRIOTITY: %d",priorityCounter)
-	if(ticks %(4*1) != 0)//if (priorityCounter != 0)
+	if(ticks %(2*1) != 0)//if (priorityCounter != 0)
 	{
 		return ptr;
 	}

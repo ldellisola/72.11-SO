@@ -38,10 +38,6 @@ extern int _free(void ** address);
 
 extern void memory_state(void ** first, void ** last, void ** next);
 
-int brk(void * address);
-
-void * sbrk(int increment);
-
 extern void create_process(char * name,int * state,void * function);
 
 extern void kill_process(int * pid);

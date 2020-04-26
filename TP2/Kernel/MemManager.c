@@ -42,7 +42,7 @@ void *malloc(size_t size)
 	total_size = sizeof(header_t) + size;
 	sbrk_handler(total_size,&block);
 
-	if (block == (void*) -1) {
+	if (block == NULL) {
 		// pthread_mutex_unlock(&global_malloc_lock);
 		return NULL;
 	}
