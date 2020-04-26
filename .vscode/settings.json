@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "scheduler.h": "c",
-        "memmanager.h": "c"
+        "memmanager.h": "c",
+        "pcb.h": "c"
     }
 }

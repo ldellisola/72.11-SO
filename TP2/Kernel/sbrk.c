@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <Curses.h>
 static void * const sampleDataModuleAddress = (void*)0x600000;
-static void * const maxAddress = (void*) 0xA00000;
+static void * const maxAddress = (void*) 0xF00000;
 void * topAddress = NULL;
 
 

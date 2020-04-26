@@ -4,7 +4,7 @@
 #include "include/String.h"
 
 #define MAX 20
-#define STACK 0x150
+#define STACK 0x300
 #define NULL 0
 static int pid = 0;
 
@@ -132,6 +132,12 @@ void block(int *pid)
     }
     else
         *pid = -1;
+}
+void unlock(int pid){
+    int i=findProcess(pid);
+    if(i!=-1){
+        pcbs[i].state=READY;
+    }
 }
 
 int findProcess(int pid)

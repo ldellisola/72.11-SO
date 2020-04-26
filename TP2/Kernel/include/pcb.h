@@ -32,6 +32,8 @@ void kill(int * pid);
 
 void block (int *pid);
 
+void unlock(int pid);
+
 void nice(int * pid, int pr);
 
 void ps();

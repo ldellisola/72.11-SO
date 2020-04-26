@@ -3,8 +3,8 @@
 #include "include/test_util.h"
 #include "include/Commands.h"
 
-#define MAX_BLOCKS 10
-#define MAX_MEMORY 115000 //Should be around 80% of memory managed by the MM
+#define MAX_BLOCKS 128
+#define MAX_MEMORY 200000 //Should be around 80% of memory managed by the MM
 
 typedef struct MM_rq{
   void *address;
@@ -45,10 +45,10 @@ void test_mm(){
     // Check
     for (i = 0; i < rq; i++){
       if (mm_rqs[i].address != NULL)
-        if(!memcheck(mm_rqs[i].address, i, mm_rqs[i].size))
+        if(!memcheck(mm_rqs[i].address, i, mm_rqs[i].size)){
           printf("ERROR!\n"); // TODO: Port this call as required
-        else 
-          printf("Ok\n");  
+          printf("%s %d\n",mm_rqs[i].address,i);
+          }
     }    
     // Free
     for (i = 0; i < rq; i++){

@@ -24,6 +24,9 @@ header_t *get_free_block(size_t size);
 
 void *malloc(size_t size)
 {
+	if(size%8!=0){
+		size+=(8-size%8);
+	}
 	size_t total_size;
 	void *block;
 	header_t *header;
@@ -63,7 +66,7 @@ header_t *get_free_block(size_t size)
 	int flag;
 	while(curr) {
 		flag=1;
-		if (curr->s.is_free) {
+		if (curr->s.is_free==1) {
 			if(curr->s.size == size|| (curr->s.size>size && curr->s.size-sizeof(header_t)<size)){
 				return curr;
 			}
