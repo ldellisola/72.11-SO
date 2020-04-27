@@ -22,7 +22,6 @@ typedef struct{
     uint64_t * sp;
     Status status; //foreground  background
     int pidP;
-    // Registers registers;
     State state; 
 }pcb;
 
