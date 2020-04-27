@@ -9,11 +9,16 @@
 Priority priority;
 process * curr=0;
 int currPr=0;
+
+bool killedCurrentProcess = false;
+
 void insertQueue(process * process);
 void deleteQueue(int * pid,process ** process);
 
-void roundRobin(){
 
+
+void roundRobin(){
+    killedCurrentProcess = false;
     if(priority.cant == 0){
         // DEBUG("No process%s","");
 
@@ -34,7 +39,7 @@ void roundRobin(){
 
 process * GetCurrentProcess(){
 
-    return curr;
+    return killedCurrentProcess ? NULL : curr;
 }
 
 void * createProcess(char * name, int * status, function_t * function){
@@ -78,12 +83,16 @@ void killProcess(int * pid){
         priority.cant--;
         process * process=priority.first;
         deleteQueue(pid,&process);
+
         if(process->pcb->status==0){
             int pidP=process->pcb->pidP;
             unlock(pidP);
         }           
         free(process);
-    }  
+    }
+    else{
+        DEBUG("HOLA%s","")
+    }
 }  
 
 void blockProcess(int * pid){
@@ -109,8 +118,9 @@ void niceProcess(int * pid, int priority){
 }
 
 void Exit(){
+    killedCurrentProcess = true;
     process * aux=curr->prev;
-    killProcess(curr->pcb->pid);
+    killProcess(&curr->pcb->pid);
     curr=aux;
 }    
 void insertQueue(process * procs){
@@ -142,8 +152,10 @@ void deleteQueue(int * pid, process ** process){
         while((*process)->pcb->pid!=*pid){
             *process=(*process)->next;
         }
+
         (*process)->prev->next=(*process)->next;
         (*process)->next->prev=(*process)->prev;
+
 }
 
 int getpid(){

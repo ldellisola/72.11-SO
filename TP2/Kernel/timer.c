@@ -29,6 +29,8 @@ void *timer_handler(void *ptr)
 	{
 		old->pcb->sp = ptr;
 	}
+
+	
 	
 	roundRobin();
 
@@ -38,6 +40,7 @@ void *timer_handler(void *ptr)
 
 	if (new == NULL)
 		return ptr;
+
 
 	return new->pcb->sp;
 }
