@@ -51,4 +51,5 @@ extern void ps();
 extern void get_pid(int * ret);
 
 int getpid();
+
 #endif

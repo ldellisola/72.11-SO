@@ -221,7 +221,7 @@ _irq83Handler:
 _irq85Handler:
 	irqHandlerMaster 85h
 
-; _malloc/free
+; _malloc
 _irq86Handler:
 	irqHandlerMaster 86h
 

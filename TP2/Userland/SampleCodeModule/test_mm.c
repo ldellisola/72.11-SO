@@ -29,9 +29,7 @@ void test_mm(){
     // Request as many blocks as we can
     while(rq < MAX_BLOCKS && total < MAX_MEMORY){
       mm_rqs[rq].size = GetUniform(MAX_MEMORY - total - 1) + 1;
-      void * address=malloc(mm_rqs[rq].size);
-      mm_rqs[rq].address=address;
-      //mm_rqs[rq].address =malloc(mm_rqs[rq].size); // TODO: Port this call as required
+      mm_rqs[rq].address =malloc(mm_rqs[rq].size); // TODO: Port this call as required
       total += mm_rqs[rq].size;
       rq++;
     }
@@ -41,6 +39,11 @@ void test_mm(){
     for (i = 0; i < rq; i++){
       if (mm_rqs[i].address != NULL)
         memset(mm_rqs[i].address, i, mm_rqs[i].size); // TODO: Port this call as required
+      else
+      {
+        printf("NULL");
+      }
+        
     }
     // Check
     for (i = 0; i < rq; i++){
