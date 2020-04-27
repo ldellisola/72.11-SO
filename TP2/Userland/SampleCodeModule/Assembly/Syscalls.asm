@@ -10,6 +10,7 @@ GLOBAL block_process
 GLOBAL nice_process
 GLOBAL ps
 GLOBAL get_pid
+GLOBAL _exit
 
 section .text:
 
@@ -216,7 +217,7 @@ ps:
 
         leave
         ret        
-
+                
 get_pid:
         enter 0,0
 
@@ -224,6 +225,17 @@ get_pid:
 
         mov rax, rdi    ;primer arg  
         int 94h
+
+        popState
+
+        leave
+        ret
+_exit:
+        enter 0,0
+
+        pushState
+        
+        int 95h
 
         popState
 

@@ -1,4 +1,5 @@
 #include "../include/timer.h"
+#include <Scheduler.h>
 #include <MemManager.h>
 #include <stdint.h>
 #include <Curses.h>
@@ -13,7 +14,6 @@
 #include <VideoDriver.h>
 #include <ConsoleDriver.h>
 #include <pcb.h>
-#include <Scheduler.h>
 
 
 #define FD_STDOUT 				(0x01)
@@ -40,11 +40,12 @@ void dispatchMalloc(int increment, void ** buffer);
 void dispatchFree(void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
 void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
-void * dispatchKillProcess(int * firstParam);
+void dispatchKillProcess(int * firstParam);
 void dispatchBlockProcess(int * firstParam);
 void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
 void dispatchGetPid(int * ret);
+void dispatchExit();
 
 static void * int_20(void * ptr);
 static void int_21();
@@ -86,14 +87,11 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 			}
 		case 0x89:{ 
-			//DEBUG("%s","LLego syscall CREATE Process")
-			uint64_t * p = dispatchCreateProcess(firstParam, secondParam,thirdParam);
-			//DEBUG("Nuevo SP: 0x%x",p)
-			return p;
+			return dispatchCreateProcess(firstParam, secondParam,thirdParam);
 			break;
 			}
 		case 0x90:{ 
-			return dispatchKillProcess(firstParam);
+			dispatchKillProcess(firstParam);
 			break;
 			}
 		case 0x91:{ 
@@ -111,15 +109,17 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 		case 0x94:{ 
 			dispatchGetPid(firstParam);
 			break;
+			}					
+		case 0x95:{ 
+			dispatchExit();
+			break;
 			}
 	}
 
 	return 0;
 }
 void * int_20(void * ptr) {
-	void * ptr2 = timer_handler(ptr);
-
-	return ptr2;
+	return timer_handler(ptr);
 }
 
 void int_21(){
@@ -145,8 +145,8 @@ void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam)
 void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
 	return createProcess(firstParam,secondParam,thirdParam);
 }
-void * dispatchKillProcess(int * firstParam){
-	return killProcess(firstParam);
+void dispatchKillProcess(int * firstParam){
+	killProcess(firstParam);
 }
 
 
@@ -162,6 +162,10 @@ void dispatchPs(){
 
 void dispatchGetPid(int * ret){
 	*ret=getpid();
+}
+
+void dispatchExit(){
+	Exit();
 }
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 

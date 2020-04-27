@@ -19,19 +19,16 @@ void roundRobin();
 
 process * GetCurrentProcess();
 
-void SaveExitAddress(void * add);
-
-
-bool HasStoppedExcecution();
-
 void * createProcess(char * name, int * status, function_t * function);
 
-void * killProcess(int * pid);
+void killProcess(int * pid);
 
 void blockProcess(int * pid);
 
 void niceProcess(int * pid, int priority);
 
 int getpid();
+
+void Exit();
 
 #endif
