@@ -73,7 +73,7 @@ int printMemoryState(){
     void *next=NULL;
 
     memory_state(&first,&last,&next);
-    printf("\n \n Memory starts at: 0x%x and finishes at : 0x%x\n",first,last);
+    printf("\nMemory starts at: 0x%x and finishes at : 0x%x\n",first,last);
     printf("Proxima memoria libre: 0x%x\n",next);
     return 0;
 }
