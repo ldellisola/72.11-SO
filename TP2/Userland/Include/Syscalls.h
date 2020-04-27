@@ -32,9 +32,9 @@ extern void read(int fd, void * first, void *second, void * third, void * forth)
 
 extern void delete(int fd, void * first, void *second, void * third, void * forth);
 
-extern 	int _malloc(int increment, void ** resp);
+extern 	void _malloc(int increment, void ** resp);
 
-extern int _free(void ** address);
+extern  void _free(void ** address);
 
 extern void memory_state(void ** first, void ** last, void ** next);
 
@@ -51,4 +51,5 @@ extern void ps();
 extern void get_pid(int * ret);
 
 int getpid();
+
 #endif
