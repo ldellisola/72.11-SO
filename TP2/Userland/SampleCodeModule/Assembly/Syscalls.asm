@@ -62,14 +62,15 @@ write:
  _malloc:
         enter 0,0
 
-        mov r15, rdx    ; guardo el valor
+        push r15
+        push rbx
 
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        mov rbx, rsi    ;segundo arg
+        mov rax, rdi    ; primer arg
         int 86h
+
+        pop rbx
+        pop r15
 
         leave
         ret
@@ -77,14 +78,14 @@ write:
  _free:
         enter 0,0
 
-        mov r15, rdx    ; guardo el valor
+        push r15
+        push rbx
 
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        mov rax, rdi    ; primer arg
         int 87h
+
+        pop rbx
+        pop r15
 
         leave
         ret
@@ -92,13 +93,9 @@ write:
 memory_state:
         enter 0,0
 
-        mov r15, rdx    ; guardo el valor
-
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        mov rcx, rdx    ;tercer arg
+        mov rbx, rsi    ;segundo arg
+        mov rax, rdi    ;primer arg        
         int 88h
 
         leave
@@ -109,11 +106,9 @@ create_process:
 
         mov r15, rdx    ; guardo el valor
 
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        mov rcx, rdx    ;tercer arg
+        mov rbx, rsi    ;segundo arg
+        mov rax, rdi    ;primer arg          
         int 89h
 
         leave
@@ -122,13 +117,7 @@ create_process:
 kill_process:
         enter 0,0
 
-        mov r15, rdx    ; guardo el valor
-
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        mov rax, rdi    ;primer arg     
         int 90h
 
         leave
@@ -136,13 +125,8 @@ kill_process:
 nice_process:
         enter 0,0
 
-        mov r15, rdx    ; guardo el valor
-
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        mov rbx, rsi    ;segundo arg
+        mov rax, rdi    ;primer arg        
         int 91h
 
         leave
@@ -151,13 +135,8 @@ nice_process:
 block_process:
         enter 0,0
 
-        mov r15, rdx    ; guardo el valor
-
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        
+        mov rax, rdi    ;primer arg     
         int 92h
 
         leave
@@ -165,14 +144,7 @@ block_process:
 
 ps:
         enter 0,0
-
-        mov r15, rdx    ; guardo el valor
-
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        
         int 93h
 
         leave
@@ -181,13 +153,7 @@ ps:
 get_pid:
         enter 0,0
 
-        mov r15, rdx    ; guardo el valor
-
-        mov r9, r8      ;cuarto arg
-        mov rdx, rcx    ;tercer arg
-        mov rcx, r15    ;segundo arg
-        mov rbx, rsi    ;primer arg
-        mov rax, rdi    ; fd        
+        mov rax, rdi    ;primer arg  
         int 94h
 
         leave
