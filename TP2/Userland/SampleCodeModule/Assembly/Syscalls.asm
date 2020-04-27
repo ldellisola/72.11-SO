@@ -104,8 +104,6 @@ memory_state:
 create_process:
         enter 0,0
 
-        mov r15, rdx    ; guardo el valor
-
         mov rcx, rdx    ;tercer arg
         mov rbx, rsi    ;segundo arg
         mov rax, rdi    ;primer arg          
