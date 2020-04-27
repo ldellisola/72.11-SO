@@ -1,9 +1,9 @@
 #include <stdarg.h>
+#include "../Include/Syscalls.h"
 #include "include/Terminal.h"
 #include "../Include/Curses.h"
 #include "include/Commands.h"
 #include "../Include/String.h"
-#include "../Include/Syscalls.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include "include/Exec.h"

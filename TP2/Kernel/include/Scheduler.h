@@ -29,4 +29,6 @@ void niceProcess(int * pid, int priority);
 
 int getpid();
 
+void Exit();
+
 #endif

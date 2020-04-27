@@ -28,6 +28,7 @@ GLOBAL _irq91Handler
 GLOBAL _irq92Handler
 GLOBAL _irq93Handler
 GLOBAL _irq94Handler
+GLOBAL _irq95Handler
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
@@ -256,6 +257,11 @@ _irq93Handler:
 ;getpid
 _irq94Handler:
 	irqHandlerMaster 94h	
+
+;exit
+_irq95Handler:
+	irqHandlerMaster 95h	
+
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5

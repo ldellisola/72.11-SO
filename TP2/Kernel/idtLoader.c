@@ -41,8 +41,9 @@ void load_idt() {
   setup_IDT_entry(0x92,(uint64_t)&_irq92Handler);
   setup_IDT_entry(0x93,(uint64_t)&_irq93Handler);
   setup_IDT_entry(0x94,(uint64_t)&_irq94Handler);
-
-	picMasterMask(0xFC); 
+  setup_IDT_entry(0x95,(uint64_t)&_irq95Handler);
+	
+  picMasterMask(0xFC); 
 	picSlaveMask(0xFF);
         
 	_sti();

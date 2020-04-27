@@ -1,4 +1,5 @@
 #include "../include/timer.h"
+#include <Scheduler.h>
 #include <MemManager.h>
 #include <stdint.h>
 #include <Curses.h>
@@ -13,7 +14,6 @@
 #include <VideoDriver.h>
 #include <ConsoleDriver.h>
 #include <pcb.h>
-#include <Scheduler.h>
 
 
 #define FD_STDOUT 				(0x01)
@@ -45,6 +45,7 @@ void dispatchBlockProcess(int * firstParam);
 void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
 void dispatchGetPid(int * ret);
+void dispatchExit();
 
 static void * int_20(void * ptr);
 static void int_21();
@@ -108,6 +109,10 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 		case 0x94:{ 
 			dispatchGetPid(firstParam);
 			break;
+			}					
+		case 0x95:{ 
+			dispatchExit();
+			break;
 			}
 	}
 
@@ -157,6 +162,10 @@ void dispatchPs(){
 
 void dispatchGetPid(int * ret){
 	*ret=getpid();
+}
+
+void dispatchExit(){
+	Exit();
 }
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 

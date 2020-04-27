@@ -80,7 +80,7 @@ void killProcess(int * pid){
         deleteQueue(pid,&process);
         if(process->pcb->status==0){
             int pidP=process->pcb->pidP;
-            block(pidP);
+            unlock(pidP);
         }           
         free(process);
     }  
@@ -107,7 +107,12 @@ void niceProcess(int * pid, int priority){
 
     nice(pid,priority);
 }
-    
+
+void Exit(){
+    process * aux=curr->prev;
+    killProcess(curr->pcb->pid);
+    curr=aux;
+}    
 void insertQueue(process * procs){
         priority.last=procs;
     if(priority.first==NULL){
