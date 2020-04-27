@@ -39,10 +39,6 @@ void test_mm(){
     for (i = 0; i < rq; i++){
       if (mm_rqs[i].address != NULL)
         memset(mm_rqs[i].address, i, mm_rqs[i].size); // TODO: Port this call as required
-      else
-      {
-        printf("NULL");
-      }
         
     }
     // Check
@@ -51,7 +47,6 @@ void test_mm(){
         if(!memcheck(mm_rqs[i].address, i, mm_rqs[i].size)){
           printf("ERROR!\n"); // TODO: Port this call as required
           }
-          
     }    
     // Free
     for (i = 0; i < rq; i++){

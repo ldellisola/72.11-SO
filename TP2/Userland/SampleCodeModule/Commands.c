@@ -20,7 +20,7 @@ int quotient(int a, int b){
 }
 
 int help(){
-    printf("\nCOMMANDS\n\nmalloctest\ntime\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\nblock\nkill\nnice\nloop\nmem\n\nTESTS\n\ntestMem\n\nhelp\nexit\n");
+    printf("\nCOMMANDS\n\ntime\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\nblock\nkill\nnice\nloop\nmem\n\nTESTS\n\ntestMem\n\nhelp\nexit\n");
     return 0;
 }
 
@@ -77,7 +77,7 @@ int printMemoryState(){
     void *next=NULL;
 
     memory_state(&first,&last,&next);
-    printf("\n \n Memory starts at: 0x%x and finishes at : 0x%x\n",first,last);
+    printf("\nMemory starts at: 0x%x and finishes at : 0x%x\n",first,last);
     printf("Proxima memoria libre: 0x%x\n",next);
     return 0;
 }
