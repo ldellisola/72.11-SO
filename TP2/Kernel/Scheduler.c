@@ -9,10 +9,6 @@
 Priority priority;
 process * curr=0;
 int currPr=0;
-
-void * exitAddress = NULL;
-bool hasExited = false;
-
 void insertQueue(process * process);
 void deleteQueue(int * pid,process ** process);
 
@@ -39,18 +35,6 @@ void roundRobin(){
 process * GetCurrentProcess(){
 
     return curr;
-}
-
-void SaveExitAddress(void * add){
-    exitAddress = add;
-}
-
-bool HasStoppedExcecution(){
-    return hasExited;
-}
-
-void * GetExitAddress(){
-    return exitAddress;
 }
 
 void * createProcess(char * name, int * status, function_t * function){
@@ -82,11 +66,12 @@ void * createProcess(char * name, int * status, function_t * function){
     return NULL;
 
 }    
-void * killProcess(int * pid){
-    hasExited = false;
+void killProcess(int * pid){
 
-    if(*pid == 0)
-        hasExited = true;
+    if(*pid == 0){
+        *pid = -2;
+        return;
+    }
 
     kill(pid);  
     if(*pid!=-1){
@@ -94,25 +79,32 @@ void * killProcess(int * pid){
         process * process=priority.first;
         deleteQueue(pid,&process);
         if(process->pcb->status==0){
-        int pidP=process->pcb->pidP;
-        block(pidP);
-}        
+            int pidP=process->pcb->pidP;
+            block(pidP);
+        }           
         free(process);
     }  
-
-    if(hasExited)
-        return exitAddress;
-    else
-        return NULL;
-
-
 }  
 
 void blockProcess(int * pid){
+    if(*pid==0){
+        *pid = -2;
+        return;
+    }
     block(pid);
 }
 
 void niceProcess(int * pid, int priority){
+    if(*pid==0){
+        *pid = -2;
+        return;
+    }
+
+    if(priority < 0 || priority > 2){
+        *pid = -3;
+        return;
+    }
+
     nice(pid,priority);
 }
     

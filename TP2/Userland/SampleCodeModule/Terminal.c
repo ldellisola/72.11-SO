@@ -114,11 +114,6 @@ int interpretCommand(){
         }
         printMem(a);
     }
-    else if(strcmp(command,"exit") && !hasParam1 && !hasParam2){
-        int pid = 0;
-        kill_process(&pid);
-        return 1;
-    }
     else if(strcmp(command,"invalidOpcode") && !hasParam1 && !hasParam2){
         invalidOpcode();
         }
@@ -140,39 +135,39 @@ int interpretCommand(){
             status=1;
         exec(command,status,loop,0);
     }
-        else if(strcmp(command,"kill") && hasParam1){
-        int pid=stringToInt(param1);    
-        if(pid==0)
-            printf("No tiene permiso para acceder a ese proceso\n");
-        else 
+    else if(strcmp(command,"kill") && hasParam1){
+        int pid = stringToInt(param1);    
+        
         kill_process(&pid);
         if(pid==-1)
             printf("No es un proceso %s, no esta permitida esa accion\n",param1);
-        }
-       else if(strcmp(command,"nice") && hasParam1 && hasParam2){
-        int pid=stringToInt(param1);   
-        if(pid==0)
+        else if(pid== -2)
             printf("No tiene permiso para acceder a ese proceso\n");
-        else{
-         int prior=stringToInt(param2); 
-        if(prior<0 || prior>2)
-            printf("No es una prioridad aceptada, seleccione 0-1-2\n");
-        else 
-           nice_process(&pid,prior);
+    }
+    else if(strcmp(command,"nice") && hasParam1 && hasParam2){
+        int pid=stringToInt(param1);   
+        
+        int prior=stringToInt(param2); 
+        
+        nice_process(&pid,prior);
         
         if(pid==-1)
             printf("No es un proceso %s, no esta permitida esa accion\n",param1);
-        }
+        else if(pid == -2)
+            printf("No tiene permiso para acceder a ese proceso\n");
+        else if(pid == -3)
+            printf("No es una prioridad aceptada, seleccione 0-1-2\n");
+
     }
        else if(strcmp(command,"block") && hasParam1){
-       int pid=stringToInt(param1);    
-        if(pid==0)
+        int pid=stringToInt(param1);    
+        block_process(&pid);
+
+        if(pid == -2)
             printf("No tiene permiso para acceder a ese proceso\n");
-        else{
-       block_process(&pid);
-        if(pid==-1)
+        else if(pid == -1)
             printf("No es un proceso %s, no esta permitida esa accion\n",param1);
-        }
+        
     }
      else if (strcmp(command,"ps")) {
         ps();

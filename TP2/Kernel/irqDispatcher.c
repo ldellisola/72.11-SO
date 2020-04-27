@@ -40,7 +40,7 @@ void dispatchMalloc(int increment, void ** buffer);
 void dispatchFree(void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
 void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
-void * dispatchKillProcess(int * firstParam);
+void dispatchKillProcess(int * firstParam);
 void dispatchBlockProcess(int * firstParam);
 void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
@@ -86,14 +86,11 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 			}
 		case 0x89:{ 
-			//DEBUG("%s","LLego syscall CREATE Process")
-			uint64_t * p = dispatchCreateProcess(firstParam, secondParam,thirdParam);
-			//DEBUG("Nuevo SP: 0x%x",p)
-			return p;
+			return dispatchCreateProcess(firstParam, secondParam,thirdParam);
 			break;
 			}
 		case 0x90:{ 
-			return dispatchKillProcess(firstParam);
+			dispatchKillProcess(firstParam);
 			break;
 			}
 		case 0x91:{ 
@@ -117,9 +114,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 	return 0;
 }
 void * int_20(void * ptr) {
-	void * ptr2 = timer_handler(ptr);
-
-	return ptr2;
+	return timer_handler(ptr);
 }
 
 void int_21(){
@@ -145,8 +140,8 @@ void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam)
 void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
 	return createProcess(firstParam,secondParam,thirdParam);
 }
-void * dispatchKillProcess(int * firstParam){
-	return killProcess(firstParam);
+void dispatchKillProcess(int * firstParam){
+	killProcess(firstParam);
 }
 
 

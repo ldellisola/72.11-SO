@@ -2,6 +2,7 @@ GLOBAL infoReg
 GLOBAL __UD2__
 GLOBAL __MEM__
 
+GLOBAL __halt__
 EXTERN printRegisters
 
 section .text
@@ -44,7 +45,13 @@ section .text
 %endmacro
 
 
+__halt__:
+		enter 0,0
+		
+		hlt
 
+		leave
+		ret
 
 __UD2__:
 

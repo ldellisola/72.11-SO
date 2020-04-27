@@ -20,7 +20,7 @@ int quotient(int a, int b){
 }
 
 int help(){
-    printf("\nCOMMANDS\n\nmalloctest\ntime\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\nblock\nkill\nnice\nloop\nmem\n\nTESTS\n\ntestMem\n\nhelp\nexit\n");
+    printf("\nCOMMANDS\n\nmalloctest\ntime\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\nblock\nkill\nnice\nloop\nmem\n\nTESTS\n\ntestMem\n\nhelp\n");
     return 0;
 }
 
@@ -42,10 +42,6 @@ int explainCommand(char * command){
     else if(strcmp(command,"printMem")){
         printf("Command:\n        printMem [Argument_1]\n");
         printf("It prints on screen the first 32 bytes of memory from any given memory position.\n");
-    }
-    else if(strcmp(command,"exit")){
-        printf("Command:\n        exit\n");
-        printf("It exits the program.\n");
     }
     else if(strcmp(command,"invalidOpcode")){
         printf("Command:\n        invalidOpcode\n");

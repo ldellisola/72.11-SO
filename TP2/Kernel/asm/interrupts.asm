@@ -239,35 +239,7 @@ _irq89Handler:
 
 ;kill_process
 _irq90Handler:
-	;irqHandlerMaster 90h	
-
-		pushState
-
-	
-	mov r9, r9 ; Quinto Param
-	mov r8, rdx ; Cuarto Param
-	mov rcx,rcx ; Tercer Param
-	mov rdx,rbx ; Segundo Param
-	mov rsi,rax ; Primer Param
-	mov rdi, 90h; Tipo de Interrupcion
-	
-	call irqDispatcher
-
-	cmp rax,0
-
-	jz .skip
-
-	mov rsp, rax
-
-.skip:
-
-
-	; signal pic EOI (End of Interrupt)
-	mov al, 20h
-	out 20h, al
-
-	popState
-	iretq
+	irqHandlerMaster 90h
 
 ;nice_process
 _irq91Handler:
