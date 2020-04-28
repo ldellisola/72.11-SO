@@ -2,6 +2,7 @@
 Read me para entrega parcial:
 
 Para esta entrega desde terminal se puede llamar a:
+ 
  Como built-ins : 
   * ps 
   * help
@@ -9,6 +10,7 @@ Para esta entrega desde terminal se puede llamar a:
   * block [id] //se llama para bloquear o desbloquear el proceso
   * mem
   * kill [id]
+ 
  Como procesos (es decir se los puede llamar con & en caso de querer tratarlos en background):
   * testMem [*&] 
   * loop  [*&]
