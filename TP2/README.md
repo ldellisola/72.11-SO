@@ -1,9 +1,9 @@
 # Arqui -TPE
-## Read me para entrega parcial:
+# Read me para entrega parcial:
 
-## Para esta entrega desde terminal se puede llamar a:
+# Para esta entrega desde terminal se puede llamar a:
  
- # Como built-ins : 
+ ## Como built-ins : 
   * ps 
   * help
   * nice [id] [prioridad] //Contamos con 3 prioridades, 0,1,2 a mayor numero, mayor prioridad
@@ -11,7 +11,7 @@
   * mem
   * kill [id]
  
- # Como procesos (es decir se los puede llamar con & en caso de querer tratarlos en background):
+ ## Como procesos (es decir se los puede llamar con & en caso de querer tratarlos en background):
   * testMem [*&] 
   * loop  [*&]
   
