@@ -1,4 +1,3 @@
-# Arqui -TPE
 # Read me para entrega parcial:
   Para esta entrega desde terminal se puede llamar a:
  
