@@ -2,6 +2,8 @@
 #define CURSES
 
 #include <stdarg.h>
+#include <stdint.h>
+
 
 
 void clearConsole();
@@ -17,6 +19,8 @@ void putChar(char ch);
 int readKey();
 
 void printfColorAt(const char * format,int fontColor, int backgroundColor,int x,int y,...);
+
+void * memset(void * destiation, int32_t c, uint64_t length);
 
 #define DEBUG(mod,val) printfError("USER - DEBUG - "#mod,val); putChar('\n');
 

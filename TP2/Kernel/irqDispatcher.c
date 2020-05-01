@@ -130,7 +130,9 @@ void int_21(){
 
 
 void dispatchMalloc(int increment, void ** buffer) { 
-	*buffer=malloc(increment);
+	void * aux=malloc(increment);
+	*buffer=aux;
+
 }
 
 void dispatchFree(void ** ptr){
