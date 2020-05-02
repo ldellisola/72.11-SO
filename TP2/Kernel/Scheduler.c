@@ -90,9 +90,6 @@ void killProcess(int * pid){
         }           
         free(process);
     }
-    else{
-        DEBUG("HOLA%s","")
-    }
 }  
 
 void blockProcess(int * pid){
