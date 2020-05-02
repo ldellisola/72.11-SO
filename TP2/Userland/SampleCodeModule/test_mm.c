@@ -30,6 +30,13 @@ void test_mm(){
     while(rq < MAX_BLOCKS && total < MAX_MEMORY){
       mm_rqs[rq].size = GetUniform(MAX_MEMORY - total - 1) + 1;
       mm_rqs[rq].address =malloc(mm_rqs[rq].size); // TODO: Port this call as required
+      if(mm_rqs[rq].address==NULL)
+        printf("es null\n");
+      else
+      {
+        printf("no es null, es 0x%x\n",mm_rqs[rq].address);
+      }
+        
       total += mm_rqs[rq].size;
       rq++;
     }
@@ -43,10 +50,11 @@ void test_mm(){
     }
     // Check
     for (i = 0; i < rq; i++){
-      if (mm_rqs[i].address != NULL)
+      if (mm_rqs[i].address != NULL){
         if(!memcheck(mm_rqs[i].address, i, mm_rqs[i].size)){
-          printf("ERROR!\n"); // TODO: Port this call as required
-          }
+          printf("ERROR!\n");
+        }
+      }
     }    
     // Free
     for (i = 0; i < rq; i++){

@@ -178,6 +178,8 @@ int interpretCommand(){
             status=1;
         exec(command,status,test_mm,0);
     }
+    else if(strcmp(command,"testMemx"))
+        test_mm();
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    
     

@@ -8,6 +8,7 @@
 #define NULL 0
 static int pid = 0;
 
+uint64_t stck[MAX][STACK];
 pcb pcbs[MAX];
 int cant = 0;
 
@@ -30,16 +31,15 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcbs[i].priority = 1;
     pcbs[i].pidP=pidp;
 
-    uint64_t *stack = malloc(STACK * sizeof(uint64_t));
 
-    pcbs[i].stack = stack;
+    pcbs[i].stack = stck[i];
     pcbs[i].state = READY;
     pcbs[i].status = *status;
 
     // Set up stack
     pcb *proc = &pcbs[i];
 
-    proc->sp = stack + STACK - 1;
+    proc->sp = stck[i] + STACK - 1;
 
     *(proc->sp--) = 0; //ss
     proc->bp = proc->sp + 1;
