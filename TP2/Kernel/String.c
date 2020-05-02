@@ -176,3 +176,12 @@ void handleFormat(char type,int * k,char * string,int size,va_list args){
 	*k=strlen(string);	
 
 }
+
+int strcmp(char * s1,char * s2){
+    int i;
+    for(i=0;*(s1+i)!=0 && *(s2+i)!=0 && *(s1+i)==*(s2+i);i++);
+
+    if(*(s1+i)==0 && *(s2+i)==0)
+     return 1;
+    return 0; 
+}

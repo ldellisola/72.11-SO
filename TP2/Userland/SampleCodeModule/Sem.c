@@ -8,20 +8,17 @@ sem_t semopen(char * name){
 }
 
 void semwait(sem_t semp){
-    int aux;
-    sem(1,(void *) sem,(void *)&aux);
+    
+    sem(1,(void *) sem,(void **)&semp);
 }
 
-int sempost(sem_t semp){
-    int aux;
-    int * paux=&aux;
-    sem(2,(void *) sem,(void **)&paux);
-    return aux;
+void sempost(sem_t semp){
+
+    sem(2,(void *) sem,(void **)&semp);
+    
 }
 
-int semclose(sem_t semp){
-    int aux;
-    int * paux=&aux;
-    sem(3,(void *) sem,(void **)&paux);
-    return aux;
+void semclose(sem_t semp){
+    sem(3,(void *) sem,(void **)&semp);
+    
 }

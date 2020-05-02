@@ -188,13 +188,11 @@ void dispatchSem(int fd,void * firstParam, void ** secondParam){
 		break;
 		}
 	case 2:{
-		//esta mal
-		*secondParam=sempost((SemData_t *)firstParam);
+		sempost((SemData_t *)firstParam);
 		break;
 		}
 	case 3:{
-		//esta mal
-		*secondParam=semclose((SemData_t *)firstParam);
+		semclose((SemData_t *)firstParam);
 		break;
 	}			
 	

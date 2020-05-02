@@ -18,6 +18,8 @@ void append(char * src, char * dest, unsigned size);
 
 void formatString(char * string, int size,char * format,...);
 
+int strcmp(char * s1,char * s2);
+
 
 
 #endif
