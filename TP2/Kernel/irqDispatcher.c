@@ -14,6 +14,7 @@
 #include <VideoDriver.h>
 #include <ConsoleDriver.h>
 #include <pcb.h>
+#include <Sem.h>
 
 
 #define FD_STDOUT 				(0x01)
@@ -46,6 +47,7 @@ void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
 void dispatchGetPid(int * ret);
 void dispatchExit();
+void dispatchSem(int fd,void * firstParam, void ** secondParam);
 
 static void * int_20(void * ptr);
 static void int_21();
@@ -114,6 +116,10 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			dispatchExit();
 			break;
 			}
+		case 0x96:{ 
+			dispatchSem(firstParam,secondParam,thirdParam);
+			break;
+			}	
 	}
 
 	return 0;
@@ -169,6 +175,34 @@ void dispatchGetPid(int * ret){
 void dispatchExit(){
 	Exit();
 }
+
+void dispatchSem(int fd,void * firstParam, void ** secondParam){
+	switch (fd)
+	{
+	case 0:{
+		*secondParam=semopen((char *)firstParam);
+		break;
+		}
+	case 1:{
+		semwait((SemData_t *)firstParam);
+		break;
+		}
+	case 2:{
+		//esta mal
+		*secondParam=sempost((SemData_t *)firstParam);
+		break;
+		}
+	case 3:{
+		//esta mal
+		*secondParam=semclose((SemData_t *)firstParam);
+		break;
+	}			
+	
+	default:
+		break;
+	}
+}
+
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 
 	switch(fd){

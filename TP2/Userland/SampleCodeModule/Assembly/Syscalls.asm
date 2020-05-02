@@ -11,6 +11,7 @@ GLOBAL nice_process
 GLOBAL ps
 GLOBAL get_pid
 GLOBAL _exit
+GLOBAL sem
 
 section .text:
 
@@ -236,6 +237,20 @@ _exit:
         pushState
         
         int 95h
+
+        popState
+
+        leave
+        ret
+sem:
+        enter 0,0
+
+        pushState
+
+        mov rcx, rdx    ;segundo arg
+        mov rbx, rsi    ;primer arg
+        mov rax, rdi    ;fd        
+        int 96h
 
         popState
 

@@ -46,4 +46,6 @@ extern void get_pid(int * ret);
 
 int getpid();
 
+extern void sem(int fd,void * first,void ** second);
+
 #endif
