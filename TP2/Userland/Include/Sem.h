@@ -4,10 +4,10 @@ typedef void * sem_t;
 
 sem_t semopen(char * name);
 
-void semwait(sem_t semp);
+void semwait(void * semp);
 
-void sempost(sem_t semp);
+void sempost(void * semp);
 
-void semclose(sem_t semp);
+void semclose(void * semp);
 
 #endif

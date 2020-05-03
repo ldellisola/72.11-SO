@@ -4,6 +4,8 @@
 
 #include <stdint.h>
 
+void semTest(int argc, char ** argv);
+
 int printMem(uint64_t memDirection);
 
 extern int infoReg();

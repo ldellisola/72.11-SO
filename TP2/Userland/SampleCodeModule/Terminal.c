@@ -178,6 +178,12 @@ int interpretCommand(){
             status=1;
         exec(command,status,test_mm,0);
     }
+    else if(strcmp(command,"semTest") && hasParam1){
+        int status=0;
+        if(hasParam2 && strcmp(param2,"&"))
+            status=1;
+        exec("semTest",status,semTest,1,param1);
+    }
     else if(strcmp(command,"testMemx"))
         test_mm();
     else

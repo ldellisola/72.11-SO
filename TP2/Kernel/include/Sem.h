@@ -2,7 +2,7 @@
 #define SEM_H
 
 typedef enum{LOCK,UNLOCK} lock;
-#define MAX 20 //maximos procesos por sem
+#define MAX_PROC_SEM 20 //maximos procesos por sem
 
 typedef struct
 {
@@ -10,7 +10,7 @@ typedef struct
     char name[1024];
     lock lock;
     int cant;
-    int block[MAX];
+    int processesBlocked[MAX_PROC_SEM];
 } SemData_t;
 
 

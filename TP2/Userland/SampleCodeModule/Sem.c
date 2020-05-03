@@ -7,18 +7,18 @@ sem_t semopen(char * name){
     return aux;
 }
 
-void semwait(sem_t semp){
+void semwait(void * semp){
     
-    sem(1,(void *) sem,(void **)&semp);
+    sem(1,(void *) semp,NULL);
 }
 
-void sempost(sem_t semp){
+void sempost(void * semp){
 
-    sem(2,(void *) sem,(void **)&semp);
+    sem(2,(void *) semp,NULL);
     
 }
 
-void semclose(sem_t semp){
-    sem(3,(void *) sem,(void **)&semp);
+void semclose(void * semp){
+    sem(3,(void *) semp,NULL);
     
 }

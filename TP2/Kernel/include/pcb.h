@@ -23,6 +23,8 @@ typedef struct{
     Status status; //foreground  background
     int pidP;
     State state; 
+    char ** argv;
+    int argc;
 }pcb;
 
 pcb * create(char * name, int * status, function_t * function,int pidp);

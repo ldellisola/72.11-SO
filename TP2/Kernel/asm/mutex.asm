@@ -9,10 +9,10 @@ GLOBAL spin_lock
 GLOBAL spin_unlock
 
 
-section .bss
-
-locked:                      ; The lock variable. 1 = locked, 0 = unlocked.
-     dd      0
+;section .bss
+                    ; The lock variable. 1 = locked, 0 = unlocked.
+locked:
+    dd    0
 
 
 section .text
@@ -22,7 +22,7 @@ spin_lock:
     mov     ecx, 1             ; Set the ECX register to 1.
 retry:
     xor     eax, eax           ; Zero out EAX, because cmpxchg compares against EAX.
-    XACQUIRE lock cmpxchg ecx, [locked]
+    xchg ecx, [locked]
                                ; atomically decide: if locked is zero, write ECX to it.
                                ;  XACQUIRE hints to the processor that we are acquiring a lock.
     je      out                ; If we locked it (old value equal to EAX: 0), return.
@@ -39,7 +39,7 @@ out:
 
 spin_unlock:
     enter 0,0
-    XRELEASE mov [locked], 0   ; Assuming the memory ordering rules apply, release the 
+    XRELEASE mov dword [locked], 0   ; Assuming the memory ordering rules apply, release the 
                                ;  lock variable with a "lock release" hint.
     leave
     ret                        ; The lock has been released.

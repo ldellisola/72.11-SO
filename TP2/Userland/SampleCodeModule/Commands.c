@@ -1,13 +1,49 @@
 #include "include/Commands.h"
 
+#include <stdbool.h>
+
 #include "../Include/deviceInfo.h"
 #include "../Include/String.h"
 #include "../Include/Curses.h"
 #include "../Include/Time.h"
 #include "../Include/MemManager.h"
-
+#include "../Include/Sem.h"
 
 extern void __UD2__();
+
+void semTest(int argc, char ** argv){
+
+    if(argc != 1){
+        printf("ARG Invalido\n");
+        exit_process();
+    }
+
+    char * name = argv[0];
+
+
+    sem_t sem = semopen("sem1");
+
+    bool flag = true;
+    do
+    {
+        semwait(sem);
+
+        bool flag = true;
+
+
+            printf("Name: %s\n", name);
+            for(int i = 0; i < 999; i++);
+        
+        void * ptr = sem;
+
+        sempost(ptr);
+
+
+    } while (1);
+
+    semclose(sem);
+
+}
 
 int quotient(int a, int b){
 

@@ -42,6 +42,28 @@ process * GetCurrentProcess(){
     return killedCurrentProcess ? NULL : curr;
 }
 
+process * GetProcess(int pid){
+    process * p = NULL;
+    process *temp = curr;
+
+    do{
+
+        if(temp->pcb->pid == pid){
+            p = temp;
+        }else{
+            temp = temp->next;
+        }
+
+        if(temp->pcb == curr->pcb){
+            break;
+        }
+
+    }while(p == NULL);
+
+    return p;
+}
+
+
 void * createProcess(char * name, int * status, function_t * function){
     
     //DEBUG("Creando proceso: %s",name)
@@ -84,7 +106,7 @@ void killProcess(int * pid){
         process * process=priority.first;
         deleteQueue(pid,&process);
 
-        if(process->pcb->status==0){
+        if(process->pcb->status == 0){
             int pidP=process->pcb->pidP;
             unlock(pidP);
         }           
