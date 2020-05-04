@@ -67,21 +67,25 @@ header_t *get_free_block(size_t size)
 	while(curr) {
 		flag=1;
 		if (curr->s.is_free==1) {
-			if(curr->s.size == size|| (curr->s.size>size && curr->s.size-sizeof(header_t)<size)){
+			if(curr->s.size == size|| (curr->s.size>size && curr->s.size<(size+sizeof(header_t)))){
 				return curr;
 			}
 			else if(curr->s.size > size){
-				header_t * new=(char *)(curr+1)+size;
+				header_t * new=(header_t *)(((char *)(curr+1))+size);
 				new->s.size=(curr->s.size)-size-sizeof(header_t);
 				new->s.next=curr->s.next;
 				new->s.is_free=1;
 				curr->s.size=size;
 				curr->s.next=new;
+				if(curr==tail)
+					tail=new;
 				return curr;
 			}	
 			else if((next=curr->s.next)!=NULL && next->s.is_free){
 				curr->s.size+=next->s.size+sizeof(header_t);
-				curr->s.next=next->s.next;	
+				curr->s.next=next->s.next;
+				if(next==tail)
+					tail=curr;	
 				flag=0;
 			}
 
