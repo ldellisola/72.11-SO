@@ -32,10 +32,7 @@ void test_mm(){
       mm_rqs[rq].address =malloc(mm_rqs[rq].size); // TODO: Port this call as required
       if(mm_rqs[rq].address==NULL)
         printf("es null\n");
-      else
-      {
-        printf("no es null, es 0x%x\n",mm_rqs[rq].address);
-      }
+      
         
       total += mm_rqs[rq].size;
       rq++;
