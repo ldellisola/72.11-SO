@@ -11,4 +11,8 @@ int getpid(){
 void exit_process(){
 	_exit();
 	__asm__("hlt");
+	__asm__("hlt");
+	__asm__("hlt");
+	__asm__("hlt");
+
 }

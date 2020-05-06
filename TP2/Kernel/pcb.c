@@ -96,6 +96,7 @@ void kill(int *pid)
         }
 
         free(pcbs[i].argv);
+        cant--;
         return;
     }
     *pid = -1;

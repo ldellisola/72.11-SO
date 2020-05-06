@@ -3,10 +3,10 @@
 #include "../Include/Syscalls.h"
 #include "../Include/Curses.h"
 
+
 //TO BE INCLUDED
-int  endless_loop(){
+void  endless_loop(){
   while(1);
-  return 0;
 }
 
 uint32_t my_create_process(char * name){
@@ -44,14 +44,13 @@ typedef struct P_rq{
   enum State state;
 }p_rq;
 
-int test_processes(){
+void test_processes(){
   p_rq p_rqs[MAX_PROCESSES];
   uint8_t rq;
   uint8_t alive = 0;
   uint8_t action;
 
   while (1){
-
     // Create MAX_PROCESSES processes
     for(rq = 0; rq < MAX_PROCESSES; rq++){
       p_rqs[rq].pid = my_create_process("endless_loop");  // TODO: Port this call as required
@@ -64,8 +63,6 @@ int test_processes(){
         alive++;
       }
     }
-        exit_process();
-
     // Randomly kills, blocks or unblocks processes until every one has been killed
     while (alive > 0){
 
@@ -95,7 +92,6 @@ int test_processes(){
             break;
         }
       }
-
       // Randomly unblocks processes
       for(rq = 0; rq < MAX_PROCESSES; rq++)
         if (p_rqs[rq].state == BLOCKED && GetUniform(2) % 2){
@@ -107,5 +103,4 @@ int test_processes(){
         }
     } 
   }
-return 0;
 }
