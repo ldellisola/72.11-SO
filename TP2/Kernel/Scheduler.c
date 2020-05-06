@@ -64,7 +64,7 @@ process * GetProcess(int pid){
 }
 
 
-void * createProcess(char * name, int * status, function_t * function){
+void createProcess(char * name, int * status, function_t * function){
     
     //DEBUG("Creando proceso: %s",name)
     int pidP;
@@ -88,10 +88,8 @@ void * createProcess(char * name, int * status, function_t * function){
         else if(pidP==-1){
             new->priority=2;
         }
-        return new->sp;
-    }
-    return NULL;
-
+        *status=new->pid;
+    }    
 }    
 void killProcess(int * pid){
 

@@ -7,6 +7,6 @@ typedef struct function_t{
     char ** args;
 }function_t;
 
-int exec(char * name, int status, int ** func,int args,...);
+int exec(char * name, int status, int (*func)(),int args,...);
 
 #endif

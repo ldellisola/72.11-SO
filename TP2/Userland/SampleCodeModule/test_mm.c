@@ -1,7 +1,7 @@
 #include "../Include/MemManager.h"
 #include "../Include/Curses.h"
 #include "include/test_util.h"
-#include "include/Commands.h"
+#include "include/Process.h"
 
 #define MAX_BLOCKS 128
 #define MAX_MEMORY 200000 //Should be around 80% of memory managed by the MM

@@ -40,7 +40,7 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 void dispatchMalloc(int increment, void ** buffer);
 void dispatchFree(void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
-void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
+void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
 void dispatchKillProcess(int * firstParam);
 void dispatchBlockProcess(int * firstParam);
 void dispatchNiceProcess(int * firstParam,int secondParam);
@@ -89,7 +89,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 			}
 		case 0x89:{ 
-			return dispatchCreateProcess(firstParam, secondParam,thirdParam);
+			dispatchCreateProcess(firstParam, secondParam,thirdParam);
 			break;
 			}
 		case 0x90:{ 
@@ -150,8 +150,8 @@ void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam)
 	mem_state(firstParam,secondParam,thirdParam);
 }
 
-void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
-	return createProcess(firstParam,secondParam,thirdParam);
+void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
+	 createProcess(firstParam,secondParam,thirdParam);
 }
 void dispatchKillProcess(int * firstParam){
 	killProcess(firstParam);

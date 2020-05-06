@@ -27,6 +27,5 @@ void fillString(char * test);
 
 int printMemoryState();
 
-void test_mm();
 
 #endif

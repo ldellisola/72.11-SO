@@ -134,6 +134,7 @@ int interpretCommand(){
         if(hasParam1 && strcmp(param1,"&"))
             status=1;
         exec(command,status,loop,0);
+        
     }
     else if(strcmp(command,"kill") && hasParam1){
         int pid = stringToInt(param1);    
@@ -178,14 +179,19 @@ int interpretCommand(){
             status=1;
         exec(command,status,test_mm,0);
     }
+    else if (strcmp(command,"testProcess")) {
+        int status=0;
+        if(strcmp(param1,"&"))
+            status=1;
+        exec(command,status,test_processes,0);
+    }
     else if(strcmp(command,"semTest") && hasParam1){
         int status=0;
         if(hasParam2 && strcmp(param2,"&"))
             status=1;
         exec("semTest",status,semTest,1,param1);
     }
-    else if(strcmp(command,"testMemx"))
-        test_mm();
+        
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    
     
