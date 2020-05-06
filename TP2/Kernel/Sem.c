@@ -76,7 +76,7 @@ void semwait(SemData_t * sem){
         }
         spin_unlock();
 
-        if(!try){
+        if(try){
             __asm__("hlt");
         }
     }while(try);
