@@ -56,9 +56,9 @@ void semwait(SemData_t * sem){
         if(sem->lock == LOCK){
             process * p = GetCurrentProcess();
             
-            if (p->pcb->state == BLOCK){
-                try = false;
-            }
+            // if (p->pcb->state == BLOCK){
+            //     try = false;
+            // }
             
             p->pcb->state = BLOCK;
             
@@ -75,6 +75,10 @@ void semwait(SemData_t * sem){
             sem->lock = LOCK;
         }
         spin_unlock();
+
+        if(!try){
+            __asm__("hlt");
+        }
     }while(try);
     // printf("Semwait  exited\n");
 }
