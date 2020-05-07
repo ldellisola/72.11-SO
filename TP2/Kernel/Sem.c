@@ -42,23 +42,16 @@ SemData_t * semopen(char * name){
     return ptr;
 }
 
-void semwait(SemData_t * sem){
+void * semwait(SemData_t * sem){
     if (semCheck(sem) != 0) {
         printf("Error waiting semaphore\n");
         return;
     }
-    // printf("Semwait at beginning\n");
-    bool try = true;
     
-    do{
 
-        spin_lock();
+
         if(sem->lock == LOCK){
             process * p = GetCurrentProcess();
-            
-            // if (p->pcb->state == BLOCK){
-            //     try = false;
-            // }
             
             p->pcb->state = BLOCK;
             
@@ -69,38 +62,40 @@ void semwait(SemData_t * sem){
                     sem->processesBlocked[i] = p->pcb->pid;
                 }
             }while(sem->processesBlocked[i++] != p->pcb->pid);
-            
-        }else{
-            try = false;
-            sem->lock = LOCK;
-        }
-        spin_unlock();
 
-        if(try){
-            __asm__("hlt");
+            return true;
+        }else{
+
+            sem->lock = LOCK;
+
+            return false;
         }
-    }while(try);
-    // printf("Semwait  exited\n");
+
+
+
 }
 
 void sempost(SemData_t * sem){
+
     if (semCheck(sem) != 0) {
         printf("Error posting semaphore\n");
         return;
     }
-    // printf("Sempost at beginning\n");
     //¿Habría que chequear esto?¿Miramos si es de verdad un sem o es trabajo del usuario?
     sem->lock=UNLOCK;
-
+    int myPID = getpid();
     int i = 0;
     for(i = 0 ; i < MAX_PROC_SEM; i++){
         int pid = sem->processesBlocked[i];
-        if(pid != 0){
+        if(pid != 0 && pid != myPID){
             process * p = GetProcess(sem->processesBlocked[i]);
+            DEBUG("LIBERO A : %s",p->pcb->argv[0])
             p->pcb->state = READY;
             break;
         }
     }
+
+
     // printf("Sempost at ending\n");
     return;
 }
@@ -118,7 +113,7 @@ void semclose(SemData_t * sem){
 int GetSemaphoreByName(char * name){
     for(int i = 0; i < MAX_PROC_SEM ; i++){
         if(strcmp(name,sems[i].name)){
-            printf("Encontre un sem. Posicion: %d. Nombre: %s\n",i,name);
+            //printf("Encontre un sem. Posicion: %d. Nombre: %s\n",i,name);
             return i;
         }
     }

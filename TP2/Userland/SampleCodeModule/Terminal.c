@@ -190,6 +190,7 @@ int interpretCommand(){
         if(hasParam2 && strcmp(param2,"&"))
             status=1;
         exec("semTest",status,semTest,1,param1);
+        
     }
         
     else
