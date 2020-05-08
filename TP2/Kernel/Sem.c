@@ -28,7 +28,7 @@ SemData_t * semopen(char * name){
 
         sems[pos].id=pos+1;
         sems[pos].lock=UNLOCK;
-        sems[pos].cant++;
+        sems[pos].cant=0;
 
         for (int i = 0; i < MAX_PROC_SEM; i++)
         {
@@ -37,7 +37,7 @@ SemData_t * semopen(char * name){
         
         CopyString(name, sems[pos].name, strlen(name));
     }
-
+    sems[pos].cant++;
     void * ptr = &sems[pos];
     return ptr;
 }
@@ -47,32 +47,25 @@ void * semwait(SemData_t * sem){
         printf("Error waiting semaphore\n");
         return;
     }
-    
 
+    if(sem->lock == LOCK){
+        process * p = GetCurrentProcess();
+                
+        int i = 0;
 
-        if(sem->lock == LOCK){
-            process * p = GetCurrentProcess();
-            
-            p->pcb->state = BLOCK;
-            
-            int i = 0;
+        do{
+            if(sem->processesBlocked[i] == 0){
+                sem->processesBlocked[i] = p->pcb->pid;
+            }
+        }while(sem->processesBlocked[i++] != p->pcb->pid);
 
-            do{
-                if(sem->processesBlocked[i] == 0){
-                    sem->processesBlocked[i] = p->pcb->pid;
-                }
-            }while(sem->processesBlocked[i++] != p->pcb->pid);
+        //p->pcb->state = BLOCK;
+        return true;
+    }else{
 
-            return true;
-        }else{
-
-            sem->lock = LOCK;
-
-            return false;
-        }
-
-
-
+        sem->lock = LOCK;
+        return false;
+    }
 }
 
 void sempost(SemData_t * sem){
@@ -94,8 +87,6 @@ void sempost(SemData_t * sem){
             break;
         }
     }
-
-
     // printf("Sempost at ending\n");
     return;
 }
