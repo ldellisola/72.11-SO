@@ -106,8 +106,10 @@ void semclose(SemData_t * sem){
         return;
     }
     sem->cant--;
-    if(sem->cant==0)
+    if(sem->cant==0){
         CopyString(0, sem->name, 1);
+        sem->id=0;    
+    }
 }
 
 int GetSemaphoreByName(char * name){
@@ -153,4 +155,14 @@ int lookSem(char * name){
         }
     };
     return -1;
+}
+
+void semInfo(){
+    int i;
+    printf("\n Id  Lock  Cantidad  Nombre\n");
+    for(i=0;i<MAX;i++){
+        if(sems[i].id!=0){
+            printf("%d %d %d %s\n",sems[i].id,sems[i].lock,sems[i].cant,sems[i].name);
+        }
+    }
 }

@@ -8,6 +8,7 @@
 #include "../Include/Time.h"
 #include "../Include/MemManager.h"
 #include "../Include/Sem.h"
+#include "../Include/Syscalls.h"
 
 extern void __UD2__();
 

@@ -194,7 +194,12 @@ void  dispatchSem(int fd,void * firstParam, void ** secondParam){
 	case 3:{
 		semclose((SemData_t *)firstParam);
 		break;
-	}			
+	}
+	case 4:{
+		semInfo();
+		break;
+	}
+
 	
 	default:
 		break;

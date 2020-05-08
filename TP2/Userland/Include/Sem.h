@@ -10,4 +10,6 @@ void sempost(void * semp);
 
 void semclose(void * semp);
 
+void semInfo();
+
 #endif
