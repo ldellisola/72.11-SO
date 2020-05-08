@@ -49,12 +49,12 @@ void spin(){
     semwait(sem);
     printf("Hola soy %d\n",pid);
     //ps();
-    int x=0;
-    while(x!=1000000000){
-        x++;
-        if(x==1000000000)
-        ps();
-    };
+    // int x=0;
+    // while(x!=1000000000){
+    //     x++;
+    //     if(x==1000000000)
+    //     ps();
+    // };
     sempost(sem);
     exit_process();
 }

@@ -27,19 +27,7 @@ void semwait(void *semp)
         SpinUnlock();
         if(try){
             int pid=getpid();
-            block_process(&pid);
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
+            BlockAndSwitchProcess(&pid);
         }
         //DEBUG("checkeando %d\n",getpid());
         

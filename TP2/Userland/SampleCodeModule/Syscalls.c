@@ -16,3 +16,8 @@ void exit_process(){
 	__asm__("hlt");
 
 }
+
+void BlockAndSwitchProcess(int * pid){
+	block_process(pid);
+	__asm__("hlt");
+}
