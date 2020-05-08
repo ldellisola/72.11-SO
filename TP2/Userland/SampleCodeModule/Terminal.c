@@ -77,12 +77,58 @@ int runTerminal(){
 /***************************************************************/
 /*                      Funciones Privadas                     */
 /***************************************************************/
+typedef struct 
+{
+    bool isForeground;
+    int argc;
+    char ** argv;
+    char * process;
+
+} ParsedCommand_t;
+
+#include <string.h>
+
+void ProcessCommandString(char * command, ParsedCommand_t * cmd){
+
+    char * currentPart;
+    int index = 0;
+    cmd->isForeground = true;
+
+    while((currentPart = strtok(command," "))!= NULL){
+        
+        if(cmd->process == NULL){
+            cmd->process = currentPart;
+            continue;
+        }
+
+        if(strcmp(currentPart,"&")){
+            cmd->isForeground = false;
+            break;
+        }
+
+        cmd->argv[index++] = currentPart;
+    }
+    cmd->argc = index;
+
+}
 
 int interpretCommand(){
     char command[MAXBUFFER];
     char param1[MAXBUFFER];
     char param2[MAXBUFFER];
     char param3[MAXBUFFER];
+
+    ParsedCommand_t parsedCommand;
+
+    ProcessCommandString(TerminalType,&parsedCommand);
+
+    printf("Name: %s | Is Foreground: %d\n",parsedCommand.process,parsedCommand.isForeground);
+
+    printf("Argumentos: ");
+    for(int i = 0 ; i < parsedCommand.argc ; i++){
+        printf(" | %s ", parsedCommand.argv[i]);
+    }
+    printf("\n");
 
 
     overwriteArrayUpTo(TerminalType,command,' ');
