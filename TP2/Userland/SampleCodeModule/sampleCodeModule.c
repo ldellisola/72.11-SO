@@ -17,6 +17,9 @@ int main() {
 	exec("terminal",0,runTerminal,0);
 
 	__halt__();
+	__halt__();
+	__halt__();
+	__halt__();
 	
 	return 0xDEA;
 }
