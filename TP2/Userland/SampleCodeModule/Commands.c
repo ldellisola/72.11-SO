@@ -11,6 +11,8 @@
 
 extern void __UD2__();
 
+int a = 0;
+
 void semTest(int argc, char ** argv){
 
     if(argc != 1){
@@ -19,28 +21,39 @@ void semTest(int argc, char ** argv){
     }
 
     char * name = argv[0];
+    int sign = -1;
+
+    if(name[0] == '+')
+        sign = 1;
+
 
     sem_t sem = semopen("sem1");
 
 
     bool flag = true;
-    do
-    {
+
+    for(int i = 0 ; i < 9999999 ; i++){
         semwait(sem);
 
-        bool flag = true;
+        int old = a;
+        old += sign;
+        a = old;
 
-        printf("Name: %s\n", name);
-        
-        void * ptr = sem;
-
-        sempost(ptr);
-
-
-    } while (1);
+        sempost(sem);
+    }
 
     semclose(sem);
 
+    exit_process();
+
+}
+
+void SemTestPrint(int argc, char ** argv){
+    
+    printf("Value: %d\n",a);
+    a = 0;
+
+    exit_process();
 }
 
 int quotient(int a, int b){

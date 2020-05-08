@@ -56,6 +56,7 @@ section .text
 
 
 spin_lock:
+	enter 0,0
      mov     eax, 1          ; Set the EAX register to 1.
      xchg    eax, [locked]   ; Atomically swap the EAX register with
                              ;  the lock variable.
@@ -69,13 +70,16 @@ spin_lock:
      jnz     spin_lock       ; Jump back to the MOV instruction if the Zero Flag is
                              ;  not set; the lock was previously locked, and so
                              ; we need to spin until it becomes unlocked.
+	leave
      ret                     ; The lock has been acquired, return to the calling
                              ;  function.
 
 spin_unlock:
+	enter 0,0
      xor     eax, eax        ; Set the EAX register to 0.
      xchg    eax, [locked]   ; Atomically swap the EAX register with
                              ;  the lock variable.
+	leave
      ret                     ; The lock has been released.
 
 

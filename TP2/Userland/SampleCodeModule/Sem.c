@@ -17,26 +17,33 @@ sem_t semopen(char * name){
 void semwait(void * semp){
 
 
-    bool try = true;
+    int try;
+
+    while (!__sync_bool_compare_and_swap(&try,0,1))
+    {
+        while(try)
+            __builtin_ia32_pause();    
+    }
+    sem(1,(void *) semp,&try);
     
-    do{
-        spin_lock();
+    // do{
+    //     // spin_lock();
+    //     __asm__("cli");
 
-        while(1);
+    //     sem(1,(void *) semp,&try);
+    //    __asm__("sti");
+    //    // spin_unlock();
+    //     // for(int i = 0 ; i < 9999999 ; i++);
 
-        sem(1,(void *) semp,&try);
-        spin_unlock();
-        // for(int i = 0 ; i < 9999999 ; i++);
+    //     if(try){
+    //         // DEBUG("ANTES DE HALT%s","")
+    //         __asm__("hlt");
 
-        if(try){
-            // DEBUG("ANTES DE HALT%s","")
-            __asm__("hlt");
-            __asm__("hlt");
-            // DEBUG("DESP DE HALT%s","")
+    //         // DEBUG("DESP DE HALT%s","")
 
-        }
+    //     }
 
-    }while(try);
+    // }while(try);
     
 }
 
