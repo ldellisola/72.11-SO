@@ -7,4 +7,6 @@ void test_mm();
 
 void test_processes();
 
+void testSem();
+
 #endif

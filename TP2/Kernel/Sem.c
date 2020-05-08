@@ -43,6 +43,8 @@ SemData_t * semopen(char * name){
 }
 
 void semwait(SemData_t * sem){
+    int pid=getpid();
+    printf("Entre en wait %d\n",pid);
     if (semCheck(sem) != 0) {
         printf("Error waiting semaphore\n");
         return;
@@ -51,8 +53,9 @@ void semwait(SemData_t * sem){
     bool try = true;
     
     do{
-
+        printf("entre en el do %d\n",pid);
         spin_lock();
+        printf("pase el spin %d\n",pid);
         if(sem->lock == LOCK){
             process * p = GetCurrentProcess();
             
@@ -73,17 +76,21 @@ void semwait(SemData_t * sem){
         }else{
             try = false;
             sem->lock = LOCK;
+            printf("sem lock %d\n",sem->lock,pid);
         }
         spin_unlock();
-
-        if(try){
-            __asm__("hlt");
-        }
+        printf("salio del spin y try es %d y %d\n",try,pid);
+        /*if(try){
+            //__asm__("hlt");
+        }*/
     }while(try);
     // printf("Semwait  exited\n");
 }
 
 void sempost(SemData_t * sem){
+    int pid=getpid();
+    printf("Entre en post %d\n",pid);
+    
     if (semCheck(sem) != 0) {
         printf("Error posting semaphore\n");
         return;
@@ -92,10 +99,12 @@ void sempost(SemData_t * sem){
     //¿Habría que chequear esto?¿Miramos si es de verdad un sem o es trabajo del usuario?
     sem->lock=UNLOCK;
 
+    printf("sem unlock %d\n",sem->lock,pid);
     int i = 0;
     for(i = 0 ; i < MAX_PROC_SEM; i++){
         int pid = sem->processesBlocked[i];
         if(pid != 0){
+            printf("Desbloqueo a %d\n",pid);
             process * p = GetProcess(sem->processesBlocked[i]);
             p->pcb->state = READY;
             break;
@@ -111,8 +120,10 @@ void semclose(SemData_t * sem){
         return;
     }
     sem->cant--;
-    if(sem->cant==0)
+    if(sem->cant==0){
         CopyString(0, sem->name, 1);
+        sem->id=0;    
+    }
 }
 
 int GetSemaphoreByName(char * name){
@@ -158,4 +169,14 @@ int lookSem(char * name){
         }
     };
     return -1;
+}
+
+void semInfo(){
+    int i;
+    printf("\n Id  Lock  Cantidad  Nombre\n");
+    for(i=0;i<MAX;i++){
+        if(sems[i].id!=0){
+            printf("%d %d %d %s\n",sems[i].id,sems[i].lock,sems[i].cant,sems[i].name);
+        }
+    }
 }

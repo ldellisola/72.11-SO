@@ -191,7 +191,10 @@ int interpretCommand(){
             status=1;
         exec("semTest",status,semTest,1,param1);
     }
-        
+    else if(strcmp(command,"sem"))
+        semInfo();
+    else if(strcmp(command,"testSem"))
+        testSem();    
     else
         printfError("%s%s%s%s: command not found \n",command,param1,param2,param3);    
     

@@ -22,4 +22,6 @@ void sempost(SemData_t * sem);
 
 void semclose(SemData_t * sem);
 
+void semInfo();
+
 #endif

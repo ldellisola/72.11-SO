@@ -8,6 +8,7 @@
 #include "../Include/Time.h"
 #include "../Include/MemManager.h"
 #include "../Include/Sem.h"
+#include "../Include/Syscalls.h"
 
 extern void __UD2__();
 
@@ -19,7 +20,7 @@ void semTest(int argc, char ** argv){
     }
 
     char * name = argv[0];
-
+    int pid=getpid();
 
     sem_t sem = semopen("sem1");
 
@@ -31,13 +32,13 @@ void semTest(int argc, char ** argv){
         bool flag = true;
 
 
-            printf("Name: %s\n", name);
-            for(int i = 0; i < 999; i++);
+            printf("Name: %d\n", pid);
+            for(int i = 0; i < 9999999; i++);
         
         void * ptr = sem;
 
         sempost(ptr);
-
+       // semInfo();
 
     } while (1);
 

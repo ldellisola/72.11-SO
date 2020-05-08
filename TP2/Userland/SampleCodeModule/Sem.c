@@ -22,3 +22,7 @@ void semclose(void * semp){
     sem(3,(void *) semp,NULL);
     
 }
+
+void semInfo(){
+    sem(4,NULL,NULL);
+}
