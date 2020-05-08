@@ -176,7 +176,7 @@ void dispatchExit(){
 	Exit();
 }
 
-void dispatchSem(int fd,void * firstParam, void ** secondParam){
+void  dispatchSem(int fd,void * firstParam, void ** secondParam){
 	switch (fd)
 	{
 	case 0:{
@@ -184,7 +184,7 @@ void dispatchSem(int fd,void * firstParam, void ** secondParam){
 		break;
 		}
 	case 1:{
-		semwait((SemData_t *)firstParam);
+		*(bool *)secondParam =  semwait((SemData_t *)firstParam);
 		break;
 		}
 	case 2:{
@@ -204,6 +204,7 @@ void dispatchSem(int fd,void * firstParam, void ** secondParam){
 	default:
 		break;
 	}
+
 }
 
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){

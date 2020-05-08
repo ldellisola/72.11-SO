@@ -42,26 +42,16 @@ SemData_t * semopen(char * name){
     return ptr;
 }
 
-void semwait(SemData_t * sem){
-    int pid=getpid();
-    printf("Entre en wait %d\n",pid);
+void * semwait(SemData_t * sem){
     if (semCheck(sem) != 0) {
         printf("Error waiting semaphore\n");
         return;
     }
-    // printf("Semwait at beginning\n");
-    bool try = true;
     
-    do{
-        printf("entre en el do %d\n",pid);
-        spin_lock();
-        printf("pase el spin %d\n",pid);
+
+
         if(sem->lock == LOCK){
             process * p = GetCurrentProcess();
-            
-            // if (p->pcb->state == BLOCK){
-            //     try = false;
-            // }
             
             p->pcb->state = BLOCK;
             
@@ -72,44 +62,40 @@ void semwait(SemData_t * sem){
                     sem->processesBlocked[i] = p->pcb->pid;
                 }
             }while(sem->processesBlocked[i++] != p->pcb->pid);
-            
+
+            return true;
         }else{
-            try = false;
+
             sem->lock = LOCK;
-            printf("sem lock %d\n",sem->lock,pid);
+
+            return false;
         }
-        spin_unlock();
-        printf("salio del spin y try es %d y %d\n",try,pid);
-        /*if(try){
-            //__asm__("hlt");
-        }*/
-    }while(try);
-    // printf("Semwait  exited\n");
+
+
+
 }
 
 void sempost(SemData_t * sem){
-    int pid=getpid();
-    printf("Entre en post %d\n",pid);
-    
+
     if (semCheck(sem) != 0) {
         printf("Error posting semaphore\n");
         return;
     }
-    // printf("Sempost at beginning\n");
     //¿Habría que chequear esto?¿Miramos si es de verdad un sem o es trabajo del usuario?
     sem->lock=UNLOCK;
-
-    printf("sem unlock %d\n",sem->lock,pid);
+    int myPID = getpid();
     int i = 0;
     for(i = 0 ; i < MAX_PROC_SEM; i++){
         int pid = sem->processesBlocked[i];
-        if(pid != 0){
-            printf("Desbloqueo a %d\n",pid);
+        if(pid != 0 && pid != myPID){
             process * p = GetProcess(sem->processesBlocked[i]);
+            DEBUG("LIBERO A : %s",p->pcb->argv[0])
             p->pcb->state = READY;
             break;
         }
     }
+
+
     // printf("Sempost at ending\n");
     return;
 }
@@ -129,7 +115,7 @@ void semclose(SemData_t * sem){
 int GetSemaphoreByName(char * name){
     for(int i = 0; i < MAX_PROC_SEM ; i++){
         if(strcmp(name,sems[i].name)){
-            printf("Encontre un sem. Posicion: %d. Nombre: %s\n",i,name);
+            //printf("Encontre un sem. Posicion: %d. Nombre: %s\n",i,name);
             return i;
         }
     }

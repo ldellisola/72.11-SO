@@ -20,9 +20,9 @@ void semTest(int argc, char ** argv){
     }
 
     char * name = argv[0];
-    int pid=getpid();
 
     sem_t sem = semopen("sem1");
+
 
     bool flag = true;
     do
@@ -31,9 +31,7 @@ void semTest(int argc, char ** argv){
 
         bool flag = true;
 
-
-            printf("Name: %d\n", pid);
-            for(int i = 0; i < 9999999; i++);
+        printf("Name: %s\n", name);
         
         void * ptr = sem;
 

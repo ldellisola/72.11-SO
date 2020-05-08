@@ -16,7 +16,7 @@ typedef struct
 
 SemData_t * semopen(char * name);
 
-void semwait(SemData_t * sem);
+void * semwait(SemData_t * sem);
 
 void sempost(SemData_t * sem);
 
