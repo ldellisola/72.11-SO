@@ -12,58 +12,6 @@
 
 extern void __UD2__();
 
-int a = 0;
-
-void semTest(int argc, char ** argv){
-
-    if(argc != 1){
-        printf("ARG Invalido\n");
-        exit_process();
-    }
-
-    char * name = argv[0];
-    int sign = -1;
-
-    if(name[0] == '+')
-        sign = 1;
-
-
-    sem_t sem = semopen("sem1");
-
-
-    bool flag = true;
-
-    for(int i = 0 ; i < 100000 ; i++){
-semwait(sem);
-        if(sign == -1 && a > 0){
-            a--;
-        }
-
-        if(sign == 0 && a == 0){
-            a++;
-        }
-        sempost(sem);
-        // a += sign;
-
-        // int old = a;
-        // a = old;
-
-        
-    }
-
-    semclose(sem);
-
-    exit_process();
-
-}
-
-void SemTestPrint(int argc, char ** argv){
-    
-    printf("Value: %d\n",a);
-    a = 0;
-
-    exit_process();
-}
 
 int quotient(int a, int b){
 

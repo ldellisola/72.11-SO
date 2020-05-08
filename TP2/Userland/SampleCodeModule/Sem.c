@@ -20,11 +20,11 @@ void semwait(void *semp)
     bool try = true;
     do
     {
-        spin_lock();
+        SpinLock();
         //printf("Hola %d\n",getpid());
         sem(1, (void *)semp, &try);
         //printf("Sali %d y devolvio %d\n",getpid(),try);
-        spin_unlock();
+        SpinUnlock();
         if(try){
             int pid=getpid();
             block_process(&pid);
@@ -50,10 +50,10 @@ void semwait(void *semp)
 
 void sempost(void *semp)
 {
-    spin_lock();
+    SpinLock();
 
     sem(2, (void *)semp, NULL);
-    spin_unlock();
+    SpinUnlock();
 }
 
 void semclose(void *semp)

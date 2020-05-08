@@ -81,7 +81,6 @@ void sempost(SemData_t * sem){
         int pid = sem->processesBlocked[i];
         if(pid != 0 && pid != myPID){
             process * p = GetProcess(sem->processesBlocked[i]);
-            DEBUG("LIBERO A : %s",p->pcb->argv[0])
             p->pcb->state = READY;
             break;
         }

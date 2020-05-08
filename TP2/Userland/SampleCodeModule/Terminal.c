@@ -185,28 +185,6 @@ int interpretCommand(){
             status=1;
         exec(command,status,test_processes,0);
     }
-    else if(strcmp(command,"semTest")){
-        int status=0;
-        if(hasParam1 && strcmp(param1,"&"))
-            status=1;
-        exec("semTest",status,semTest,1,"+");
-        exec("semTest",status,semTest,1,"-");
-        exec("semTest",status,semTest,1,"+");
-        exec("semTest",status,semTest,1,"-");
-        exec("semTest",status,semTest,1,"+");
-        exec("semTest",status,semTest,1,"-");
-        exec("semTest",status,semTest,1,"+");
-        exec("semTest",status,semTest,1,"-");
-        exec("semTest",status,semTest,1,"+");
-        exec("semTest",status,semTest,1,"-");
-    }
-    else if(strcmp(command,"semTestValue")){
-        
-        int status=0;
-        if(hasParam1 && strcmp(param1,"&"))
-            status=1;
-        exec("semTestValue",status,SemTestPrint,0);
-    }
     else if(strcmp(command,"sem"))
         semInfo();
     else if(strcmp(command,"testSem"))
