@@ -44,10 +44,23 @@ void resta(){
 }
 void spin(){
     sem_t sem=semopen("test");
-    printf("mira\n");
+    int pid=getpid();
+    printf("Me crearon %d\n",pid);
     semwait(sem);
-    printf("a ver\n");
+    printf("Hola soy %d\n",pid);
+    //ps();
+    int x=0;
+    while(x!=1000000000){
+        x++;
+        if(x==1000000000)
+        ps();
+    };
+    sempost(sem);
     exit_process();
+}
+void spin1(){
+   printf("chau\n"); 
+   exit_process();
 }
 void testSem(){
     sem_t sem=semopen("test");
@@ -61,8 +74,7 @@ void testSem(){
     printf("%d\n",variable);
     variable=0;
     flag=0;*/
-    for(int i=0;i<MAX/2;i++){
+    for(int i=0;i<5;i++){
         exec("spin",1,spin,0);
-        printf("lo cree\n");
     }
 }
