@@ -4,6 +4,9 @@
 
 #include <stdint.h>
 
+void semTest(int argc, char ** argv);
+void SemTestPrint(int argc, char ** argv);
+
 int printMem(uint64_t memDirection);
 
 extern int infoReg();
@@ -25,6 +28,5 @@ void fillString(char * test);
 
 int printMemoryState();
 
-void test_mm();
 
 #endif

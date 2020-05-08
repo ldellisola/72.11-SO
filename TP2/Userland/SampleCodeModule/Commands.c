@@ -1,13 +1,17 @@
 #include "include/Commands.h"
 
+#include <stdbool.h>
+
 #include "../Include/deviceInfo.h"
 #include "../Include/String.h"
 #include "../Include/Curses.h"
 #include "../Include/Time.h"
 #include "../Include/MemManager.h"
-
+#include "../Include/Sem.h"
+#include "../Include/Syscalls.h"
 
 extern void __UD2__();
+
 
 int quotient(int a, int b){
 

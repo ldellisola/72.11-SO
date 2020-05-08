@@ -14,6 +14,7 @@
 #include <VideoDriver.h>
 #include <ConsoleDriver.h>
 #include <pcb.h>
+#include <Sem.h>
 
 
 #define FD_STDOUT 				(0x01)
@@ -39,13 +40,14 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 void dispatchMalloc(int increment, void ** buffer);
 void dispatchFree(void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
-void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
+void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
 void dispatchKillProcess(int * firstParam);
 void dispatchBlockProcess(int * firstParam);
 void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
 void dispatchGetPid(int * ret);
 void dispatchExit();
+void dispatchSem(int fd,void * firstParam, void ** secondParam);
 
 static void * int_20(void * ptr);
 static void int_21();
@@ -87,7 +89,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 			}
 		case 0x89:{ 
-			return dispatchCreateProcess(firstParam, secondParam,thirdParam);
+			dispatchCreateProcess(firstParam, secondParam,thirdParam);
 			break;
 			}
 		case 0x90:{ 
@@ -114,6 +116,10 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			dispatchExit();
 			break;
 			}
+		case 0x96:{ 
+			dispatchSem(firstParam,secondParam,thirdParam);
+			break;
+			}	
 	}
 
 	return 0;
@@ -144,8 +150,8 @@ void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam)
 	mem_state(firstParam,secondParam,thirdParam);
 }
 
-void * dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
-	return createProcess(firstParam,secondParam,thirdParam);
+void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
+	 createProcess(firstParam,secondParam,thirdParam);
 }
 void dispatchKillProcess(int * firstParam){
 	killProcess(firstParam);
@@ -169,6 +175,38 @@ void dispatchGetPid(int * ret){
 void dispatchExit(){
 	Exit();
 }
+
+void  dispatchSem(int fd,void * firstParam, void ** secondParam){
+	switch (fd)
+	{
+	case 0:{
+		*secondParam=semopen((char *)firstParam);
+		break;
+		}
+	case 1:{
+		*(bool *)secondParam =  semwait((SemData_t *)firstParam);
+		break;
+		}
+	case 2:{
+		sempost((SemData_t *)firstParam);
+		break;
+		}
+	case 3:{
+		semclose((SemData_t *)firstParam);
+		break;
+	}
+	case 4:{
+		semInfo();
+		break;
+	}
+
+	
+	default:
+		break;
+	}
+
+}
+
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 
 	switch(fd){

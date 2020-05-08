@@ -19,7 +19,9 @@ void roundRobin();
 
 process * GetCurrentProcess();
 
-void * createProcess(char * name, int * status, function_t * function);
+process * GetProcess(int pid);
+
+void createProcess(char * name, int * status, function_t * function);
 
 void killProcess(int * pid);
 

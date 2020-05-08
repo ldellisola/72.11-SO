@@ -3,7 +3,11 @@ GLOBAL __UD2__
 GLOBAL __MEM__
 
 GLOBAL __halt__
+
 EXTERN printRegisters
+
+
+
 
 section .text
 
@@ -43,6 +47,12 @@ section .text
 	pop rbx
 	pop rax
 %endmacro
+
+
+
+
+
+
 
 
 __halt__:

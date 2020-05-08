@@ -6,7 +6,16 @@
 
 
 
-int exec(char * name, int status, int ** func,int argc,...){
+/*
+
+    - name: name of the process
+    - status: foreground / background?
+    - func: Puntero a la funciona ejectuar
+    - argc: cantidad de argumentos
+    - ... argumentos
+
+*/
+int exec(char * name, int status, int (* func)(),int argc,...){
     int bridge=status;
     char * args[argc];
 
@@ -24,6 +33,7 @@ int exec(char * name, int status, int ** func,int argc,...){
         va_end(valist);
     }
 
+
     function_t  function;
     function.args=args;
     function.function=func;
@@ -32,9 +42,7 @@ int exec(char * name, int status, int ** func,int argc,...){
     //DEBUG("%s","Llamando a syscall")    
 
     create_process(name,&bridge,&function);
-    
-    if(bridge==-1)
-        return -1;
-    return 0;
+//    ps();
+    return bridge;
         
 }

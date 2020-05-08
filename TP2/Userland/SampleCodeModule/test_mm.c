@@ -1,7 +1,7 @@
 #include "../Include/MemManager.h"
 #include "../Include/Curses.h"
 #include "include/test_util.h"
-#include "include/Commands.h"
+#include "include/Process.h"
 
 #define MAX_BLOCKS 128
 #define MAX_MEMORY 200000 //Should be around 80% of memory managed by the MM
@@ -30,9 +30,6 @@ void test_mm(){
     while(rq < MAX_BLOCKS && total < MAX_MEMORY){
       mm_rqs[rq].size = GetUniform(MAX_MEMORY - total - 1) + 1;
       mm_rqs[rq].address =malloc(mm_rqs[rq].size); // TODO: Port this call as required
-      if(mm_rqs[rq].address==NULL)
-        printf("es null\n");
-      
         
       total += mm_rqs[rq].size;
       rq++;

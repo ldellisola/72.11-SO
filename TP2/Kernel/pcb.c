@@ -31,6 +31,24 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcbs[i].priority = 1;
     pcbs[i].pidP=pidp;
 
+    /// Copio argumentos a pcb
+
+    pcbs[i].argv = malloc(function->argc * sizeof(char *));
+
+    for(int j = 0 ; j < function->argc; j++){
+        int t;
+        for(t = 0 ; function->args[j][t] !=0 ; t++)
+
+        pcbs[i].argv[j] = malloc((t+1) * sizeof(char));
+        CopyString(function->args[j],pcbs[i].argv[j],(t+1));
+    }
+
+    pcbs[i].argc = function->argc;
+
+
+
+    /// Continuo
+
 
     pcbs[i].stack = stck[i];
     pcbs[i].state = READY;
@@ -54,7 +72,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     *(proc->sp--) = 0;              //rdx
     *(proc->sp--) = proc->bp;       //rbp
     *(proc->sp--) = function->argc; //rdi
-    *(proc->sp--) = function->args; // rsi        
+    *(proc->sp--) = pcbs[i].argv;   // rsi        
     *(proc->sp--) = 0;              //r8
     *(proc->sp--) = 0;              //r9
     *(proc->sp--) = 0;              //r10
@@ -73,7 +91,12 @@ void kill(int *pid)
     if (i != -1)
     {
         pcbs[i].state = KILL;
-        free(pcbs[i].stack);
+        for(int j = 0 ; j < pcbs[i].argc ; j++){
+            free(pcbs[i].argv[j]);
+        }
+
+        free(pcbs[i].argv);
+        cant--;
         return;
     }
     *pid = -1;
