@@ -6,29 +6,26 @@
 
 int variable=0;
 int flag=0;
-int cantidad=0;
 
 void sum();
 void resta();
 
 void sum(){
-    int num=cantidad++;
+    flag++;
     for(int i=0;i<MAX;i++){
     int cant=variable;
     cant++;
     variable=cant;  
     }
-    flag++;    
     exit_process();
 }
 void resta(){
-    int num=cantidad++;
+    flag++;
     for(int i=0;i<MAX;i++){
     int cant=variable;
     cant--;
     variable=cant;  
     }
-    flag++;    
     exit_process();
 }
 
@@ -41,5 +38,6 @@ void testSem(){
     }
     while(flag!=6);
     printf("%d\n",variable);
-
+    variable=0;
+    flag=0;
 }
