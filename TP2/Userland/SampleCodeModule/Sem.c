@@ -18,13 +18,16 @@ void semwait(void * semp){
 
 
     int try;
+    bool pppp = true;
 
+    do{
     while (!__sync_bool_compare_and_swap(&try,0,1))
     {
         while(try)
             __builtin_ia32_pause();    
     }
-    sem(1,(void *) semp,&try);
+    sem(1,(void *) semp,&pppp);
+    }while(pppp);
     
     // do{
     //     // spin_lock();
@@ -48,10 +51,15 @@ void semwait(void * semp){
 }
 
 void sempost(void * semp){
-        spin_lock();
+    int try;
+
+    while (!__sync_bool_compare_and_swap(&try,0,1))
+    {
+        while(try)
+            __builtin_ia32_pause();    
+    }
 
     sem(2,(void *) semp,NULL);
-            spin_unlock();
 
     
 }

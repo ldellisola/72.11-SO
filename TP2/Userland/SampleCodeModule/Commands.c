@@ -33,14 +33,22 @@ void semTest(int argc, char ** argv){
 
     bool flag = true;
 
-    for(int i = 0 ; i < 9999999 ; i++){
-        semwait(sem);
+    for(int i = 0 ; i < 100000 ; i++){
+semwait(sem);
+        if(sign == -1 && a > 0){
+            a--;
+        }
 
-        int old = a;
-        old += sign;
-        a = old;
-
+        if(sign == 0 && a == 0){
+            a++;
+        }
         sempost(sem);
+        // a += sign;
+
+        // int old = a;
+        // a = old;
+
+        
     }
 
     semclose(sem);
