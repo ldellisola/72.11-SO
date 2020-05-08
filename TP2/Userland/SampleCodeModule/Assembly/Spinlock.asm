@@ -1,11 +1,11 @@
 GLOBAL __SpinLock__
 GLOBAL __SpinUnlock__
 
-section .bss:
+section .bss
 
-lockAddress resd 0
+locked resd 0
 
-selction .text:
+section .text
 
 
 __SpinLock__:
@@ -20,7 +20,7 @@ __SpinLock__:
                              ; If EAX is 0, then the lock was unlocked and
                              ;  we just locked it.
                              ; Otherwise, EAX is 1 and we didn't acquire the lock.
-     jnz     spin_lock       ; Jump back to the MOV instruction if the Zero Flag is
+     jnz     __SpinLock__       ; Jump back to the MOV instruction if the Zero Flag is
                              ;  not set; the lock was previously locked, and so
                              ; we need to spin until it becomes unlocked.
 	leave

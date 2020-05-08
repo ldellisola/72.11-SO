@@ -1,5 +1,4 @@
 #include "include/Sem.h"
-#include "include/Mutex.h"
 #include "include/Curses.h"
 #include "include/String.h"
 #include "include/Scheduler.h"

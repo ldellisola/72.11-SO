@@ -1,11 +1,10 @@
 #include "../Include/Sem.h"
 #include "../Include/Syscalls.h"
 #include "../Include/Curses.h"
+#include "include/SpinLock.h"
 #include <stdbool.h>
 
-void extern spin_lock();
 
-void extern spin_unlock();
 
 int var=0;
 
@@ -19,7 +18,7 @@ void semwait(void * semp){
 
 
     int try;
-    spin_lock();
+    SpinLock();
     printf("hola soy %d\n",var++);
     ps();
         //sem(1,(void *) semp,&try);
@@ -42,8 +41,8 @@ void semwait(void * semp){
         //     }
 
         // }while(try);
-    //while(1);    
-    spin_unlock();    
+    while(1);    
+    SpinUnlock();   
     printf("ya salí %d\n",var-1);
 }
 
