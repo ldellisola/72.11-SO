@@ -62,19 +62,10 @@ void spin1(){
    printf("chau\n"); 
    exit_process();
 }
-void testSem(){
+void testSem(int argc, char ** argv){
     sem_t sem=semopen("test");
-    /*for(int i=0;i<3;i++){
-        int status=1;
-        exec("suma",status,sum,0);
-        exec("resta",status,resta,0);
-        
-    }
-    while(flag!=6);
-    printf("%d\n",variable);
-    variable=0;
-    flag=0;*/
+
     for(int i=0;i<5;i++){
-        exec("spin",1,spin,0);
+        exec("spin",1,spin,0,NULL);
     }
 }
