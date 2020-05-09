@@ -2,6 +2,7 @@
 #include "include/Scheduler.h"
 #include "include/MemManager.h"
 #include "include/Curses.h"
+#include "include/pcb.h"
 
 #define quantum 20/1000
 #define INIT_QUEUE 1
@@ -15,6 +16,19 @@ bool killedCurrentProcess = false;
 void insertQueue(process * process);
 void deleteQueue(int * pid,process ** process);
 
+void AwakeAllProcesses(){
+
+    process * p = curr;
+
+    do{
+        if(p->pcb->state == WAITING_INPUT)
+            p->pcb->state = READY;
+        
+        p = p->next;
+
+    }while(p != curr);
+
+}
 
 
 void roundRobin(){
@@ -33,7 +47,7 @@ void roundRobin(){
     
     do{
         curr=curr->next;
-    }while(curr->pcb->state==BLOCK);
+    }while(curr->pcb->state==BLOCK || curr->pcb->state == WAITING_INPUT);
     
 }
 
@@ -119,6 +133,17 @@ void blockProcess(int * pid){
     }
     block(pid);
 }
+
+void SleepProcess(){
+    int pid = getpid();
+
+    process * p = GetProcess(pid);
+
+    if(p != NULL){
+        p->pcb->state = WAITING_INPUT;
+    }
+}
+
 
 void niceProcess(int * pid, int priority){
     if(*pid==0){

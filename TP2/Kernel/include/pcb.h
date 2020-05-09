@@ -10,7 +10,7 @@ typedef struct{
     int argc;
     char ** args;
 }function_t;
-typedef enum {KILL,READY,BLOCK}State;
+typedef enum {KILL,READY,BLOCK,WAITING_INPUT}State;
 typedef enum {FOREGROUND,BACKGROUND}Status;
 
 typedef struct{

@@ -34,6 +34,7 @@ void _irq93Handler(int * firstParam);
 void _irq94Handler(int * firstParam);
 void _irq95Handler();
 void _irq96Handler(int fd,void*first,void**second);
+void _irq97Handler();
 
 void _exception0Handler(void);
 void _exception6Handler(void);

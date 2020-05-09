@@ -12,6 +12,7 @@ GLOBAL ps
 GLOBAL get_pid
 GLOBAL _exit
 GLOBAL sem
+GLOBAL sleep_process
 
 section .text:
 
@@ -207,6 +208,8 @@ block_process:
         leave
         ret
 
+
+
 ps:
         enter 0,0
 
@@ -251,6 +254,19 @@ sem:
         mov rbx, rsi    ;primer arg
         mov rax, rdi    ;fd        
         int 96h
+
+        popState
+
+        leave
+        ret
+
+sleep_process:
+        enter 0,0
+
+        pushState
+        
+        mov rax, rdi    ;primer arg     
+        int 97h
 
         popState
 
