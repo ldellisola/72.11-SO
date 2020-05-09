@@ -1,5 +1,6 @@
 #include <keyboard.h>
 #include <stdbool.h>
+#include <Scheduler.h>
 
 extern int __ReadKey__();
 
@@ -85,6 +86,7 @@ void readKey()
    
     if(temp != -1){
         keyboardBuffer[bufferIndex++ % BUFFER_SIZE] = temp;
+
     }
 }
 
@@ -94,7 +96,8 @@ int returnKey(){
 
     if(returnIndex == bufferIndex)
         return -1;
-        
+    
+
     return keyboardBuffer[returnIndex++ % BUFFER_SIZE];
 }
 

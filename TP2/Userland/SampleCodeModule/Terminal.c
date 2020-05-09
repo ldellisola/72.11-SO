@@ -39,13 +39,17 @@ void overwriteArrayUpTo(char * src, char * dest,char c);
 /***************************************************************/
 
 int runTerminal(){
+	exec("BACK LOOP",1,loop,0);
 
     clearArray(TerminalType,MAXBUFFER);
     TypeIndex = 0;
     printf(">>>>  "); 
     int exit=0;
     do{
-        
+        DEBUG("ESPERO INPUT%s","")
+        SleepUntilUserInput();
+        DEBUG("LLEGO INPUT %s","")
+
 		int key = readKey();
 
 		if(key >0){     

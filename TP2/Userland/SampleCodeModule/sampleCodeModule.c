@@ -8,13 +8,13 @@
 #include <stdlib.h>
 #include "../Include/deviceInfo.h"
 
-
+#include "include/Process.h"
 extern void __halt__();
 
 
 int main() {	
-	
 	exec("terminal",0,runTerminal,0);
+
 
 	__halt__();
 	__halt__();

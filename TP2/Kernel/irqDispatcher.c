@@ -48,6 +48,8 @@ void dispatchPs();
 void dispatchGetPid(int * ret);
 void dispatchExit();
 void dispatchSem(int fd,void * firstParam, void ** secondParam);
+void dispatchSleep();
+
 
 static void * int_20(void * ptr);
 static void int_21();
@@ -120,6 +122,9 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			dispatchSem(firstParam,secondParam,thirdParam);
 			break;
 			}	
+		case 0x97:{
+			dispatchSleep();
+		}
 	}
 
 	return 0;
@@ -130,9 +135,13 @@ void * int_20(void * ptr) {
 
 void int_21(){
 
-	 readKey();
+	readKey();
+	AwakeAllProcesses();
+
 	
 }
+
+
 
 
 void dispatchMalloc(int increment, void ** buffer) { 
@@ -156,6 +165,11 @@ void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thi
 void dispatchKillProcess(int * firstParam){
 	killProcess(firstParam);
 }
+
+void dispatchSleep(){
+	SleepProcess();
+}
+
 
 
 void dispatchBlockProcess(int * firstParam){
@@ -223,6 +237,7 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 				
 				if( temp != -1 ){
 					buffer[i++]=temp;
+
 				}
 
 			}while( temp!= -1 && i <bufferSize-1 );
@@ -248,9 +263,6 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 			break;
 		}
 		case FD_DEVICE_INFO: { 
-
-			// printf("FD: %d. PAR1 %d. PAR2 %d. PAR3 %d. PAR4 %d.",fd,firstParam,secondParam,thirdParam,fourthParam);
-
 			getDeviceInfo(firstParam);
 			break;
 		}
