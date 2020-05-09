@@ -13,8 +13,9 @@ extern void __halt__();
 
 
 int main() {	
-	
-	exec("terminal",0,runTerminal,0);
+	char * args[] = {"TP2 de SO"};
+
+	exec("terminal",0,runTerminal,1,args);
 
 	__halt__();
 	__halt__();

@@ -49,7 +49,7 @@ void semclose(void *semp)
     sem(3, (void *)semp, NULL);
 }
 
-void semInfo()
+void semInfo(int argc, char ** argv)
 {
     sem(4, NULL, NULL);
 }
