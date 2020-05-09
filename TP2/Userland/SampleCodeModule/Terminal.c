@@ -50,7 +50,7 @@ static char TerminalType[MAXBUFFER];
 static unsigned int TypeIndex = 0;
 
 Command_t commands[] = {
-    {.function = loop, .name = "loop", .isProcess = true, .description = "It shows the current date and time."},
+    {.function = loop, .name = "loop", .isProcess = true, .description = "Infinite loop"},
     {.function = test_mm, .name = "testMem", .isProcess = true, .description = "Process that tests our memory manager implementation."},
     {.function = test_processes, .name = "testProcess", .isProcess = true, .description = "Process that tests our process implementation."},
 
@@ -96,6 +96,7 @@ int runTerminal()
     int exit = 0;
     do
     {
+        SleepUntilUserInput();
         int key = readKey();
         if (key > 0)
         {
@@ -157,7 +158,7 @@ void help(int argc, char **argv)
 
         while (commands[i].name != NULL)
         {
-            printf("%s    |%s\n", commands[i].isProcess ? "Proceso" : "Comando", commands[i].name);
+            printf("%s    |  %s\n", commands[i].isProcess ? "Proceso" : "Comando", commands[i].name);
             i++;
         }
     }
@@ -168,11 +169,13 @@ void help(int argc, char **argv)
         {
             if (hash == commands[i].hash)
             {
-                printf("%s      | %s\n", commands[i].isProcess ? "Proceso" : "Comando", commands[i].name);
+                printf("%s      |  %s\n", commands[i].isProcess ? "Proceso" : "Comando", commands[i].name);
                 printf("           %s\n", commands[i].description);
                 return;
             }
         }
+
+        printfError("%s  Unkown command\n",argv[0]);
     }
 }
 
@@ -231,9 +234,8 @@ int interpretCommand()
 
     if (commands[i].name == NULL)
     {
-        printfError("%s: command not found with arguments: \n", parsedCommand.process);
-        for (int i = 0; i < parsedCommand.argc; i++)
-            printfError(" %s ", parsedCommand.argv[i]);
+        printfError("%s: command not found\n", parsedCommand.process);
+        
     }
 
     return 0;

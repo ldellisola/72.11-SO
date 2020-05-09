@@ -17,6 +17,8 @@ typedef struct Priority{
 
 void roundRobin();
 
+void AwakeAllProcesses();
+
 process * GetCurrentProcess();
 
 process * GetProcess(int pid);

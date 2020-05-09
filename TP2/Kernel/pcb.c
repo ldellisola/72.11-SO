@@ -3,20 +3,21 @@
 #include "include/Curses.h"
 #include "include/String.h"
 
-#define MAX 20
 #define STACK 0x300
 #define NULL 0
+#define MAX_PROC 20
+
 static int pid = 0;
 
-uint64_t stck[MAX][STACK];
-pcb pcbs[MAX];
+uint64_t stck[MAX_PROC][STACK];
+pcb pcbs[MAX_PROC];
 int cant = 0;
 
 int findProcess(int pid);
 
 pcb *create(char *name, int *status, function_t *function,int pidp)
 {
-    if (cant == MAX)
+    if (cant == MAX_PROC)
     {
         *status = -1;
         return NULL;
@@ -24,7 +25,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
 
     int i;
     cant++;
-    for (i = 0; i < MAX && pcbs[i].state != KILL; i++);
+    for (i = 0; i < MAX_PROC && pcbs[i].state != KILL; i++);
     
     CopyString(name, pcbs[i].name, strlen(name));
     pcbs[i].pid = pid++;
@@ -137,10 +138,10 @@ int findProcess(int pid)
 {
     int i;
 
-    for (i = 0; i < MAX && pcbs[i].pid != pid; i++)
+    for (i = 0; i < MAX_PROC && pcbs[i].pid != pid; i++)
             ;
 
-    if (i == MAX || pcbs[i].state == KILL)
+    if (i == MAX_PROC || pcbs[i].state == KILL)
         return -1;
 
     return i;
@@ -149,16 +150,19 @@ int findProcess(int pid)
 void ps()
 {
     printf("pid  prioridad   stack        bp     status  estado     nombre\n");
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < MAX_PROC; i++)
     {
         if (pcbs[i].state != KILL)
         {
             printf(" %d      %d      0x%x    0x%x     %d     ", pcbs[i].pid, pcbs[i].priority, pcbs[i].stack,pcbs[i].bp, pcbs[i].status);
             if (pcbs[i].state == READY)
                 printf("ready");
-            else
+            else if(pcbs[i].state == BLOCK)
                 printf("block");
+            else 
+                printf("waiting");
             printf("    %s\n",pcbs[i].name);    
         }
     }
 }
+
