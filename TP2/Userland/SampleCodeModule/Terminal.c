@@ -133,8 +133,19 @@ int interpretCommand(){
         int status=0;
         if(hasParam1 && strcmp(param1,"&"))
             status=1;
-        exec(command,status,loop,0);
-        
+        exec(command,status,loop,0); 
+    }
+    else if(strcmp(command,"filter")){
+        int status=0;
+        if(hasParam1 && strcmp(param1,"&"))
+            status=1;
+        exec(command,status,filter,0); 
+    }
+    else if(strcmp(command,"phylo")){
+        int status=0;
+        if(hasParam1 && strcmp(param1,"&"))
+            status=1;
+        exec(command,status,phylo,0); 
     }
     else if(strcmp(command,"kill") && hasParam1){
         int pid = stringToInt(param1);    
