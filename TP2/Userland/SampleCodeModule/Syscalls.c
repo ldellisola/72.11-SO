@@ -1,6 +1,7 @@
 #include "../Include/Syscalls.h"
 extern void _exit();
 extern void sleep_process();
+extern void get_pid(int * ret);
 
 
 
@@ -23,7 +24,6 @@ void BlockAndSwitchProcess(int * pid){
 
 void SleepUntilUserInput(){
 	sleep_process();
-	__asm__("hlt");
 
 
 }

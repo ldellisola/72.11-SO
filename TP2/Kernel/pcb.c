@@ -100,6 +100,7 @@ void kill(int *pid)
         cant--;
         return;
     }
+    DEBUG("KILL Failed%s","")
     *pid = -1;
 }
 
@@ -138,10 +139,9 @@ int findProcess(int pid)
 {
     int i;
 
-    for (i = 0; i < MAX_PROC && pcbs[i].pid != pid; i++)
-            ;
+    for (i = 0; i < MAX_PROC && pcbs[i].pid != pid; i++);
 
-    if (i == MAX_PROC || pcbs[i].state == KILL)
+    if (i == MAX_PROC)
         return -1;
 
     return i;
