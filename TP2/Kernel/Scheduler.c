@@ -4,12 +4,17 @@
 #include "include/Curses.h"
 #include "include/pcb.h"
 
+extern void __ForceTimerTick__();
+
+
 #define quantum 20/1000
 #define INIT_QUEUE 1
 
 Priority priority;
 process * curr=0;
 int currPr=0;
+
+int hasTodelete = 0;
 
 bool killedCurrentProcess = false;
 
@@ -40,16 +45,37 @@ void roundRobin(){
         return ;
     }
 
+    if(hasTodelete > 0){
+        process * aux = curr;
+
+        do{
+
+            if(curr->pcb->state == KILL){
+                process * aux=curr->prev;
+                killProcess(&curr->pcb->pid);
+                hasTodelete--;
+                curr=aux;
+            } 
+            else{
+                aux = aux->next;
+            }
+        }while (aux != curr);
+        
+    }
+
     if(priority.cant == 1){
         curr = priority.first;
         return;
     }
+
+
     
     do{
         curr=curr->next;
     }while(curr->pcb->state==BLOCK || curr->pcb->state == WAITING_INPUT);
     
 }
+
 
 process * GetCurrentProcess(){
 
@@ -108,6 +134,8 @@ void createProcess(char * name, int * status, function_t * function){
 void killProcess(int * pid){
 
     if(*pid == 0){
+            DEBUG("KILLprocess Failed%s","1")
+
         *pid = -2;
         return;
     }
@@ -141,6 +169,7 @@ void SleepProcess(){
 
     if(p != NULL){
         p->pcb->state = WAITING_INPUT;
+        __ForceTimerTick__();
     }
 }
 
@@ -160,10 +189,9 @@ void niceProcess(int * pid, int priority){
 }
 
 void Exit(){
-    killedCurrentProcess = true;
-    process * aux=curr->prev;
-    killProcess(&curr->pcb->pid);
-    curr=aux;
+    hasTodelete++;
+    //killedCurrentProcess = true;
+    curr->pcb->state = KILL;
 }    
 void insertQueue(process * procs){
         priority.last=procs;

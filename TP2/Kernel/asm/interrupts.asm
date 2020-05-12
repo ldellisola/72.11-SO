@@ -35,6 +35,8 @@ GLOBAL _irq97Handler
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 
+GLOBAL __ForceTimerTick__
+
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -120,7 +122,11 @@ SECTION .text
 	%endmacro
 
 
-
+__ForceTimerTick__:
+	enter 0,0
+	int 20h
+	leave
+	ret
 
 _hlt:
 	sti

@@ -48,7 +48,6 @@ void exit_process();
 
 extern void ps();
 
-extern void get_pid(int * ret);
 
 int getpid();
 
