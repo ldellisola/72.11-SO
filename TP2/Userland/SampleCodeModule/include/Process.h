@@ -3,6 +3,8 @@
 
 void loop();
 
+void cat(int argc, char ** argv);
+
 void test_mm();
 
 void test_processes();

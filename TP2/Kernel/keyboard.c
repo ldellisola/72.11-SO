@@ -30,6 +30,9 @@ enum Commands
 #define F(x) (CapsLock - x)
 #define BUFFER_SIZE  256
 
+#define QUIT -30
+#define EOF -20
+
 static const int KeyMap[] = {
     //1
     Escape, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 8,
@@ -47,6 +50,7 @@ static const int KeyMap[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, F(11), F(12), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
 static const int ShiftKeyMap[] = {    
     //0
     0, 0, 0, 0, 0, 0, 0, 0, 8, 0, '\n', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -56,6 +60,21 @@ static const int ShiftKeyMap[] = {
     '@', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}',
     '^', '_', '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{',
+    '|', '}', '~', 0
+};
+
+
+
+static const int ControlKeyMap[] = {    
+    //0
+    0, 0, 0, 0, 0, 0, 0, 0, 8, 0, '\n', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    //32
+    ' ', '!', '\"', '#', '&', '%', '\"', '(', ')', '*', '+', '<', '_', '>', '?', ')',
+    '!', '@', '#', '$', '%', '^', '&', '*', '(', ':', ':', '<', '+', '>', '?',
+    '@', 'a', 'b', QUIT, 'd', EOF, 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}',
+    '^', '_', '~', 'A', 'B', QUIT, 'D', EOF, 'F', 'G', 'H', 'I', 'J', 'K', 'L',
     'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{',
     '|', '}', '~', 0
     };
@@ -70,6 +89,7 @@ int processKeyboardInput(int input);
 
 static bool Mayusc = false;
 static bool Shift = false;
+static bool control = false;
 
 #include <Curses.h>
 
@@ -116,9 +136,13 @@ int processKeyboardInput(int input)
     if (PressedKey > 0)
     {
         int asciiValue = handleASCII(PressedKey);
-        
-        if (asciiValue != -1)
+
+        if(asciiValue > 0 || asciiValue == EOF){
             return asciiValue;
+        }
+        else if(asciiValue == QUIT){
+            killCurrentForegroundProcess();
+        }      
     }
 
     handleCommands(PressedKey);
@@ -140,6 +164,9 @@ void handleBreaks(int input)
         case Rshift:
             Shift = false;
             break;
+        case Control:
+            control = false;
+            break;
         }
     }
 }
@@ -153,6 +180,8 @@ int handleASCII(int PressedKey)
             PressedKey += 'A' - 'a';
         if (Shift)
             PressedKey = ShiftKeyMap[PressedKey];
+        if (control)
+            PressedKey = ControlKeyMap[PressedKey];
         return PressedKey;
     }
     else if ((' ' <= PressedKey && PressedKey <= '?') || ('Z' < PressedKey && PressedKey < 'a') 
@@ -171,6 +200,22 @@ int handleASCII(int PressedKey)
 
 void handleCommands(int PressedKey)
 {
+    switch (PressedKey)
+    {
+    case CapsLock:
+        Mayusc != Mayusc;
+        break;
+    case LShift:
+    case Rshift:
+        Shift = true;
+        break;
+    case Control:
+        control = true;
+        break;
+    
+    default:
+        break;
+    }
     if (PressedKey == CapsLock)
     {
         if (Mayusc)
