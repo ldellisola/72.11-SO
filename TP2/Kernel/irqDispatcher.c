@@ -130,6 +130,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 		case 0x98:{
 			dispatchPipes(firstParam,secondParam,thirdParam,fourthParam);
 		}
+		default: break;
 	}
 
 	return 0;
