@@ -24,7 +24,6 @@
 /* ----------------------------------------*/
 
 void openPipe(char * name,actions action,int*fd){
-  printf("aca muere\n");
   int i=lookPipe(name);
   //si no se puede tener más de dos procesos esto cambia
   if(i==-1){
@@ -41,6 +40,9 @@ void openPipe(char * name,actions action,int*fd){
     CopyString(name,files[i].name,strlen(name));
     files[i].read=files[i].buffer;
     files[i].write=files[i].buffer;
+    int buffer=files[i].buffer;
+    int read=files[i].read;
+    int write=files[i].write;
     //me aseguro que lo primero sea 0 por read y write
     *files[i].buffer=0;
     files[i].state=1;
@@ -74,10 +76,11 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
   
   int j=0;
   int count=0;
-  
+  bool blocking=false;
   char * read=files[i].read;
   char * write=files[i].write;
   //aseguro que soy yo solo
+  
   SpinLock();
   
   //cuando el write dio la vuelta
@@ -92,11 +95,9 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
 
       //lo guardo en los procesos bloqueados     
       files[i].processesBlocked=pid;
-
       //bloqueo al proceso
       blockProcess(&pid);
-      //genero la interrupcion
-      __ForceTimerTick__();
+      blocking=true;
     }
     else{
       read++;
@@ -104,8 +105,13 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
   }
   //libero el lock porque ya me fije si habia alguien más y como en kernel no interrupme
   //si estoy aca nadie más está acá
-  SpinUnlock();
 
+  //genero la interrupcion
+  if(blocking){
+      SpinUnlock();
+    __ForceTimerTick__();
+    write=files[i].write;
+}
   if(read>write){
       while(read<(files[i].buffer+BUFFER) && j<bufferSize-1){
       buffer[j++]=*read;
@@ -123,8 +129,10 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
       //desbloqueo al otro
       if(files[i].processesBlocked!=0){
         block(&files[i].processesBlocked);
-        files[i].processesBlocked=0;  
+        files[i].processesBlocked=0;
+        return;  
       }
+      SpinUnlock();
       return;
     }
     read=files[i].buffer;
@@ -147,7 +155,9 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
   if(files[i].processesBlocked!=0){
     block(&files[i].processesBlocked);
     files[i].processesBlocked=0;  
+    return;
   }
+  SpinUnlock();
   return;
 }
 
@@ -178,7 +188,6 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
     flag=false;
       SpinLock();
       if(read==write && *write!=0){
-        DEBUG("En lock de write\n",0);
         int pid=getpid();
         files[i].processesBlocked=pid;
         block(&pid);
@@ -189,11 +198,10 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
 
       if(flag){
         __ForceTimerTick__();
+        read=files[i].read;
       }
-
       if(write<(files[i].buffer+BUFFER)){
         *write=buffer[j++];
-        DEBUG("%s\n",*write);
         write++;
         count++;
       }

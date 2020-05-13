@@ -230,7 +230,6 @@ void  dispatchSem(int fd,void * firstParam, void ** secondParam){
 }
 
 void  dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam){
-	printf("%d\n",ind);
 	switch (ind){
 	case 0:{
 		openPipe((char *)firstParam,secondParam,thirdParam);

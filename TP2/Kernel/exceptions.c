@@ -25,7 +25,7 @@ void exceptionDispatcher(int exception, uint64_t * stackPointer) {
 			case INVALID_OPCODE_EXCEPTION_ID:
 			{
 				PrintExceptionDetails("Invalid OPCODE",stackPointer,*(stackPointer+15));
-
+				DEBUG("La excepcion me la tira %d",getpid());
 				break;
 			}
 			default:{
