@@ -1,8 +1,6 @@
 #include "include/Exec.h"
 #include "../Include/Syscalls.h"
 #include "../Include/Curses.h"
-typedef enum{READ,WRITE} actions;
-
 /*
 
     - name: name of the process
@@ -21,8 +19,8 @@ int exec(char * name, int status, int (* func)(),int read,int write,int argc,cha
     function.args=argv;
     function.function=func;
     function.argc=argc;
-    function.fd[READ]=read;
-    function.fd[WRITE]=write;
+    function.read=read;
+    function.write=write;
     //DEBUG("%s","Llamando a syscall")    
 
     create_process(name,&bridge,&function);

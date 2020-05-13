@@ -9,7 +9,8 @@ typedef struct{
     int (* function)(int, char **);
     int argc;
     char ** args;
-    int fd[2];
+    int read;
+    int write;
 }function_t;
 typedef enum {KILL,READY,BLOCK,WAITING_INPUT}State;
 typedef enum {FOREGROUND,BACKGROUND}Status;
