@@ -27,7 +27,7 @@ void openPipe(char * name,actions action,int * fd);
 void read(char * buffer,int bufferSize);
 
 //devuelve si pudo leer por el bufferSize, -1 error sino cantidad de caracteres
-void readPipe(int fd,char * buffer,int * bufferSize);
+void readPipe(int fd,char * buffer,int * bufferSize,bool pipe);
 
 void write(char * buffer,int * ans);
 //devuelve si pudo escribir por la respuesta, -1 error sino cantidad de caracteres

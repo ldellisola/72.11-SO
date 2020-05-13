@@ -55,17 +55,18 @@ void read(char * buffer,int bufferSize){
     readStdin(buffer,bufferSize);
     return;
   }
-  readPipe(fd,buffer,bufferSize);
+  readPipe(fd,buffer,bufferSize,false);
   
 }
 
-void readPipe(int fd,char * buffer,int * bufferSize){
+void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
  
  //checkeo que exista el pipe
   int i=pipeCheck(fd,READ);
   
   //sino -1
   if(i==-1){
+    if(pipe)
     *bufferSize=i;
     return;
   }
@@ -115,6 +116,7 @@ void readPipe(int fd,char * buffer,int * bufferSize){
     if(j==bufferSize-1){
       buffer[j]=0;
       files[i].read=read;
+      if(pipe)
       *bufferSize=count;
 
       //desbloqueo al otro
@@ -137,6 +139,14 @@ void readPipe(int fd,char * buffer,int * bufferSize){
   }
   buffer[j]=0;
   files[i].read=read;
+  if(pipe)
+  *bufferSize=count;
+
+  //desbloqueo al otro
+  if(files[i].processesBlocked!=0){
+    block(files[i].processesBlocked);
+    files[i].processesBlocked=0;  
+
   return;
 }
 

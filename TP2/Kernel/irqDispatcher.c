@@ -12,6 +12,7 @@
 #include <SpeakerDriver.h>
 #include <font.h>
 #include <VideoDriver.h>
+#include <Pipe.h>
 #include <ConsoleDriver.h>
 #include <pcb.h>
 #include <Sem.h>
@@ -49,6 +50,7 @@ void dispatchGetPid(int * ret);
 void dispatchExit();
 void dispatchSem(int fd,void * firstParam, void ** secondParam);
 void dispatchSleep();
+void dispatchPipes();
 
 
 static void * int_20(void * ptr);
@@ -226,22 +228,22 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 	switch(fd){
 		case FD_STDOUT: { break;}
 		case FD_STDERR: { break;}
-		case FD_STDIN: { 
+				case FD_STDIN: { 
 
 			char * buffer = (char *) firstParam;
-            int bufferSize = secondParam;
-			int i = 0;		
-			int temp;
-			do{
-				temp = returnKey();
+      int bufferSize = secondParam;
+			read(buffer,bufferSize);			
+			// int i = 0;		
+			// int temp;
+			// do{
+			// 	temp = returnKey();
 				
-				if( temp != -1 ){
-					buffer[i++]=temp;
+			// 	if( temp != -1 ){
+			// 		buffer[i++]=temp;
+			// 	}
 
-				}
-
-			}while( temp!= -1 && i <bufferSize-1 );
-			buffer[i] = 0;
+			// }while( temp!= -1 && i <bufferSize-1 );
+			// buffer[i] = 0;
 			
 			break;
 		}
@@ -263,6 +265,9 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 			break;
 		}
 		case FD_DEVICE_INFO: { 
+
+			// printf("FD: %d. PAR1 %d. PAR2 %d. PAR3 %d. PAR4 %d.",fd,firstParam,secondParam,thirdParam,fourthParam);
+
 			getDeviceInfo(firstParam);
 			break;
 		}
@@ -279,6 +284,12 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 			break;
 			}
 		case FD_STDOUT_COLOR: { break;}
+		default:{
+			char * buffer = (char *) firstParam;
+			int * bufferSize = secondParam;
+			readPipe(fd,buffer,bufferSize,true);			
+			
+		}
 	}
 }
 
