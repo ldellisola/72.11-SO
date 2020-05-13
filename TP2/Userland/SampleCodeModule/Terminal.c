@@ -54,6 +54,7 @@ Command_t commands[] = {
     {.function = loop, .name = "loop", .isProcess = true, .description = "Infinite loop"},
     {.function = test_mm, .name = "testMem", .isProcess = true, .description = "Process that tests our memory manager implementation."},
     {.function = test_processes, .name = "testProcess", .isProcess = true, .description = "Process that tests our process implementation."},
+    {.function = cat, .name = "cat", .isProcess = true, .description = "Imprime en STDOOUT lo que viene por STDIN"},
 
     {.function = help, .name = "help", .isProcess = false, .description = "It enumerates all the commands available on this shell\nIf there's an argument, it will tell you the funcition of that command."},
     {.function = time, .name = "time", .isProcess = false, .description = "It shows the current date and time."},
@@ -96,9 +97,10 @@ int runTerminal()
     TypeIndex = 0;
     printf(">>>>  ");
     int exit = 0;
+            SleepUntilUserInput();
+
     do
     {
-        SleepUntilUserInput();
         int key = readKey();
         if (key > 0)
         {
@@ -121,6 +123,8 @@ int runTerminal()
                     clearArray(TerminalType, MAXBUFFER);
                     TypeIndex = 0;
                     printf(">>>>  ");
+                    SleepUntilUserInput();
+
                 }
             }
         }

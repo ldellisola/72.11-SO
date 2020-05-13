@@ -1,6 +1,7 @@
 #ifndef PCB_H
 #define PCB_H
 #include "deviceInfo.h"
+#include <stdbool.h>
 
 #define MAX_NAME 50
 
@@ -11,7 +12,7 @@ typedef struct{
     char ** args;
     int fd[2];
 }function_t;
-typedef enum {KILL,READY,BLOCK,WAITING_INPUT}State;
+typedef enum {KILL,READY,BLOCK}State;
 typedef enum {FOREGROUND,BACKGROUND}Status;
 
 #define STDIN 0
@@ -30,6 +31,7 @@ typedef struct{
     State state; 
     char ** argv;
     int argc;
+    bool isWaitingForInput;
 }pcb;
 
 pcb * create(char * name, int * status, function_t * function,int pidp);

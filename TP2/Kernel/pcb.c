@@ -46,7 +46,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     }
 
     pcbs[i].argc = function->argc;
-
+    pcbs[i].isWaitingForInput = false;
 
 
     /// Continuo
@@ -145,6 +145,7 @@ void unlock(int pid){
     int i=findProcess(pid);
     if(i!=-1){
         pcbs[i].state=READY;
+        //pcbs[i].status = FOREGROUND;
     }
 }
 

@@ -31,6 +31,8 @@ void blockProcess(int * pid);
 
 void niceProcess(int * pid, int priority);
 
+void killCurrentForegroundProcess();
+
 int getpid();
 
 void Exit();
