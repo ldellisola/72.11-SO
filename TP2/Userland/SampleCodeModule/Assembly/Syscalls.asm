@@ -13,6 +13,7 @@ GLOBAL get_pid
 GLOBAL _exit
 GLOBAL sem
 GLOBAL sleep_process
+GLOBAL pipes
 
 section .text:
 
@@ -272,3 +273,20 @@ sleep_process:
 
         leave
         ret
+pipes:
+    enter 0,0
+    
+    pushState
+    
+    mov r15, rdx    ; guardo el valor
+
+    mov rdx, rcx    ;tercer arg
+    mov rcx, r15    ;segundo arg
+    mov rbx, rsi    ;primer arg
+    mov rax, rdi    ; ind
+    int 98h
+
+    popState
+
+    leave
+    ret

@@ -50,7 +50,7 @@ void dispatchGetPid(int * ret);
 void dispatchExit();
 void dispatchSem(int fd,void * firstParam, void ** secondParam);
 void dispatchSleep();
-void dispatchPipes();
+void dispatchPipes(int fd,void * firstParam, void ** secondParam);
 
 
 static void * int_20(void * ptr);
@@ -126,6 +126,9 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			}	
 		case 0x97:{
 			dispatchSleep();
+		}
+		case 0x98:{
+			dispatchPipes(irq,firstParam,secondParam);
 		}
 	}
 

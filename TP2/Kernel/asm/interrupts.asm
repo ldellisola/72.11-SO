@@ -31,6 +31,8 @@ GLOBAL _irq94Handler
 GLOBAL _irq95Handler
 GLOBAL _irq96Handler
 GLOBAL _irq97Handler
+GLOBAL _irq98Handler
+
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
@@ -278,6 +280,9 @@ _irq96Handler:
 _irq97Handler:
 	irqHandlerMaster 97h		
 
+;Pipes
+_irq98Handler:
+	irqHandlerMaster 98h		
 
 ;USB
 _irq05Handler:
