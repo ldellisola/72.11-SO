@@ -2,7 +2,11 @@
 #include "include/Curses.h"
 #include "include/String.h"
 #include "include/Scheduler.h"
+#include "include/SpinLock.h"
 #include <stdlib.h>
+
+extern void __ForceTimerTick__();
+
 #define MAX 20
 SemData_t sems[MAX];
 
@@ -13,7 +17,7 @@ int semCheck(SemData_t * sem);
 
 SemData_t * semopen(char * name){
 
-
+    SpinLock();
     int pos = GetSemaphoreByName(name);
 
     if(pos == -1){
@@ -38,42 +42,65 @@ SemData_t * semopen(char * name){
     }
     sems[pos].cant++;
     void * ptr = &sems[pos];
+
+    SpinUnlock();
     return ptr;
 }
 
-void * semwait(SemData_t * sem){
+bool semwait(SemData_t * sem){
+
+    bool hasToBeBlocked = true;
+
+    SpinLock();
+
     if (semCheck(sem) != 0) {
         printf("Error waiting semaphore\n");
         return;
     }
 
     if(sem->lock == LOCK){
-        process * p = GetCurrentProcess();
+        int pid = getpid();
                 
         int i = 0;
 
         do{
             if(sem->processesBlocked[i] == 0){
-                sem->processesBlocked[i] = p->pcb->pid;
+                sem->processesBlocked[i] = pid;
             }
-        }while(sem->processesBlocked[i++] != p->pcb->pid);
+        }while(sem->processesBlocked[i++] != pid);
 
-        //p->pcb->state = BLOCK;
-        return true;
+        blockProcess(&pid);
+
+        if(pid != getpid()){
+            printfColor("ERROR blocking process on semaphore",0xFF0000,0);
+        }
+
     }else{
 
         sem->lock = LOCK;
-        return false;
+        hasToBeBlocked =  false;
     }
+
+    SpinUnlock();
+
+
+    if(hasToBeBlocked){
+        __ForceTimerTick__();
+    }
+
+        return hasToBeBlocked;
+
 }
 
 void sempost(SemData_t * sem){
+
+    SpinLock();
 
     if (semCheck(sem) != 0) {
         printf("Error posting semaphore\n");
         return;
     }
-    //¿Habría que chequear esto?¿Miramos si es de verdad un sem o es trabajo del usuario?
+
     sem->lock=UNLOCK;
     int myPID = getpid();
     int i = 0;
@@ -85,8 +112,8 @@ void sempost(SemData_t * sem){
             break;
         }
     }
-    // printf("Sempost at ending\n");
-    return;
+    
+    SpinUnlock();
 }
 
 void semclose(SemData_t * sem){

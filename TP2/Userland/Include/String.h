@@ -7,6 +7,8 @@
 
 int strlen(char * str);
 
+char * strtok(char **str,  char delim);
+
 void IntToString(char * buff, int buffSize, uint64_t num);
 
 int stringToHexa(char *buff);

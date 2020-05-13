@@ -45,7 +45,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     }
 
     pcbs[i].argc = function->argc;
-
+    pcbs[i].isWaitingForInput = false;
 
 
     /// Continuo
@@ -100,6 +100,7 @@ void kill(int *pid)
         cant--;
         return;
     }
+    DEBUG("KILL Failed%s","")
     *pid = -1;
 }
 
@@ -131,6 +132,7 @@ void unlock(int pid){
     int i=findProcess(pid);
     if(i!=-1){
         pcbs[i].state=READY;
+        //pcbs[i].status = FOREGROUND;
     }
 }
 
@@ -138,10 +140,9 @@ int findProcess(int pid)
 {
     int i;
 
-    for (i = 0; i < MAX_PROC && pcbs[i].pid != pid; i++)
-            ;
+    for (i = 0; i < MAX_PROC && pcbs[i].pid != pid; i++);
 
-    if (i == MAX_PROC || pcbs[i].state == KILL)
+    if (i == MAX_PROC)
         return -1;
 
     return i;

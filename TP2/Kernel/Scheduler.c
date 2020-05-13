@@ -4,12 +4,17 @@
 #include "include/Curses.h"
 #include "include/pcb.h"
 
+extern void __ForceTimerTick__();
+
+
 #define quantum 20/1000
 #define INIT_QUEUE 1
 
 Priority priority;
 process * curr=0;
 int currPr=0;
+
+int hasTodelete = 0;
 
 bool killedCurrentProcess = false;
 
@@ -21,8 +26,10 @@ void AwakeAllProcesses(){
     process * p = curr;
 
     do{
-        if(p->pcb->state == WAITING_INPUT)
-            p->pcb->state = READY;
+        if(p->pcb->isWaitingForInput){
+            p->pcb->isWaitingForInput = false;
+            DEBUG("WAKE UP %d",p->pcb->pid)
+        }
         
         p = p->next;
 
@@ -40,16 +47,37 @@ void roundRobin(){
         return ;
     }
 
+    if(hasTodelete > 0){
+        process * aux = curr;
+
+        do{
+
+            if(curr->pcb->state == KILL){
+                process * aux=curr->prev;
+                killProcess(&curr->pcb->pid);
+                hasTodelete--;
+                curr=aux;
+            } 
+            else{
+                aux = aux->next;
+            }
+        }while (aux != curr);
+        
+    }
+
     if(priority.cant == 1){
         curr = priority.first;
         return;
     }
+
+
     
     do{
         curr=curr->next;
-    }while(curr->pcb->state==BLOCK || curr->pcb->state == WAITING_INPUT);
+    }while(curr->pcb->state==BLOCK || curr->pcb->isWaitingForInput);
     
 }
+
 
 process * GetCurrentProcess(){
 
@@ -98,9 +126,11 @@ void createProcess(char * name, int * status, function_t * function){
         if(*status==0 && pidP!=-1){
             int pid=curr->pcb->pid;
             curr->pcb->state=BLOCK;
+            //curr->pcb->status = BACKGROUND;
+            procs->pcb->pidP = pid;
         }
         else if(pidP==-1){
-            new->priority=2;
+            new->priority=3;
         }
         *status=new->pid;
     }    
@@ -108,6 +138,8 @@ void createProcess(char * name, int * status, function_t * function){
 void killProcess(int * pid){
 
     if(*pid == 0){
+            DEBUG("KILLprocess Failed%s","1")
+
         *pid = -2;
         return;
     }
@@ -140,7 +172,8 @@ void SleepProcess(){
     process * p = GetProcess(pid);
 
     if(p != NULL){
-        p->pcb->state = WAITING_INPUT;
+        p->pcb->isWaitingForInput = true;
+        __ForceTimerTick__();
     }
 }
 
@@ -159,11 +192,57 @@ void niceProcess(int * pid, int priority){
     nice(pid,priority);
 }
 
+void killCurrentForegroundProcess(){
+
+    process* p  = GetCurrentProcess();
+
+    process * temp = p;
+
+    do{
+        if(temp->pcb->status == FOREGROUND && temp->pcb->state == READY){
+            break;
+        }
+        
+        temp = temp->next;
+
+    }while (p != temp);
+    
+
+    if (temp->pcb->pid == 0)
+    {
+        printfColor("ERROR: No se puede eliminar a la terminal\n",0xFF0000,0);
+        return;
+    }
+
+    if(p == temp){
+        Exit();
+    }
+    else
+    {
+        int pid = temp->pcb->pid;
+        killProcess(&pid);
+
+        if(pid < 0){
+            DEBUG("Process %d not force killed",temp->pcb->pid)
+        }
+    }
+
+    ps();
+    
+    
+    
+
+}
+
 void Exit(){
-    killedCurrentProcess = true;
-    process * aux=curr->prev;
-    killProcess(&curr->pcb->pid);
-    curr=aux;
+    if (getpid() != 0)
+    {
+        hasTodelete++;
+        curr->pcb->state = KILL;
+    }
+    else{
+        printfColor("Can't Stop Terminal\n",0xFF0000,0);
+    }
 }    
 void insertQueue(process * procs){
         priority.last=procs;

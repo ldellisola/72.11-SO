@@ -7,26 +7,31 @@
 void semTest(int argc, char ** argv);
 void SemTestPrint(int argc, char ** argv);
 
-int printMem(uint64_t memDirection);
+void printMem(int argc, char ** argv);
 
 extern int infoReg();
 
-int time();
+void time();
 
-int help();
+void help();
 
-int quotient(int a, int b);
+void killProcess(int argc, char **argv);
 
-int invalidOpcode();
+void niceProcess(int argc, char ** argv);
 
-int help();
+void blockProcess(int argc, char ** argv);
 
-int explainCommand(char * command);
+void ProcessState(int argc, char ** argv);
 
-int malloc_test();
+void quotient(int argc, char ** argv);
+
+void invalidOpcode();
+
+void malloc_test(int argc, char ** argv);
+
 void fillString(char * test);
 
-int printMemoryState();
+void printMemoryState(int argc, char ** argv);
 
 
 #endif

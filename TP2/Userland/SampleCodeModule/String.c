@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "../Include/String.h"
 
 int strlen(char * str){
@@ -146,6 +147,39 @@ void preppend(char * src, char * dest, unsigned size){
 	for(int i = 0 ; i < srcLenght-1 ; i++)
 		dest[i] = src[i];
 
+}
+
+char* strtok(char ** str, char comp)
+{
+	char * s = *str;
+
+	int i;
+	int t = -1;
+	for(i = 0; s[i] != 0 ; i++){
+
+		if(s[i] == comp && t == -1){
+			t = i;
+		}
+
+
+		if( t != -1 && s[i] != comp){
+			*(s+t) = 0;
+
+			*str = s+i;
+			return s;
+		}
+
+	}
+
+	if(i !=0){
+		*(s+i) = 0;
+
+		*str = s+i+1;
+		return s;
+	}
+
+	return NULL;
+	
 }
 
 int strcmp(char * s1,char * s2){
