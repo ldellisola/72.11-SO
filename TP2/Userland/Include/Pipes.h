@@ -1,8 +1,8 @@
 #ifndef PIPES_H
 #define PIPES_H
 #include "../Include/Sem.h"
-typedef enum{READ,WRITE} actions;
 
+typedef enum{READ,WRITE} actions;
 
 int openPipe(char * name,actions action);
 

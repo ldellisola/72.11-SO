@@ -1,6 +1,7 @@
 #include "include/Exec.h"
 #include "../Include/Syscalls.h"
 #include "../Include/Curses.h"
+typedef enum{READ,WRITE} actions;
 
 /*
 

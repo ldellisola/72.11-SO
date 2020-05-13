@@ -9,4 +9,5 @@ void test_processes();
 
 void testSem(int argc, char ** argv);
 
+void testPipes();
 #endif

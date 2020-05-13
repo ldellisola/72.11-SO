@@ -2,6 +2,7 @@
 #include "../Include/Syscalls.h"
 #include "include/Terminal.h"
 #include "../Include/Curses.h"
+#include "../Include/Pipes.h"
 #include "include/Commands.h"
 #include "../Include/String.h"
 #include <stdlib.h>
@@ -68,6 +69,7 @@ Command_t commands[] = {
     {.function = ProcessState, .name = "ps", .isProcess = false, .description = "It prints in the terminal information about all the processes that are currently running."},
     {.function = semInfo, .name = "sem", .isProcess = false, .description = "It prints in the terminal information about all the current semaphores that currently exists."},
     {.function = testSem, .name = "testSem", .isProcess = false, .description = "Our very own function that tests our semaphores implementation."},
+    {.function = testPipes, .name = "testPipes", .isProcess = false, .description = "Our very own function that tests our pipes implementation."},
 
     {.function = NULL, .name = NULL, .isProcess = false, .description = NULL}};
 

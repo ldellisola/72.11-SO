@@ -50,7 +50,7 @@ void dispatchGetPid(int * ret);
 void dispatchExit();
 void dispatchSem(int fd,void * firstParam, void ** secondParam);
 void dispatchSleep();
-void dispatchPipes(int fd,void * firstParam, void ** secondParam);
+void dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam);
 
 
 static void * int_20(void * ptr);
@@ -128,7 +128,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			dispatchSleep();
 		}
 		case 0x98:{
-			dispatchPipes(irq,firstParam,secondParam);
+			dispatchPipes(irq,firstParam,secondParam,thirdParam);
 		}
 	}
 
@@ -225,6 +225,28 @@ void  dispatchSem(int fd,void * firstParam, void ** secondParam){
 	}
 
 }
+
+void  dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam){
+	switch (ind)
+	{
+	case 0:{
+		openPipe((char *)firstParam,secondParam,thirdParam);
+		break;
+		}
+	case 1:{
+		closePipes((int*)firstParam);
+		break;
+		}
+	case 2:{
+		pipes();
+		break;
+		}
+	default:
+		break;
+	}
+
+}
+
 
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 
