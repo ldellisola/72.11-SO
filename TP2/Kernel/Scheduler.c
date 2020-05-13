@@ -28,7 +28,7 @@ void AwakeAllProcesses(){
     do{
         if(p->pcb->isWaitingForInput){
             p->pcb->isWaitingForInput = false;
-            DEBUG("WAKE UP %d",p->pcb->pid)
+            //DEBUG("WAKE UP %d",p->pcb->pid)
         }
         
         p = p->next;

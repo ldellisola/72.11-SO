@@ -2,6 +2,8 @@
 #include "include/Exec.h"
 #include "../Include/Syscalls.h"
 #include "../Include/Curses.h"
+#include "include/Process.h"
+
 
 
 //TO BE INCLUDED

@@ -11,5 +11,8 @@ void test_processes();
 
 void testSem(int argc, char ** argv);
 
+void test_prio();
+
 void testPipes();
+
 #endif

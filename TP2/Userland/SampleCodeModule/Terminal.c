@@ -54,6 +54,7 @@ Command_t commands[] = {
     {.function = loop, .name = "loop", .isProcess = true, .description = "Infinite loop"},
     {.function = test_mm, .name = "testMem", .isProcess = true, .description = "Process that tests our memory manager implementation."},
     {.function = test_processes, .name = "testProcess", .isProcess = true, .description = "Process that tests our process implementation."},
+    {.function = test_prio, .name = "testPrio", .isProcess = true, .description = "Process that tests our priorities implementation."},
     {.function = cat, .name = "cat", .isProcess = true, .description = "Imprime en STDOOUT lo que viene por STDIN"},
 
     {.function = help, .name = "help", .isProcess = false, .description = "It enumerates all the commands available on this shell\nIf there's an argument, it will tell you the funcition of that command."},
