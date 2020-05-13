@@ -126,9 +126,11 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			}	
 		case 0x97:{
 			dispatchSleep();
+			break;
 		}
 		case 0x98:{
 			dispatchPipes(firstParam,secondParam,thirdParam,fourthParam);
+			break;
 		}
 		default: break;
 	}
