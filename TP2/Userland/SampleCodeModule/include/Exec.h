@@ -5,7 +5,8 @@ typedef struct function_t{
     int (* function)(int, char **);
     int argc;
     char ** args;
-    int fd[2];
+    int read;
+    int write;
 }function_t;
 
 

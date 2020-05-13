@@ -55,10 +55,10 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcbs[i].stack = stck[i];
     pcbs[i].state = READY;
     pcbs[i].status = *status;
-    int read=function->fd[READ];
-    int write=function->fd[WRITE];
-    pcbs[i].fd[READ]=read==-1?STDIN:read;
-    pcbs[i].fd[WRITE]=write==-1?STDOUT:write;
+    int read=function->read;
+    int write=function->write;
+    pcbs[i].fd[READ]= (read==-1) ? STDIN : read;
+    pcbs[i].fd[WRITE]= (write==-1) ? STDOUT : write;
 
     // Set up stack
     pcb *proc = &pcbs[i];
