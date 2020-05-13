@@ -332,16 +332,10 @@ void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdPar
 void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 
 	switch(fd){
-		case FD_STDOUT:{
+			case FD_STDOUT:{
 			char * buffer = firstParam;
-
-            if(buffer[1] == 0)
-                putChar(*buffer);
-			else
-                printf(buffer);
-	
+			write(buffer,(int *)secondParam);
 			break;
-
 			return;
 		}
 		case FD_STDERR:{
@@ -379,6 +373,13 @@ void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdPara
 
 			break;
 		}
+		default:{
+			char * buffer = firstParam;
+			writePipe(fd,buffer,(int *)secondParam,true);
+			break;
+						
+		}
+	
 	}
 	
 }

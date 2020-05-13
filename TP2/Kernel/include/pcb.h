@@ -14,7 +14,6 @@ typedef struct{
 typedef enum {KILL,READY,BLOCK,WAITING_INPUT}State;
 typedef enum {FOREGROUND,BACKGROUND}Status;
 
-typedef enum{READ,WRITE} actions;
 #define STDIN 0
 #define STDOUT 1
 
@@ -45,6 +44,6 @@ void nice(int * pid, int pr);
 
 void ps();
 
-int getFd(int pid,actions action);
+int getFd(int pid,int action);
 
 #endif

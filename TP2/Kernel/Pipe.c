@@ -121,7 +121,7 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
 
       //desbloqueo al otro
       if(files[i].processesBlocked!=0){
-        block(files[i].processesBlocked);
+        block(&files[i].processesBlocked);
         files[i].processesBlocked=0;  
       }
       return;
@@ -144,9 +144,9 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
 
   //desbloqueo al otro
   if(files[i].processesBlocked!=0){
-    block(files[i].processesBlocked);
+    block(&files[i].processesBlocked);
     files[i].processesBlocked=0;  
-
+  }
   return;
 }
 
@@ -157,19 +157,21 @@ void write(char * buffer,int * ans){
     writeStdout(buffer);
     return;
   }
-  writePipe(fd,buffer,ans);
+  writePipe(fd,buffer,ans,false);
 }
 
-void writePipe(int fd,char * buffer,int * ans){
+void writePipe(int fd,char * buffer,int * ans,bool pipe){
   int i=pipeCheck(fd,WRITE);
   int j=0;
   if(i==-1){
+    if(pipe)
     *ans=i;
     return;
   }
 
   char * write=files[i].write;
   char * read=files[i].read;
+  int count=0;
   bool flag=false;
   while(buffer[j]!=0){
     flag=false;
@@ -184,12 +186,13 @@ void writePipe(int fd,char * buffer,int * ans){
       SpinUnlock();
 
       if(flag){
-        __ForceTimerTick__
+        __ForceTimerTick__();
       }
 
       if(write<(files[i].buffer+BUFFER)){
         *write=buffer[j++];
         write++;
+        count++;
       }
       else
         write=files[i].buffer;
@@ -197,9 +200,11 @@ void writePipe(int fd,char * buffer,int * ans){
     *write=0;
     files[i].write=write;
     if(files[i].processesBlocked!=0){
-      block(files[i].processesBlocked);
+      block(&files[i].processesBlocked);
       files[i].processesBlocked=0;
     }
+    if(pipe)
+      *ans=count;
     return;
   }
 
@@ -218,7 +223,7 @@ void pipes(){
           putChar('-');
       }
       putChar('\n');
-      printf("Proceso Bloqueado:")
+      printf("Proceso Bloqueado:");
       if(files[i].processesBlocked!=0)
       printf(" %d",files[i].processesBlocked);
       printf("\n");

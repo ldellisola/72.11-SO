@@ -148,7 +148,7 @@ void unlock(int pid){
     }
 }
 
-int getFd(int pid,actions action){
+int getFd(int pid,int action){
     int i=findProcess(pid);
     if(i==-1)
         return i;

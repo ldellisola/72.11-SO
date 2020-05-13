@@ -31,7 +31,7 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe);
 
 void write(char * buffer,int * ans);
 //devuelve si pudo escribir por la respuesta, -1 error sino cantidad de caracteres
-void writePipe(int fd,char * buffer,int * ans);
+void writePipe(int fd,char * buffer,int * ans,bool pipe);
 
 void pipes();
 
