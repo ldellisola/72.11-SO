@@ -2,6 +2,7 @@
 #include "include/MemManager.h"
 #include "include/Curses.h"
 #include "include/String.h"
+#include "include/Pipe.h"
 
 #define STACK 0x300
 #define NULL 0
@@ -54,6 +55,10 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcbs[i].stack = stck[i];
     pcbs[i].state = READY;
     pcbs[i].status = *status;
+    int read=function->fd[READ];
+    int write=function->fd[WRITE];
+    pcbs[i].fd[READ]=read==-1?STDIN:read;
+    pcbs[i].fd[WRITE]=write==-1?STDOUT:write;
 
     // Set up stack
     pcb *proc = &pcbs[i];
@@ -92,6 +97,13 @@ void kill(int *pid)
     if (i != -1)
     {
         pcbs[i].state = KILL;
+        
+        //cierro los pipes desde aca
+        if(pcbs[i].fd[READ]!=STDIN)
+            closePipes(pcbs[i].fd[READ]);
+        if(pcbs[i].fd[WRITE]!=STDOUT)
+            closePipes(pcbs[i].fd[WRITE]);  
+
         for(int j = 0 ; j < pcbs[i].argc ; j++){
             free(pcbs[i].argv[j]);
         }
@@ -128,11 +140,19 @@ void block(int *pid)
     else
         *pid = -1;
 }
+
 void unlock(int pid){
     int i=findProcess(pid);
     if(i!=-1){
         pcbs[i].state=READY;
     }
+}
+
+int getFd(int pid,actions action){
+    int i=findProcess(pid);
+    if(i==-1)
+        return i;
+    return pcbs[i].fd[action];
 }
 
 int findProcess(int pid)

@@ -88,7 +88,7 @@ bool semwait(SemData_t * sem){
         __ForceTimerTick__();
     }
 
-        return hasToBeBlocked;
+    return hasToBeBlocked;
 
 }
 

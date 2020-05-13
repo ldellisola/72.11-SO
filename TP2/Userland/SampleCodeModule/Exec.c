@@ -2,10 +2,6 @@
 #include "../Include/Syscalls.h"
 #include "../Include/Curses.h"
 
-
-
-
-
 /*
 
     - name: name of the process
@@ -15,7 +11,8 @@
     - ... argumentos
 
 */
-int exec(char * name, int status, int (* func)(),int argc,char ** argv){
+
+int exec(char * name, int status, int (* func)(),int read,int write,int argc,char ** argv){
     int bridge=status;
 
 
@@ -23,11 +20,11 @@ int exec(char * name, int status, int (* func)(),int argc,char ** argv){
     function.args=argv;
     function.function=func;
     function.argc=argc;
-
+    function.fd[READ]=read;
+    function.fd[WRITE]=write;
     //DEBUG("%s","Llamando a syscall")    
 
     create_process(name,&bridge,&function);
-//    ps();
     return bridge;
         
 }

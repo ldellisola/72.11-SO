@@ -1,4 +1,5 @@
 #include "include/Pipe.h"
+#include "include/SpinLock.h"
 #include "include/pcb.h"
 #include "include/String.h"
 #include "include/Scheduler.h"
@@ -17,6 +18,8 @@
   int pipeCheck(int fd,actions action);
   void readStdin();
   void writeStdout();
+  extern void __ForceTimerTick__();
+
   //int getFree();
 /* ----------------------------------------*/
 
@@ -26,22 +29,28 @@ void openPipe(char * name,actions action,int*fd){
   if(i==-1){
     if(cantidad==MAX){
       *fd=-1;
-      return;}  
+      return;
+    }  
+    
     i=freePipe();
     cantidad++;
+    files[i].sem=semopen(name);
     files[i].fd[READ]=minFd++;
     files[i].fd[WRITE]=minFd++;
     CopyString(name,files[i].name,strlen(name));
     files[i].read=files[i].buffer;
     files[i].write=files[i].buffer;
+    //me aseguro que lo primero sea 0 por read y write
+    *files[i].buffer=0;
     files[i].state=1;
   }
   *fd=files[i].fd[action];
 }
 
 void read(char * buffer,int bufferSize){
-  process * current= GetCurrentProcess();
-  int fd=current->pcb->fd[READ];
+  int pid=getpid();
+  int fd=getFd(pid,READ);
+  
   if(fd==STDIN){
     readStdin(buffer,bufferSize);
     return;
@@ -49,36 +58,74 @@ void read(char * buffer,int bufferSize){
   readPipe(fd,buffer,bufferSize);
   
 }
-void readPipe(int fd,char * buffer,int bufferSize){
+
+void readPipe(int fd,char * buffer,int * bufferSize){
+ 
+ //checkeo que exista el pipe
   int i=pipeCheck(fd,READ);
-  int j=0;
+  
+  //sino -1
   if(i==-1){
-    //*fd=i;
+    *bufferSize=i;
     return;
   }
+  
+  int j=0;
+  int count=0;
+  
   char * read=files[i].read;
   char * write=files[i].write;
+  //aseguro que soy yo solo
+  SpinLock();
+  
   //cuando el write dio la vuelta
   if(read==write){
     //voy a asumir que si son iguales hay dos posibilidades, que el write no haya escrito 
     //o que haya escrito y dado toda la vuelta hasta justo quedar en el read
-    if(*read==0)
-      return;
-    read++;  
+    
+    //como write se para en el proximo que tiene que escribir, tengo que preguntar si el anterior
+    //esta en 0 o no (Seria lo ultimo que escribio)
+    if((*read==0)){
+       int pid=getpid();
+
+      //lo guardo en los procesos bloqueados     
+      files[i].processesBlocked=pid;
+
+      //bloqueo al proceso
+      blockProcess(&pid);
+      //genero la interrupcion
+      __ForceTimerTick__();
+    }
+    else{
+      read++;
+    }
   }
+  //libero el lock porque ya me fije si habia alguien más y como en kernel no interrupme
+  //si estoy aca nadie más está acá
+  SpinUnlock();
+
   if(read>write){
       while(read<(files[i].buffer+BUFFER) && j<bufferSize-1){
       buffer[j++]=*read;
       *read=0;
       read++;
+      count++;
     }
     //checkeo si me quede sin espacio o llegue al final del buffer
     if(j==bufferSize-1){
       buffer[j]=0;
       files[i].read=read;
+      *bufferSize=count;
+
+      //desbloqueo al otro
+      if(files[i].processesBlocked!=0){
+        block(files[i].processesBlocked);
+        files[i].processesBlocked=0;  
+      }
       return;
     }
     read=files[i].buffer;
+
     DEBUG("CAMBIE\n",0);
   }
  
@@ -86,40 +133,63 @@ void readPipe(int fd,char * buffer,int bufferSize){
       buffer[j++]=*read;
       *read=0;
       read++;
-    }
+      count++;
+  }
   buffer[j]=0;
   files[i].read=read;
   return;
 }
 
-void write(char * buffer){
-  process * current= GetCurrentProcess();
-  int fd=current->pcb->fd[WRITE];
+void write(char * buffer,int * ans){
+  int pid=getpid();
+  int fd=getFd(pid,WRITE);
   if(fd==STDOUT){
     writeStdout(buffer);
     return;
   }
-  writePipe(fd,buffer);
+  writePipe(fd,buffer,ans);
 }
 
-void writePipe(int fd,char * buffer){
+void writePipe(int fd,char * buffer,int * ans){
   int i=pipeCheck(fd,WRITE);
   int j=0;
   if(i==-1){
-    //*fd=i;
+    *ans=i;
     return;
   }
+
   char * write=files[i].write;
+  char * read=files[i].read;
+  bool flag=false;
   while(buffer[j]!=0){
-    if(write<(files[i].buffer+BUFFER)){
-      *write=buffer[j++];
-      write++;
-    }
-    else
-      write=files[i].buffer;
-  }  
+    flag=false;
+      SpinLock();
+      if(read==write){
+        int pid=getpid();
+        files[i].processesBlocked=pid;
+        block(&pid);
+        flag=true;
+      }
+
+      SpinUnlock();
+
+      if(flag){
+        __ForceTimerTick__
+      }
+
+      if(write<(files[i].buffer+BUFFER)){
+        *write=buffer[j++];
+        write++;
+      }
+      else
+        write=files[i].buffer;
+}  
     *write=0;
     files[i].write=write;
+    if(files[i].processesBlocked!=0){
+      block(files[i].processesBlocked);
+      files[i].processesBlocked=0;
+    }
     return;
   }
 
@@ -138,7 +208,10 @@ void pipes(){
           putChar('-');
       }
       putChar('\n');
-      printf("FALTAN PROCESOS BLOQUEADOS\n");
+      printf("Proceso Bloqueado:")
+      if(files[i].processesBlocked!=0)
+      printf(" %d",files[i].processesBlocked);
+      printf("\n");
     }
   }
 }

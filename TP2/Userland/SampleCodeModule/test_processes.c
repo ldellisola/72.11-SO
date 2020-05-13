@@ -11,7 +11,7 @@ void  endless_loop(){
 
 uint32_t my_create_process(char * name){
     int status=1;//background
-  return exec(name,status,endless_loop,0,NULL);;
+  return exec(name,status,endless_loop,-1,-1,0,NULL);;
 }
 
 uint32_t my_kill(uint32_t pid){

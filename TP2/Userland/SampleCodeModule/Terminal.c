@@ -222,7 +222,7 @@ int interpretCommand()
 
             if (commands[i].isProcess)
             {
-                exec(commands[i].name, parsedCommand.isBackground, commands[i].function, parsedCommand.argc, parsedCommand.argv);
+                exec(commands[i].name, parsedCommand.isBackground, commands[i].function, -1,-1,parsedCommand.argc, parsedCommand.argv);
             }
             else
             {
