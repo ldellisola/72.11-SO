@@ -6,12 +6,16 @@
 
 
 typedef struct{
-    int (*function)();
+    int (* function)(int, char **);
     int argc;
     char ** args;
+    int fd[2];
 }function_t;
 typedef enum {KILL,READY,BLOCK,WAITING_INPUT}State;
 typedef enum {FOREGROUND,BACKGROUND}Status;
+
+#define STDIN 0
+#define STDOUT 1
 
 typedef struct{
     char name[MAX_NAME];
@@ -22,6 +26,7 @@ typedef struct{
     uint64_t * sp;
     Status status; //foreground  background
     int pidP;
+    int fd[2];
     State state; 
     char ** argv;
     int argc;
@@ -38,4 +43,7 @@ void unlock(int pid);
 void nice(int * pid, int pr);
 
 void ps();
+
+int getFd(int pid,int action);
+
 #endif

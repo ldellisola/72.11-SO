@@ -61,6 +61,6 @@ void testSem(int argc, char ** argv){
     sem_t sem=semopen("test");
 
     for(int i=0;i<5;i++){
-        exec("spin",1,spin,0,NULL);
+        exec("spin",1,spin,-1,-1,0,NULL);
     }
 }

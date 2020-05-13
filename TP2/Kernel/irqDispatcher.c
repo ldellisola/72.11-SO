@@ -12,6 +12,7 @@
 #include <SpeakerDriver.h>
 #include <font.h>
 #include <VideoDriver.h>
+#include <Pipe.h>
 #include <ConsoleDriver.h>
 #include <pcb.h>
 #include <Sem.h>
@@ -49,6 +50,7 @@ void dispatchGetPid(int * ret);
 void dispatchExit();
 void dispatchSem(int fd,void * firstParam, void ** secondParam);
 void dispatchSleep();
+void dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam);
 
 
 static void * int_20(void * ptr);
@@ -124,7 +126,13 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			}	
 		case 0x97:{
 			dispatchSleep();
+			break;
 		}
+		case 0x98:{
+			dispatchPipes(firstParam,secondParam,thirdParam,fourthParam);
+			break;
+		}
+		default: break;
 	}
 
 	return 0;
@@ -221,27 +229,48 @@ void  dispatchSem(int fd,void * firstParam, void ** secondParam){
 
 }
 
+void  dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam){
+	switch (ind){
+	case 0:{
+		openPipe((char *)firstParam,secondParam,thirdParam);
+		break;
+		}
+	case 1:{
+		closePipes((int*)firstParam);
+		break;
+		}
+	case 2:{
+		pipes();
+		break;
+		}
+	default:
+		break;
+	}
+
+}
+
+
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 
 	switch(fd){
 		case FD_STDOUT: { break;}
 		case FD_STDERR: { break;}
-		case FD_STDIN: { 
+				case FD_STDIN: { 
 
 			char * buffer = (char *) firstParam;
-            int bufferSize = secondParam;
-			int i = 0;		
-			int temp;
-			do{
-				temp = returnKey();
+      int bufferSize = secondParam;
+			read(buffer,bufferSize);			
+			// int i = 0;		
+			// int temp;
+			// do{
+			// 	temp = returnKey();
 				
-				if( temp != -1 ){
-					buffer[i++]=temp;
+			// 	if( temp != -1 ){
+			// 		buffer[i++]=temp;
+			// 	}
 
-				}
-
-			}while( temp!= -1 && i <bufferSize-1 );
-			buffer[i] = 0;
+			// }while( temp!= -1 && i <bufferSize-1 );
+			// buffer[i] = 0;
 			
 			break;
 		}
@@ -263,6 +292,9 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 			break;
 		}
 		case FD_DEVICE_INFO: { 
+
+			// printf("FD: %d. PAR1 %d. PAR2 %d. PAR3 %d. PAR4 %d.",fd,firstParam,secondParam,thirdParam,fourthParam);
+
 			getDeviceInfo(firstParam);
 			break;
 		}
@@ -279,6 +311,12 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 			break;
 			}
 		case FD_STDOUT_COLOR: { break;}
+		default:{
+			char * buffer = (char *) firstParam;
+			int * bufferSize = secondParam;
+			readPipe(fd,buffer,bufferSize,true);			
+			
+		}
 	}
 }
 
@@ -318,16 +356,10 @@ void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdPar
 void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam){
 
 	switch(fd){
-		case FD_STDOUT:{
+			case FD_STDOUT:{
 			char * buffer = firstParam;
-
-            if(buffer[1] == 0)
-                putChar(*buffer);
-			else
-                printf(buffer);
-	
+			write(buffer,(int *)secondParam);
 			break;
-
 			return;
 		}
 		case FD_STDERR:{
@@ -365,6 +397,13 @@ void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdPara
 
 			break;
 		}
+		default:{
+			char * buffer = firstParam;
+			writePipe(fd,buffer,(int *)secondParam,true);
+			break;
+						
+		}
+	
 	}
 	
 }
