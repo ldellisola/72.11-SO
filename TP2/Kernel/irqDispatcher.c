@@ -128,7 +128,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			dispatchSleep();
 		}
 		case 0x98:{
-			dispatchPipes(irq,firstParam,secondParam,thirdParam);
+			dispatchPipes(firstParam,secondParam,thirdParam,fourthParam);
 		}
 	}
 
@@ -227,8 +227,8 @@ void  dispatchSem(int fd,void * firstParam, void ** secondParam){
 }
 
 void  dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam){
-	switch (ind)
-	{
+	printf("%d\n",ind);
+	switch (ind){
 	case 0:{
 		openPipe((char *)firstParam,secondParam,thirdParam);
 		break;

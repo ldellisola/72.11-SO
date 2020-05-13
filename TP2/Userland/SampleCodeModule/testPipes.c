@@ -16,7 +16,7 @@ void testPipes(){
     IntToString(aux,100,x);
     writePipe(fdw,aux);
     readPipe(fdr,buffer,1024);
-    printf("lei %s\n",buffer);
+    //printf("lei %s\n",buffer);
   }
   //pipe();
 }

@@ -24,6 +24,7 @@
 /* ----------------------------------------*/
 
 void openPipe(char * name,actions action,int*fd){
+  printf("aca muere\n");
   int i=lookPipe(name);
   //si no se puede tener más de dos procesos esto cambia
   if(i==-1){
@@ -176,7 +177,8 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
   while(buffer[j]!=0){
     flag=false;
       SpinLock();
-      if(read==write){
+      if(read==write && *write!=0){
+        DEBUG("En lock de write\n",0);
         int pid=getpid();
         files[i].processesBlocked=pid;
         block(&pid);
@@ -191,13 +193,13 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
 
       if(write<(files[i].buffer+BUFFER)){
         *write=buffer[j++];
+        DEBUG("%s\n",*write);
         write++;
         count++;
       }
       else
         write=files[i].buffer;
 }  
-    *write=0;
     files[i].write=write;
     if(files[i].processesBlocked!=0){
       block(&files[i].processesBlocked);
