@@ -1,8 +1,8 @@
-/*
 #include "../Include/Curses.h"
 #include "../Include/Syscalls.h"
 #include "include/Exec.h"
 #include "include/Process.h"
+#include "../Include/Sem.h"
 
 
 uint64_t my_create_process_sem(char * name,void (* func)(int, char **)){
@@ -10,19 +10,19 @@ uint64_t my_create_process_sem(char * name,void (* func)(int, char **)){
 }
 
 uint64_t my_sem_open(char *sem_id, uint64_t initialValue){
-  return 0;
+  return semopen(sem_id,initialValue);
 }
 
 uint64_t my_sem_wait(char *sem_id){
-  return 0;
+  return semwait(sem_id);
 }
 
 uint64_t my_sem_post(char *sem_id){
-  return 0;
+  return sempost(sem_id);
 }
 
 uint64_t my_sem_close(char *sem_id){
-  return 0;
+  return semclose(sem_id);
 }
 
 #define N 100000000
@@ -123,7 +123,7 @@ void test_no_sync(){
   // The last one should not print 0
 }
 
-int test_sem(){
+/*int main(){
   test_sync();
   test_no_sync();
   

@@ -1,4 +1,4 @@
-#include "../Include/Sem.h"
+/*#include "../Include/Sem.h"
 #include "../Include/Syscalls.h"
 #include "include/Exec.h"
 #include "include/Process.h"
@@ -63,4 +63,4 @@ void testSem(int argc, char ** argv){
     for(int i=0;i<5;i++){
         exec("spin",1,spin,-1,-1,0,NULL);
     }
-}
+}*/

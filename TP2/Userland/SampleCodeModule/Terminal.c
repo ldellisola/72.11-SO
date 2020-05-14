@@ -55,6 +55,8 @@ Command_t commands[] = {
     {.function = test_mm, .name = "testMem", .isProcess = true, .description = "Process that tests our memory manager implementation."},
     {.function = test_processes, .name = "testProcess", .isProcess = true, .description = "Process that tests our process implementation."},
     {.function = test_prio, .name = "testPrio", .isProcess = true, .description = "Process that tests our priorities implementation."},
+    {.function = test_sync, .name = "testSync", .isProcess = true, .description = "Process that tests our semaphore sync implementation."},
+    {.function = test_no_sync, .name = "testNoSync", .isProcess = true, .description = "Process that tests our semaphore no sync implementation."},
     {.function = cat, .name = "cat", .isProcess = true, .description = "Imprime en STDOOUT lo que viene por STDIN"},
 
     {.function = help, .name = "help", .isProcess = false, .description = "It enumerates all the commands available on this shell\nIf there's an argument, it will tell you the funcition of that command."},
@@ -70,7 +72,7 @@ Command_t commands[] = {
     {.function = blockProcess, .name = "block", .isProcess = false, .description = "It blocks a process by its PID. It won't block the terminal."},
     {.function = ProcessState, .name = "ps", .isProcess = false, .description = "It prints in the terminal information about all the processes that are currently running."},
     {.function = semInfo, .name = "sem", .isProcess = false, .description = "It prints in the terminal information about all the current semaphores that currently exists."},
-    {.function = testSem, .name = "testSem", .isProcess = false, .description = "Our very own function that tests our semaphores implementation."},
+    //{.function = testSem, .name = "testSem", .isProcess = false, .description = "Our very own function that tests our semaphores implementation."},
     {.function = testPipes, .name = "testPipes", .isProcess = false, .description = "Our very own function that tests our pipes implementation."},
 
     {.function = NULL, .name = NULL, .isProcess = false, .description = NULL}};

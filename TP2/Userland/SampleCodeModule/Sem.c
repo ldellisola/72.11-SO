@@ -7,33 +7,33 @@
 
 int var = 0;
 
-sem_t semopen(char *name)
+uint64_t semopen(char *name,uint64_t initValue)
 {
-    sem_t aux;
+    uint64_t aux=initValue;
     sem(0, (void *)name, (void **)&aux);
     return aux;
 }
 
-void semwait(void *semp)
+uint64_t semwait(char * semp)
 {
-    bool hasToBeBlocked = true;
-    sem(1, (void *)semp, &hasToBeBlocked);
-
-    // if(hasToBeBlocked){
-    //     int pid = getpid();
-    //     BlockAndSwitchProcess(&pid);
-    // }
+    uint64_t aux;
+    sem(1, (void *)semp, &aux);
+    return aux;
     
 }
 
-void sempost(void *semp)
+uint64_t sempost(char * semp)
 {
-    sem(2, (void *)semp, NULL);
+    uint64_t aux;
+    sem(2, (void *)semp, &aux);
+    return aux;
 }
 
-void semclose(void *semp)
+uint64_t semclose(char *semp)
 {
-    sem(3, (void *)semp, NULL);
+    uint64_t aux;
+    sem(3, (void *)semp, &aux);
+    return aux;
 }
 
 void semInfo(int argc, char ** argv)
