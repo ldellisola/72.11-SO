@@ -199,6 +199,7 @@ void ProcessCommandString(char *command, ParsedCommand_t * cmd)
     if (command[strlen(command) - 1] == '\n')
         command[strlen(command) - 1] = 0;
 
+    printf("%s",command);    
     while ((currentPart = strtok(&command, ' ')) != NULL && index < 20)
     {
         if (cmd->process == NULL)
@@ -212,13 +213,13 @@ void ProcessCommandString(char *command, ParsedCommand_t * cmd)
             cmd->isBackground = true;
             break;
         }
-           
         cmd->argv[index++] = currentPart;
     }
 
     cmd->argc = index;
     cmd->hash = sdbm(cmd->process);
 }
+
 
 void createCommand(int i,ParsedCommand_t * parsedCommand,int fdw,int fdr){
     if (commands[i].isProcess)
