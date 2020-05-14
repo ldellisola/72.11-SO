@@ -13,6 +13,7 @@ GLOBAL get_pid
 GLOBAL _exit
 GLOBAL sem
 GLOBAL sleep_process
+GLOBAL LoadDummyProcess
 
 section .text:
 
@@ -267,6 +268,20 @@ sleep_process:
         
         mov rax, rdi    ;primer arg     
         int 97h
+
+        popState
+
+        leave
+        ret
+
+
+LoadDummyProcess:
+        enter 0,0
+
+        pushState
+        
+        mov rax, rdi    ;primer arg     
+        int 98h
 
         popState
 

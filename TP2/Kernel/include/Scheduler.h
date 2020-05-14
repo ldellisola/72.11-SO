@@ -3,6 +3,7 @@
 #include "pcb.h"
 #include <stdbool.h>
 
+typedef void (*process_Func_t)(int, char**);
 
 typedef struct process{
     pcb * pcb;
@@ -14,6 +15,10 @@ typedef struct Priority{
     process * first;
     process * last;
 } Priority;
+
+void setDummyProcess( process_Func_t func);
+
+pcb * GetDummyProcess();
 
 void roundRobin();
 

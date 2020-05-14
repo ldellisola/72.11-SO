@@ -31,9 +31,15 @@ GLOBAL _irq94Handler
 GLOBAL _irq95Handler
 GLOBAL _irq96Handler
 GLOBAL _irq97Handler
+GLOBAL _irq98Handler
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
+GLOBAL _exception4Handler
+GLOBAL _exception8Handler
+GLOBAL _exception0xCHandler
+GLOBAL _exception0xDHandler
+GLOBAL _exception0xEHandler
 
 GLOBAL __ForceTimerTick__
 
@@ -116,7 +122,7 @@ SECTION .text
 	  	mov rsi, rsp ; second parameter
 
 	  	call exceptionDispatcher
-		mov qword [rsp+8*15],SampleCodeAdress
+;		mov qword [rsp+8*15],SampleCodeAdress
 	  	popState
 		iretq
 	%endmacro
@@ -277,6 +283,10 @@ _irq96Handler:
 ;SleepUntilInput
 _irq97Handler:
 	irqHandlerMaster 97h		
+	
+;LoadFakeProcess
+_irq98Handler:
+	irqHandlerMaster 98h		
 
 
 ;USB
@@ -288,13 +298,32 @@ _irq05Handler:
 _exception0Handler:
 	exceptionHandler 0
 
+;Overflow Exception
+_exception4Handler:
+	exceptionHandler 4h
+
 	
 ;Invalid Opcode Exception
 _exception6Handler:
 	exceptionHandler 6
 
+;DoubleFault Exception
+_exception8Handler:
+	exceptionHandler 8h
 
-; Excepciones custom
+;Stack Fault Exception
+_exception0xCHandler:
+	exceptionHandler 0ch
+
+;General Protection FaultException      
+_exception0xDHandler:
+	exceptionHandler 0dh
+
+;Page fault
+_exception0xEHandler:
+	exceptionHandler 0Eh
+
+
 
 
 haltcpu:

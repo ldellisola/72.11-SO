@@ -10,11 +10,12 @@
 
 #include "include/Process.h"
 extern void __halt__();
-
+extern void LoadDummyProcess(process_Function_t func);
+int dummy (int argc, char ** argv);
 
 int main() {	
 	char * args[] = {"TP2 de SO"};
-
+	LoadDummyProcess(dummy);
 	exec("terminal",0,runTerminal,1,args);
 
 	__halt__();
@@ -23,5 +24,14 @@ int main() {
 	__halt__();
 	
 	return 0xDEA;
+}
+
+int dummy (int argc, char ** argv){
+	while (1)
+	{
+		__asm__("hlt");
+
+	}
+	return 0;
 }
 

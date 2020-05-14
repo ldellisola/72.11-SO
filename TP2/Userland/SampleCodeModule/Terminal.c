@@ -95,8 +95,6 @@ int runTerminal()
     TypeIndex = 0;
     printf(">>>>  ");
     int exit = 0;
-            SleepUntilUserInput();
-
     do
     {
         int key = readKey();
@@ -120,9 +118,7 @@ int runTerminal()
                     exit = interpretCommand();
                     clearArray(TerminalType, MAXBUFFER);
                     TypeIndex = 0;
-                    printf(">>>>  ");
-                    SleepUntilUserInput();
-
+                    printf("\n>>>>  ");
                 }
             }
         }

@@ -49,6 +49,7 @@ void dispatchGetPid(int * ret);
 void dispatchExit();
 void dispatchSem(int fd,void * firstParam, void ** secondParam);
 void dispatchSleep();
+void dispatchLoadDummyProcess(void * func);
 
 
 static void * int_20(void * ptr);
@@ -124,6 +125,11 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			}	
 		case 0x97:{
 			dispatchSleep();
+			break;
+		}
+		case 0x98:{
+			dispatchLoadDummyProcess(firstParam);
+			break;
 		}
 	}
 
@@ -137,11 +143,11 @@ void int_21(){
 
 	readKey();
 	AwakeAllProcesses();
-
-	
 }
 
-
+void dispatchLoadDummyProcess(void * func){
+	setDummyProcess( (process_Func_t) func);
+}
 
 
 void dispatchMalloc(int increment, void ** buffer) { 
@@ -239,6 +245,11 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 					buffer[i++]=temp;
 
 				}
+				else
+				{
+					SleepProcess();
+				}
+				
 
 			}while( temp!= -1 && i <bufferSize-1 );
 			buffer[i] = 0;

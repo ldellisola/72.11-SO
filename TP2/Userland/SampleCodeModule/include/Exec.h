@@ -1,8 +1,10 @@
 #ifndef EXEC_H
 #define EXEC_H
 
+typedef  int (* process_Function_t)(int, char **);
+
 typedef struct function_t{
-    int (* function)(int, char **);
+    process_Function_t function;
     int argc;
     char ** args;
 }function_t;
