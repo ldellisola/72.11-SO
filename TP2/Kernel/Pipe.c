@@ -42,6 +42,7 @@ void openPipe(char * name,actions action,int*fd){
     int buffer=files[i].buffer;
     int read=files[i].read;
     int write=files[i].write;
+    files[i].processesBlocked=-1;
     //me aseguro que lo primero sea 0 por read y write
     *files[i].buffer=0;
     files[i].state=1;
@@ -61,23 +62,16 @@ void read(char * buffer,int bufferSize){
   
 }
 
-void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
- 
+void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
+
  //checkeo que exista el pipe
   int i=pipeCheck(fd,READ);
   
   //sino -1
   if(i==-1){
-    if(pipe)
-    *bufferSize=i;
     return;
   }
   
-  if(files[i].state==0){
-    if(pipe)
-      *bufferSize=0;
-    return;
-  }
 
   int j=0;
   int count=0;
@@ -95,6 +89,9 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
     
     //como write se para en el proximo que tiene que escribir, tengo que preguntar si el anterior
     //esta en 0 o no (Seria lo ultimo que escribio)
+  if(files[i].state==0){
+    return;
+  }
     if((*read==0)){
        int pid=getpid();
 
@@ -128,13 +125,11 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
     if(j==bufferSize-1){
       buffer[j]=0;
       files[i].read=read;
-      if(pipe)
-      *bufferSize=count;
 
       //desbloqueo al otro
-      if(files[i].processesBlocked!=0){
+      if(files[i].processesBlocked!=-1){
         block(&files[i].processesBlocked);
-        files[i].processesBlocked=0;
+        files[i].processesBlocked=-1;
         return;  
       }
       SpinUnlock();
@@ -146,20 +141,19 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
   }
  
   while(read<write && j<bufferSize-1){
-      buffer[j++]=*read;
+      char c=*read;
+      buffer[j++]=c;
       *read=0;
       read++;
       count++;
   }
   buffer[j]=0;
   files[i].read=read;
-  if(pipe)
-  *bufferSize=count;
 
   //desbloqueo al otro
-  if(files[i].processesBlocked!=0){
+  if(files[i].processesBlocked!=-1){
     block(&files[i].processesBlocked);
-    files[i].processesBlocked=0;  
+    files[i].processesBlocked=-1;  
     return;
   }
   SpinUnlock();
@@ -186,7 +180,6 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
   }
     if(files[i].state==0){
       if(pipe)
-        *ans=0;
       return;
     }
 
@@ -194,9 +187,10 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
   char * read=files[i].read;
   int count=0;
   bool flag=false;
+  SpinLock();
+ 
   while(buffer[j]!=0){
     flag=false;
-      SpinLock();
       if(read==write && *write!=0){
         int pid=getpid();
         files[i].processesBlocked=pid;
@@ -204,9 +198,9 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
         flag=true;
       }
 
-      SpinUnlock();
 
       if(flag){
+        SpinUnlock();
         __ForceTimerTick__();
         read=files[i].read;
       }
@@ -217,14 +211,17 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
       }
       else
         write=files[i].buffer;
+      
 }  
     files[i].write=write;
-    if(files[i].processesBlocked!=0){
-      block(&files[i].processesBlocked);
-      files[i].processesBlocked=0;
-    }
+    
     if(pipe)
       *ans=count;
+    
+    if(files[i].processesBlocked!=-1){
+      block(&files[i].processesBlocked);
+      files[i].processesBlocked=-1;
+    }
     return;
   }
 
@@ -244,7 +241,7 @@ void pipes(){
       }
       putChar('\n');
       printf("Proceso Bloqueado:");
-      if(files[i].processesBlocked!=0)
+      if(files[i].processesBlocked!=-1)
       printf(" %d",files[i].processesBlocked);
       printf("\n");
     }

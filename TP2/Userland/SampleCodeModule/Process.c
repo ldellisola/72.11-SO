@@ -81,4 +81,5 @@ void wc(int argc,char ** argv){
             count++;
     }
     printf("Tiene %d lineas\n",count);
+    exit_process();
 }

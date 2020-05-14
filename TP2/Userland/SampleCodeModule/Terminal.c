@@ -199,7 +199,7 @@ void ProcessCommandString(char *command, ParsedCommand_t * cmd)
     if (command[strlen(command) - 1] == '\n')
         command[strlen(command) - 1] = 0;
 
-    printf("%s",command);    
+        
     while ((currentPart = strtok(&command, ' ')) != NULL && index < 20)
     {
         if (cmd->process == NULL)
@@ -247,7 +247,6 @@ int interpretCommand()
         ProcessCommandString(currentPart, &parsedCommand[cant_process]);
         cant_process++;
     }
-    cant_process++;
     //es fd y el i del array de comands
     int fd[cant_process][3];
     fd[0][0]=-1;
@@ -300,7 +299,7 @@ int interpretCommand()
             createCommand(aux,&parsedCommand[i],fd[i][WRITE],fd[i][READ]);
         }
     }
-
+    ps();
     return 0;
 }
 
