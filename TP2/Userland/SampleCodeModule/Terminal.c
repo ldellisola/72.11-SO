@@ -190,7 +190,7 @@ void help(int argc, char **argv)
     }
 }
 
-bool ProcessCommandString(char *command, ParsedCommand_t * cmd)
+void ProcessCommandString(char *command, ParsedCommand_t * cmd)
 {   char *currentPart;
     int index = 0;
     cmd->isBackground = false;
@@ -212,20 +212,12 @@ bool ProcessCommandString(char *command, ParsedCommand_t * cmd)
             cmd->isBackground = true;
             break;
         }
-        
-        if (currentPart[0] == '|')
-        {
-            cmd->argc = index;
-            cmd->hash = sdbm(cmd->process);
-            return true;
-        }
-        
+           
         cmd->argv[index++] = currentPart;
     }
 
     cmd->argc = index;
     cmd->hash = sdbm(cmd->process);
-    return false;
 }
 
 void createCommand(int i,ParsedCommand_t * parsedCommand,int fdw,int fdr){
@@ -244,7 +236,14 @@ int interpretCommand()
 {
     ParsedCommand_t parsedCommand[MAXPIPES];
     int cant_process = 0;
-    while(ProcessCommandString(TerminalType, &parsedCommand[cant_process])){
+    char * command= TerminalType;
+    char * currentPart;
+
+    if (command[strlen(command) - 1] == '\n')
+        command[strlen(command) - 1] = 0;
+
+    while((currentPart = strtok(&command, '|')) != NULL && cant_process < MAXPIPES){
+        ProcessCommandString(currentPart, &parsedCommand[cant_process]);
         cant_process++;
     }
     cant_process++;

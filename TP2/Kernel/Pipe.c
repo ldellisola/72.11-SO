@@ -73,13 +73,19 @@ void readPipe(int fd,char * buffer,int * bufferSize,bool pipe){
     return;
   }
   
+  if(files[i].state==0){
+    if(pipe)
+      *bufferSize=0;
+    return;
+  }
+
   int j=0;
   int count=0;
   bool blocking=false;
   char * read=files[i].read;
   char * write=files[i].write;
-  //aseguro que soy yo solo
   
+  //aseguro que soy yo solo
   SpinLock();
   
   //cuando el write dio la vuelta
@@ -178,6 +184,11 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
     *ans=i;
     return;
   }
+    if(files[i].state==0){
+      if(pipe)
+        *ans=0;
+      return;
+    }
 
   char * write=files[i].write;
   char * read=files[i].read;

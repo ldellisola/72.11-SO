@@ -67,7 +67,8 @@ void cat(int argc, char ** argv){
             index = 0;
         }
     }
-
+    putChar(c);
+    printf("\n");
     exit_process();
     
 }
@@ -79,5 +80,5 @@ void wc(int argc,char ** argv){
         if(c=='\n')
             count++;
     }
-    printf("Tiene %d lineas",count);
+    printf("Tiene %d lineas\n",count);
 }
