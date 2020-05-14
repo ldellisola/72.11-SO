@@ -190,54 +190,52 @@ void help(int argc, char **argv)
     }
 }
 
-int ProcessCommandString(char *command, ParsedCommand_t **cmd)
-{
-    char *currentPart;
+bool ProcessCommandString(char *command, ParsedCommand_t * cmd)
+{   char *currentPart;
     int index = 0;
-    int i=0;
-    cmd[i]->isBackground = false;
-    cmd[i]->process = NULL;
- 
+    cmd->isBackground = false;
+    cmd->process = NULL;
+
     if (command[strlen(command) - 1] == '\n')
         command[strlen(command) - 1] = 0;
 
-    while ((currentPart = strtok(&command, ' ')) != NULL && index < 20 && i<MAXPIPES)
+    while ((currentPart = strtok(&command, ' ')) != NULL && index < 20)
     {
-        if (cmd[i]->process == NULL)
+        if (cmd->process == NULL)
         {
-            cmd[i]->process = currentPart;
+            cmd->process = currentPart;
             continue;
         }
 
         if (currentPart[0] == '&')
         {
-            cmd[i]->isBackground = true;
+            cmd->isBackground = true;
             break;
         }
+        
         if (currentPart[0] == '|')
         {
-            cmd[i]->hash=sdbm(cmd[i]->process);
-            cmd[i++]->argc=index;
-            index=0;
-            break;
+            cmd->argc = index;
+            cmd->hash = sdbm(cmd->process);
+            return true;
         }
-        cmd[i]->argv[index++] = currentPart;
         
+        cmd->argv[index++] = currentPart;
     }
-    cmd[i]->argc=index;
-    cmd[i]->hash=sdbm(cmd[i]->process);
-    i++;
-    return i;
+
+    cmd->argc = index;
+    cmd->hash = sdbm(cmd->process);
+    return false;
 }
 
-void createCommand(int i,ParsedCommand_t parsedCommand,int fdw,int fdr){
+void createCommand(int i,ParsedCommand_t * parsedCommand,int fdw,int fdr){
     if (commands[i].isProcess)
     {
-        exec(commands[i].name, parsedCommand.isBackground, commands[i].function,fdr,fdw,parsedCommand.argc, parsedCommand.argv);
+        exec(commands[i].name, parsedCommand->isBackground, commands[i].function,fdr,fdw,parsedCommand->argc, parsedCommand->argv);
     }
     else
     {
-        commands[i].function(parsedCommand.argc, parsedCommand.argv);
+        commands[i].function(parsedCommand->argc, parsedCommand->argv);
     }
     
 }
@@ -245,8 +243,11 @@ void createCommand(int i,ParsedCommand_t parsedCommand,int fdw,int fdr){
 int interpretCommand()
 {
     ParsedCommand_t parsedCommand[MAXPIPES];
-    int cant_process=ProcessCommandString(TerminalType, &parsedCommand);
-    
+    int cant_process = 0;
+    while(ProcessCommandString(TerminalType, &parsedCommand[cant_process])){
+        cant_process++;
+    }
+    cant_process++;
     //es fd y el i del array de comands
     int fd[cant_process][3];
     fd[0][0]=-1;
@@ -278,7 +279,6 @@ int interpretCommand()
     {
         for(int j=0;j<cant_process;j++){
             if(commands[i].hash==parsedCommand[j].hash){
-                printf("Lo encontré");
                 fd[j][2]=i;
                 count++;
                 break;
@@ -297,7 +297,7 @@ int interpretCommand()
     else{
         for(int i=0;i<cant_process;i++){
             int aux=fd[i][2];
-            createCommand(aux,parsedCommand[i],fd[i][WRITE],fd[i][READ]);
+            createCommand(aux,&parsedCommand[i],fd[i][WRITE],fd[i][READ]);
         }
     }
 
