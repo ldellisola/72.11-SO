@@ -53,7 +53,6 @@ void cat(int argc, char ** argv){
 
     while ( (c = readKey()) != -20)
     {
-        DEBUG("LLEGO\n",0);   
         if(c >0){
             if(index < 999)
                 arr[index++] = (char) c;

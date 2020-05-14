@@ -25,7 +25,7 @@ void *timer_handler(void *ptr)
 	if (old != NULL)
 	{
 		if(isDummyProcessRunning){
-			GetDummyProcess()->sp = ptr;
+			GetDummyProcess()->pcb->sp = ptr;
 		}
 		else{
 			old->pcb->sp = ptr;
@@ -33,20 +33,20 @@ void *timer_handler(void *ptr)
 	}
 	
 
-	roundRobin();
+	
 
-	process *new = GetCurrentProcess();
+	process *new = roundRobin();
 
 
 	if (new == NULL)
 		return ptr;
 
-	if(new->pcb->isWaitingForInput){
+	if(new->next == new->prev && new->prev == NULL){
 		isDummyProcessRunning = true;
-		return GetDummyProcess()->sp;
 	}
-	
-	isDummyProcessRunning = false;
+	else
+		isDummyProcessRunning = false;
+		
 	priorityCounter = new->pcb->priority; 
 
 	return new->pcb->sp;

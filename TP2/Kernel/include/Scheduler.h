@@ -18,9 +18,9 @@ typedef struct Priority{
 
 void setDummyProcess( process_Func_t func);
 
-pcb * GetDummyProcess();
+process * GetDummyProcess();
 
-void roundRobin();
+process * roundRobin();
 
 void AwakeAllProcesses();
 

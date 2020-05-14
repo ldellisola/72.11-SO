@@ -19,7 +19,8 @@ int hasTodelete = 0;
 
 bool killedCurrentProcess = false;
 
-pcb DummyProcess;
+pcb DummyProcessPCB;
+process DummyProcess;
 uint64_t DummyProcessStack[STACK];
 
 void insertQueue(process * process);
@@ -73,17 +74,21 @@ void setDummyProcess( process_Func_t func){
     function.argc = 0;
     function.args = NULL;
 
-    LoadPCB(&DummyProcess,DummyProcessStack,"Dummy",&status,&function,-100,0);
+    LoadPCB(&DummyProcessPCB,DummyProcessStack,"Dummy",&status,&function,-100,0);
+
+    DummyProcess.next = NULL;
+    DummyProcess.prev = NULL;
+    DummyProcess.pcb = &DummyProcessPCB;
 }
 
 
-void roundRobin(){
+process * roundRobin(){
     killedCurrentProcess = false;
     if(priority.cant == 0){
         // DEBUG("No process%s","");
 
         curr = NULL;
-        return ;
+        return curr;
     }
 
     if(hasTodelete > 0){
@@ -106,14 +111,22 @@ void roundRobin(){
 
     if(priority.cant == 1){
         curr = priority.first;
-        return;
+        if (curr->pcb->isWaitingForInput)
+            return GetDummyProcess();
+        else
+            return curr;
     }
 
 
-    
+    int counter = 0;
     do{
+        if (counter++ == priority.cant){
+            return GetDummyProcess();
+        }
         curr=curr->next;
     }while(curr->pcb->state==BLOCK || curr->pcb->isWaitingForInput);
+
+    return curr;
     
 }
 
@@ -123,7 +136,7 @@ process * GetCurrentProcess(){
     return killedCurrentProcess ? NULL : curr;
 }
 
-pcb * GetDummyProcess(){
+process * GetDummyProcess(){
     return &DummyProcess;
 }
 
