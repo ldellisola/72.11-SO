@@ -34,7 +34,6 @@ void openPipe(char * name,actions action,int*fd){
     
     i=freePipe();
     cantidad++;
-    files[i].sem=semopen(name);
     files[i].fd[READ]=minFd++;
     files[i].fd[WRITE]=minFd++;
     CopyString(name,files[i].name,strlen(name));

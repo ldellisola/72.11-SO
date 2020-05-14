@@ -15,7 +15,6 @@ typedef struct t_pipe
   char name[MAX_NAME];
   int fd[2];
   char buffer[BUFFER];
-  SemData_t * sem;
   char * read;
   char * write;
   int processesBlocked;

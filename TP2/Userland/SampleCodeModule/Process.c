@@ -71,3 +71,13 @@ void cat(int argc, char ** argv){
     exit_process();
     
 }
+
+void wc(int argc,char ** argv){
+    int count=0;
+    char c;
+    while( (c=readKey()) != -20 ){
+        if(c=='\n')
+            count++;
+    }
+    printf("Tiene %d lineas",count);
+}
