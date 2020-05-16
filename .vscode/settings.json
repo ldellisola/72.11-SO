@@ -5,6 +5,7 @@
         "pcb.h": "c",
         "idtloader.h": "c",
         "interrupts.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "limits": "c"
     }
 }

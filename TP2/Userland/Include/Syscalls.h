@@ -18,9 +18,13 @@
 #define DELETE_CURRENT_CHAR 1
 #define DELETE_ALL_DISPLAY 3
 
-extern void write(int fd, void * first, void *second, void * third, void * forth );
+extern void _write(int fd, void * first, void *second, void * third, void * forth );
 
-extern void read(int fd, void * first, void *second, void * third, void * forth);
+extern void _read(int fd, void * first, void *second, void * third, void * forth);
+
+int read(int fd,char * buffer, int size);
+
+int write(int fd, char * buffer);
 
 extern void delete(int fd, void * first, void *second, void * third, void * forth);
 

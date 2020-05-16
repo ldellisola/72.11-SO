@@ -20,10 +20,11 @@
   void writeStdout();
   extern void __ForceTimerTick__();
 
-  //int getFree();
+  int getFreePipe();
 /* ----------------------------------------*/
 
 void openPipe(char * name,actions action,int*fd){
+  printf("open %s with %d",name,action);
   int i=lookPipe(name);
   //si no se puede tener más de dos procesos esto cambia
   if(i==-1){
@@ -32,7 +33,7 @@ void openPipe(char * name,actions action,int*fd){
       return;
     }  
     
-    i=freePipe();
+    i=getFreePipe();
     cantidad++;
     files[i].fd[READ]=minFd++;
     files[i].fd[WRITE]=minFd++;
@@ -50,7 +51,7 @@ void openPipe(char * name,actions action,int*fd){
   *fd=files[i].fd[action];
 }
 
-void read(char * buffer,int bufferSize){
+void read(char * buffer,int bufferSize,int * ans){
   int pid=getpid();
   int fd=getFd(pid,READ);
   
@@ -58,11 +59,11 @@ void read(char * buffer,int bufferSize){
     readStdin(buffer,bufferSize);
     return;
   }
-  readPipe(fd,buffer,bufferSize,false);
+  readPipe(fd,buffer,bufferSize,ans);
   
 }
 
-void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
+void readPipe(int fd,char * buffer,int bufferSize,int * ans){
 
   //DEBUG("get in readPipe with %d",getpid());
  //checkeo que exista el pipe
@@ -70,6 +71,8 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
   
   //sino -1
   if(i==-1){
+    //DEBUG("they dont exist\n",0);
+    *ans=-2;
     return;
   }
 
@@ -91,7 +94,8 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
     //esta en 0 o no (Seria lo ultimo que escribio)
   //DEBUG("they are equal",0);
   if(files[i].state==0){
-      //DEBUG("return because closed",0);
+     *ans=-1;
+      DEBUG("i died in read and i %d\n",i);
     return;
   }
     if((*read==0)){
@@ -136,9 +140,11 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
       if(files[i].processesBlocked!=-1){
         block(&files[i].processesBlocked);
         files[i].processesBlocked=-1;
+        *ans=count;
         return;  
       }
       SpinUnlock();
+      *ans=count;
       return;
     }
     read=files[i].buffer;
@@ -160,10 +166,12 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
   if(files[i].processesBlocked!=-1){
     block(&files[i].processesBlocked);
     files[i].processesBlocked=-1;  
+    *ans=count;
     return;
   }
   SpinUnlock();
   //DEBUG("I count %d",count);
+  *ans=count;
   return;
 }
 
@@ -174,20 +182,20 @@ void write(char * buffer,int * ans){
     writeStdout(buffer);
     return;
   }
-  writePipe(fd,buffer,ans,false);
+  writePipe(fd,buffer,ans);
 }
 
-void writePipe(int fd,char * buffer,int * ans,bool pipe){
+void writePipe(int fd,char * buffer,int * ans){
   //DEBUG("get in write with %d",getpid());
   int i=pipeCheck(fd,WRITE);
   int j=0;
   if(i==-1){
-    if(pipe)
-    *ans=i;
+    *ans=-2;
     return;
   }
     if(files[i].state==0){
-      if(pipe)
+      *ans=-1;
+      //DEBUG("i died in write \n",0);
       return;
     }
 
@@ -225,7 +233,6 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
 }  
     files[i].write=write;
     
-    if(pipe)
       *ans=count;
     
     if(files[i].processesBlocked!=-1){
@@ -280,7 +287,7 @@ int lookPipe(char * name){
 return -1;  
 }
 
-int freePipe(){
+int getFreePipe(){
   for(int i=0;i<MAX;i++){
     if(files[i].state==0)
       return i;
@@ -289,16 +296,12 @@ int freePipe(){
 }
 
 int pipeCheck(int fd,actions action){
-  if(fd<FIRST || fd>=(FIRST+2*MAX))
-    return -1;
-  if(action==READ){
-    if(fd%2!=0)
-      return -1;
-     return fd-FIRST; 
-  }
-  if(fd%2==0)
-    return-1;
-  return fd-1-FIRST;  
+  int i;
+  for(i=0;i<MAX;i++){
+    if(files[i].fd[action]==fd && files[i].state==1)
+      return i;
+  }  
+  return -1;  
 }
 
 void readStdin(char * buffer,int bufferSize){
