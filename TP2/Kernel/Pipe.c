@@ -64,6 +64,7 @@ void read(char * buffer,int bufferSize){
 
 void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
 
+  //DEBUG("get in readPipe with %d",getpid());
  //checkeo que exista el pipe
   int i=pipeCheck(fd,READ);
   
@@ -71,7 +72,6 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
   if(i==-1){
     return;
   }
-  
 
   int j=0;
   int count=0;
@@ -89,12 +89,14 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
     
     //como write se para en el proximo que tiene que escribir, tengo que preguntar si el anterior
     //esta en 0 o no (Seria lo ultimo que escribio)
+  //DEBUG("they are equal",0);
   if(files[i].state==0){
+      //DEBUG("return because closed",0);
     return;
   }
     if((*read==0)){
        int pid=getpid();
-
+      //DEBUG("going block",0);
       //lo guardo en los procesos bloqueados     
       files[i].processesBlocked=pid;
       //bloqueo al proceso
@@ -111,9 +113,13 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
   //genero la interrupcion
   if(blocking){
       SpinUnlock();
+      //DEBUG("get lock in read",0);
     __ForceTimerTick__();
+      //DEBUG("get unlock in read",0);
     write=files[i].write;
 }
+    //DEBUG("going through checks",0);
+
   if(read>write){
       while(read<(files[i].buffer+BUFFER) && j<bufferSize-1){
       buffer[j++]=*read;
@@ -137,7 +143,7 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
     }
     read=files[i].buffer;
 
-    DEBUG("CAMBIE\n",0);
+    //DEBUG("CAMBIE\n",0);
   }
  
   while(read<write && j<bufferSize-1){
@@ -157,6 +163,7 @@ void readPipe(int fd,char * buffer,int bufferSize,bool pipe){
     return;
   }
   SpinUnlock();
+  //DEBUG("I count %d",count);
   return;
 }
 
@@ -171,6 +178,7 @@ void write(char * buffer,int * ans){
 }
 
 void writePipe(int fd,char * buffer,int * ans,bool pipe){
+  //DEBUG("get in write with %d",getpid());
   int i=pipeCheck(fd,WRITE);
   int j=0;
   if(i==-1){
@@ -201,7 +209,9 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
 
       if(flag){
         SpinUnlock();
+        //DEBUG("block in write",0);
         __ForceTimerTick__();
+        //DEBUG("unblock in write",0);
         read=files[i].read;
       }
       if(write<(files[i].buffer+BUFFER)){
@@ -221,7 +231,9 @@ void writePipe(int fd,char * buffer,int * ans,bool pipe){
     if(files[i].processesBlocked!=-1){
       block(&files[i].processesBlocked);
       files[i].processesBlocked=-1;
+      //DEBUG("unblocking someone on write",0);
     }
+    SpinUnlock();
     return;
   }
 

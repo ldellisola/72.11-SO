@@ -299,7 +299,6 @@ int interpretCommand()
             createCommand(aux,&parsedCommand[i],fd[i][WRITE],fd[i][READ]);
         }
     }
-    ps();
     return 0;
 }
 
