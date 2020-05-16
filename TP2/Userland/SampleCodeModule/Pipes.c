@@ -9,15 +9,13 @@ int openPipe(char * name,actions action){
 }
 
 int readPipe(int pipe,char * buffer,int bufferSize){
-  int ans=bufferSize;
-  read(pipe,buffer,&ans,NULL,NULL);
-  return ans;
+  
+  return read(pipe,buffer,bufferSize);
 }
 
 int writePipe(int pipe,char * buffer){
-  int ans;
-  write(pipe,buffer,&ans,NULL,NULL);
-  return ans;
+  
+  return write(pipe,buffer);
 }
 
 

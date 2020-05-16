@@ -59,7 +59,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     int write=function->write;
     pcbs[i].fd[READ]= (read==-1) ? STDIN : read;
     pcbs[i].fd[WRITE]= (write==-1) ? STDOUT : write;
-
+    
     // Set up stack
     pcb *proc = &pcbs[i];
 
@@ -100,10 +100,9 @@ void kill(int *pid)
         
         //cierro los pipes desde aca
         if(pcbs[i].fd[READ]!=STDIN)
-            closePipes(pcbs[i].fd[READ]);
+            closePipes(&pcbs[i].fd[READ]);
         if(pcbs[i].fd[WRITE]!=STDOUT)
-            closePipes(pcbs[i].fd[WRITE]);  
-
+            closePipes(&pcbs[i].fd[WRITE]);  
         for(int j = 0 ; j < pcbs[i].argc ; j++){
             free(pcbs[i].argv[j]);
         }

@@ -34,7 +34,7 @@ void printf(const char * format, ...){
     snprintf(string,MAXBUFFER,(char*)format,args);
     va_end(args);
 
-    write(FD_STDOUT,string,0,0,0);
+    write(FD_STDOUT,string);
 }
 
 void printfColorAt(const char * format,int fontColor, int backgroundColor,int x,int y,...){
@@ -62,7 +62,7 @@ void printfColorAt(const char * format,int fontColor, int backgroundColor,int x,
     }
         colorString[i].ch = 0;
 
-        write(FD_STDOUT_COLOR,colorString,0,0,0);
+        _write(FD_STDOUT_COLOR,colorString,0,0,0);
 
 }
 
@@ -76,7 +76,7 @@ void printfError(const char * format,...){
     snprintf(string,MAXBUFFER,(char*)format,args);
     va_end(args);
 
-    write(FD_STDERR,string,0,0,0);
+    _write(FD_STDERR,string,0,0,0);
 
 }
 
@@ -91,7 +91,7 @@ void putChar( char ch)
 {
     char buff[2]={0,0};
     buff[0]=ch;
-    write(FD_STDOUT,buff,0,0,0);
+    write(FD_STDOUT,buff);
 
 }
 
@@ -99,7 +99,9 @@ void putChar( char ch)
 int readKey()
 {
     static char buff[2];
-    read(FD_STDIN,buff,2,0,0);
+    int ans=read(FD_STDIN,buff,2);
+    if(ans==-1 || ans ==-2)
+	    return ans;
     char retValue = buff[0];
     buff[0] = 0;
     return retValue;

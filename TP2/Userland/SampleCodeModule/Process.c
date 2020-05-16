@@ -51,7 +51,7 @@ void cat(int argc, char ** argv){
     for(int i = 0 ; i < 1000 ; i ++)
         arr[i]  =0;
 
-    while ( (c = readKey()) != -20)
+    while ( (c=readKey()) != -20 && c!=-1 && c !=-2)
     {
         
         if(c >0){
@@ -76,7 +76,7 @@ void cat(int argc, char ** argv){
 void wc(int argc,char ** argv){
     int count=0;
     char c;
-    while( (c=readKey()) != -20 ){
+    while( (c=readKey()) != -20 && c!=-1 && c !=-2){
         if(c=='\n')
             count++;
     }

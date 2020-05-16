@@ -1,5 +1,5 @@
-GLOBAL read
-GLOBAL write
+GLOBAL _read
+GLOBAL _write
 GLOBAL delete
 GLOBAL _malloc
 GLOBAL _free
@@ -55,7 +55,7 @@ section .text:
 	pop rax
 %endmacro
 
-read:
+_read:
     enter 0,0
     
     pushState
@@ -74,7 +74,7 @@ read:
     leave
     ret
 
-write:
+_write:
     enter 0,0
 
     pushState

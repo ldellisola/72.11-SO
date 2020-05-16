@@ -14,7 +14,7 @@ void WritingEnd(){
 }
 void ReadingEnd(){
   char aux[100];
-  read(FD_STDIN,aux,100,NULL,NULL);
+  read(FD_STDIN,aux,100);
   printf("lei: %s",aux);
   exit_process();
 }

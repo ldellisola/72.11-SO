@@ -73,6 +73,7 @@ Command_t commands[] = {
     {.function = niceProcess, .name = "nice", .isProcess = false, .description = "It changes the priority of a process, with 1 beign more priority and 3 less priority."},
     {.function = blockProcess, .name = "block", .isProcess = false, .description = "It blocks a process by its PID. It won't block the terminal."},
     {.function = ProcessState, .name = "ps", .isProcess = false, .description = "It prints in the terminal information about all the processes that are currently running."},
+    {.function = pipe, .name = "pipe", .isProcess = false, .description = "It prints in the terminal information about all the pipes that currently exists."},
     {.function = semInfo, .name = "sem", .isProcess = false, .description = "It prints in the terminal information about all the current semaphores that currently exists."},
     //{.function = testSem, .name = "testSem", .isProcess = false, .description = "Our very own function that tests our semaphores implementation."},
     {.function = testPipes, .name = "testPipes", .isProcess = false, .description = "Our very own function that tests our pipes implementation."},
@@ -270,6 +271,7 @@ int interpretCommand()
             fd[i][2]=-1;
         }
         fd[cant_process-1][WRITE]=-1;
+        fd[cant_process-1][2]=-1;
     }
 
     int i;
@@ -289,9 +291,12 @@ int interpretCommand()
     {
         int j=0;
         while(fd[j][2]!=-1){
-        j++;}
+        j++;
+        if(fd[j][0]!=-1)
+        closePipes(fd[j][0]);
+        }
 
-        printfError("%s: command not found\n",parsedCommand[j].process);
+        printfError("%s: command not found \n",parsedCommand[j].process);
     }
     else{
         for(int i=0;i<cant_process;i++){

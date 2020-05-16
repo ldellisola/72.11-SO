@@ -23,14 +23,14 @@ typedef struct t_pipe
 
 void openPipe(char * name,actions action,int * fd);
 
-void read(char * buffer,int bufferSize);
+void read(char * buffer,int bufferSize, int * ans);
 
 //devuelve si pudo leer por el bufferSize, -1 error sino cantidad de caracteres
-void readPipe(int fd,char * buffer,int bufferSize,bool pipe);
+void readPipe(int fd,char * buffer,int bufferSize,int * ans);
 
 void write(char * buffer,int * ans);
 //devuelve si pudo escribir por la respuesta, -1 error sino cantidad de caracteres
-void writePipe(int fd,char * buffer,int * ans,bool pipe);
+void writePipe(int fd,char * buffer,int * ans);
 
 void pipes();
 
