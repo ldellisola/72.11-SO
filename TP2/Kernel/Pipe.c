@@ -24,7 +24,6 @@
 /* ----------------------------------------*/
 
 void openPipe(char * name,actions action,int*fd){
-  printf("open %s with %d",name,action);
   int i=lookPipe(name);
   //si no se puede tener más de dos procesos esto cambia
   if(i==-1){

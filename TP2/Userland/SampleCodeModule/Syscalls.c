@@ -1,5 +1,4 @@
 #include "../Include/Syscalls.h"
-#include "../Include/Curses.h"
 
 extern void _exit();
 extern void sleep_process();
