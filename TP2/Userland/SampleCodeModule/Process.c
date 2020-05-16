@@ -67,7 +67,19 @@ void cat(int argc, char ** argv){
             index = 0;
         }
     }
-
+    putChar(c);
+    printf("\n");
     exit_process();
     
+}
+
+void wc(int argc,char ** argv){
+    int count=0;
+    char c;
+    while( (c=readKey()) != -20 ){
+        if(c=='\n')
+            count++;
+    }
+    printf("Tiene %d lineas\n",count);
+    exit_process();
 }

@@ -155,9 +155,13 @@ char* strtok(char ** str, char comp)
 
 	int i;
 	int t = -1;
+	
+	if(s[0]==comp){
+		s+=1;
+	}
 	for(i = 0; s[i] != 0 ; i++){
 
-		if(s[i] == comp && t == -1){
+/*		if(s[i] == comp && t == -1){
 			t = i;
 		}
 
@@ -168,6 +172,14 @@ char* strtok(char ** str, char comp)
 			*str = s+i;
 			return s;
 		}
+*/
+	if(s[i] == comp && t == -1){
+			t = i;
+			*(s+t)=0;
+			*str=s+i+1;
+			return s;
+	}
+
 
 	}
 

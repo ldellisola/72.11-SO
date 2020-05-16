@@ -170,7 +170,7 @@ int findProcess(int pid)
 
 void ps()
 {
-    printf("pid  prioridad   stack        bp     status  estado     nombre\n");
+    printf("pid  prioridad   stack        bp     status  estado   fdr  fdw  nombre\n");
     for (int i = 0; i < MAX_PROC; i++)
     {
         if (pcbs[i].state != KILL)
@@ -182,6 +182,7 @@ void ps()
                 printf("block");
             else 
                 printf("waiting");
+            printf("    %d   %d",pcbs[i].fd[READ],pcbs[i].fd[WRITE]);    
             printf("    %s\n",pcbs[i].name);    
         }
     }
