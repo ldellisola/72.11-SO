@@ -82,7 +82,7 @@ process * roundRobin(){
 
     if(priority.cant == 1){
         curr = priority.first;
-        if (curr->pcb->isWaitingForInput)
+        if (curr->pcb->state == BLOCK)
             return GetDummyProcess();
         else
             return curr;    
@@ -97,7 +97,7 @@ process * roundRobin(){
             return GetDummyProcess();
         }
         curr=curr->next;
-    }while(curr->pcb->state==BLOCK || curr->pcb->isWaitingForInput);
+    }while(curr->pcb->state==BLOCK  || curr->pcb->state == KILL);
 
     return curr;
 

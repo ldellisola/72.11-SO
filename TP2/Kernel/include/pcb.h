@@ -33,7 +33,6 @@ typedef struct{
     State state; 
     char ** argv;
     int argc;
-    bool isWaitingForInput;
 }pcb;
 
 pcb * create(char * name, int * status, function_t * function,int pidp);
