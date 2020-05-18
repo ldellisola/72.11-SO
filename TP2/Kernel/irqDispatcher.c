@@ -144,7 +144,12 @@ void * int_20(void * ptr) {
 void int_21(){
 
 	readKey();
-	AwakeAllProcesses();
+
+	SemData_t * sem = getKeyboardSem();
+
+	sempost(sem);
+
+	//AwakeAllProcesses();
 
 	
 }
@@ -258,8 +263,9 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 				case FD_STDIN: { 
 
 			char * buffer = (char *) firstParam;
-      int bufferSize = secondParam;
-			read(buffer,bufferSize,(int *) thirdParam);			
+      		int bufferSize = secondParam;
+	  		if (semwait(getKeyboardSem()))
+				read(buffer,bufferSize,(int *) thirdParam);			
 			// int i = 0;		
 			// int temp;
 			// do{

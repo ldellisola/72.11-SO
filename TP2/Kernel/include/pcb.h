@@ -5,6 +5,7 @@
 
 #define MAX_NAME 50
 
+#define STACK 0x300
 
 typedef struct{
     int (* function)(int, char **);

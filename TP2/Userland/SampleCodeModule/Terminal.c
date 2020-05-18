@@ -103,10 +103,11 @@ int runTerminal()
     TypeIndex = 0;
     printf(">>>>  ");
     int exit = 0;
-            SleepUntilUserInput();
+            //SleepUntilUserInput();
 
     do
     {
+        DEBUG("Esperando INPUT","");
         int key = readKey();
         if (key > 0)
         {

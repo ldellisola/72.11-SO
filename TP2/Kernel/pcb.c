@@ -4,7 +4,6 @@
 #include "include/String.h"
 #include "include/Pipe.h"
 
-#define STACK 0x300
 #define NULL 0
 #define MAX_PROC 20
 

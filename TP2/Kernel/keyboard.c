@@ -1,7 +1,6 @@
 #include <keyboard.h>
 #include <stdbool.h>
 #include <Scheduler.h>
-
 extern int __ReadKey__();
 
 
@@ -92,6 +91,18 @@ static bool Shift = false;
 static bool control = false;
 
 #include <Curses.h>
+
+static SemData_t * keyboardSemaphore = 0;
+
+void initializeKeyboard(){
+    keyboardSemaphore = semopen("STDIN_Semaphore");
+}
+
+SemData_t * getKeyboardSem(){
+    return keyboardSemaphore;
+}
+
+
 
 static char keyboardBuffer[BUFFER_SIZE]; 
 static unsigned int bufferIndex = 0;

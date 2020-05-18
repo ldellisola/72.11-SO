@@ -14,6 +14,8 @@ GLOBAL _exit
 GLOBAL sem
 GLOBAL sleep_process
 GLOBAL pipes
+GLOBAL LoadDummyProcess 
+
 
 section .text:
 
@@ -290,3 +292,16 @@ pipes:
 
     leave
     ret
+
+LoadDummyProcess: 
+        enter 0,0 
+ 
+        pushState 
+         
+        mov rax, rdi    ;primer arg      
+        int 99h 
+ 
+        popState 
+ 
+        leave 
+        ret 

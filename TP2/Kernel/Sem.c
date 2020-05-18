@@ -69,7 +69,7 @@ bool semwait(SemData_t * sem){
             }
         }while(sem->processesBlocked[i++] != pid);
 
-        blockProcess(&pid);
+        block(&pid);
 
         if(pid != getpid()){
             printfColor("ERROR blocking process on semaphore",0xFF0000,0);
