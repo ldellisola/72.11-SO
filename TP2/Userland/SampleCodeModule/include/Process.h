@@ -19,4 +19,8 @@ void test_sync();
 
 void test_no_sync();
 
+void test_semaforito();
+
+void test_semaforito2();
+
 #endif

@@ -1,5 +1,6 @@
 #include "../Include/Curses.h"
 #include "../Include/Syscalls.h"
+#include "../Include/Sem.h"
 #include "../Include/Time.h"
 #include "include/Process.h"
 #include <stdbool.h>
@@ -70,4 +71,34 @@ void cat(int argc, char ** argv){
 
     exit_process();
     
+}
+
+void test_semaforito() {
+    char * semName = "sem1";
+    int i = semopen("sem1",0);
+
+    if (i == 0) {
+        printf("todo ok 1");
+    }
+
+    while(1) {
+        semwait(semName);
+        printf("Hola soy 1 \n");
+        sempost(semName);
+    }
+}
+
+void test_semaforito2() {
+    char * semName = "sem1";
+    int i = semopen("sem1",0);
+
+    if (i == 0) {
+        printf("todo ok 2");
+    }
+
+    while(1) {
+        semwait(semName);
+        printf("Hola soy 2 \n");
+        sempost(semName);
+    }
 }

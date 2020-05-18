@@ -58,6 +58,8 @@ Command_t commands[] = {
     {.function = test_sync, .name = "testSync", .isProcess = true, .description = "Process that tests our semaphore sync implementation."},
     {.function = test_no_sync, .name = "testNoSync", .isProcess = true, .description = "Process that tests our semaphore no sync implementation."},
     {.function = cat, .name = "cat", .isProcess = true, .description = "Imprime en STDOOUT lo que viene por STDIN"},
+    {.function = test_semaforito, .name="s1", .isProcess = true, .description = "Prueba un semaforo 1"},
+    {.function = test_semaforito2, .name="s2", .isProcess = true, .description = "Prueba un semaforo 1"},
 
     {.function = help, .name = "help", .isProcess = false, .description = "It enumerates all the commands available on this shell\nIf there's an argument, it will tell you the funcition of that command."},
     {.function = time, .name = "time", .isProcess = false, .description = "It shows the current date and time."},
