@@ -282,7 +282,6 @@ int interpretCommand()
             if(commands[i].hash==parsedCommand[j].hash){
                 fd[j][2]=i;
                 count++;
-                break;
             }
         }
     }
