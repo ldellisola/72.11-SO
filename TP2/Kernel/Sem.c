@@ -14,8 +14,9 @@ int lookSem(char * name);
 int GetSemaphoreByName(char * name);
 int FindUnusedSemaphore();
 int semCheck(SemData_t * sem);
+SemData_t * getSem(char * name);
 
-SemData_t * semopen(char * name){
+int semopen(char * name, int initialValue){
 
     SpinLock();
     int pos = GetSemaphoreByName(name);
@@ -26,11 +27,11 @@ SemData_t * semopen(char * name){
 
         if (pos == -1) {
             printf("All semaphores are occupied\n");
-            return NULL;
+            return -1;
         }
 
         sems[pos].id=pos+1;
-        sems[pos].lock=UNLOCK;
+        sems[pos].value=initialValue;
         sems[pos].cant=0;
 
         for (int i = 0; i < MAX_PROC_SEM; i++)
@@ -41,13 +42,14 @@ SemData_t * semopen(char * name){
         CopyString(name, sems[pos].name, strlen(name));
     }
     sems[pos].cant++;
-    void * ptr = &sems[pos];
 
     SpinUnlock();
-    return ptr;
+    return 0;
 }
 
-bool semwait(SemData_t * sem){
+bool semwait(char * semName){
+
+    SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     bool hasToBeBlocked = true;
 
@@ -58,7 +60,7 @@ bool semwait(SemData_t * sem){
         return;
     }
 
-    if(sem->lock == LOCK){
+    if(sem->value == 0){
         int pid = getpid();
                 
         int i = 0;
@@ -76,8 +78,7 @@ bool semwait(SemData_t * sem){
         }
 
     }else{
-
-        sem->lock = LOCK;
+        sem->value--;
         hasToBeBlocked =  false;
     }
 
@@ -92,7 +93,9 @@ bool semwait(SemData_t * sem){
 
 }
 
-void sempost(SemData_t * sem){
+void sempost(char * semName){
+
+    SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     SpinLock();
 
@@ -101,22 +104,37 @@ void sempost(SemData_t * sem){
         return;
     }
 
-    sem->lock=UNLOCK;
-    int myPID = getpid();
-    int i = 0;
-    for(i = 0 ; i < MAX_PROC_SEM; i++){
-        int pid = sem->processesBlocked[i];
-        if(pid != 0 && pid != myPID){
-            process * p = GetProcess(sem->processesBlocked[i]);
+    sem->value++;
+
+    if (sem->value > 0) {
+    //int myPID = getpid();
+
+    // desbloqueo el primero, debido al Queue
+    process * p = GetProcess(sem->processesBlocked[0]);
             p->pcb->state = READY;
-            break;
+
+    // muevo toda la queue uno hacia adelante y actualizo el último
+    for(int i = 0 ; i < MAX_PROC_SEM-1; i++) {
+        sem->processesBlocked[i] = sem->processesBlocked[i+1];
         }
+    sem->processesBlocked[MAX_PROC_SEM-1]=0;
+
+    // for(i = 0 ; i < MAX_PROC_SEM; i++){
+    //     int pid = sem->processesBlocked[i];
+    //     if(pid != 0 && pid != myPID){
+    //         process * p = GetProcess(sem->processesBlocked[i]);
+    //         p->pcb->state = READY;
+    //         break;
+    //     }
+    // }
     }
     
     SpinUnlock();
 }
 
-void semclose(SemData_t * sem){
+void semclose(char * semName){
+    SemData_t * sem = getSem(semName);
+
     if (semCheck(sem) != 0) {
         printf("Error closing semaphore\n");
         return;
@@ -152,7 +170,7 @@ int FindUnusedSemaphore(){
 
 int semCheck(SemData_t * sem) {
     int i;
-    if (sem->name == NULL) {
+    if (sem == NULL || sem->name == NULL) {
         printf("Sem name was null\n");
         return -1;
     }
@@ -175,10 +193,19 @@ int lookSem(char * name){
 
 void semInfo(){
     int i;
-    printf("\n Id  Lock  Cantidad  Nombre\n");
+    printf("\n Id  Value  Cantidad  Nombre\n");
     for(i=0;i<MAX;i++){
         if(sems[i].id!=0){
-            printf("%d %d %d %s\n",sems[i].id,sems[i].lock,sems[i].cant,sems[i].name);
+            printf("%d %d %d %s\n",sems[i].id,sems[i].value,sems[i].cant,sems[i].name);
         }
     }
+}
+
+SemData_t * getSem(char * name) {
+    int index = GetSemaphoreByName(name);
+    if (index == -1) {
+        return NULL;
+    }
+    SemData_t * ptr = &sems[index];
+    return ptr;
 }

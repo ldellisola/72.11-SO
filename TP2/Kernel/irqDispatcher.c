@@ -48,7 +48,7 @@ void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
 void dispatchGetPid(int * ret);
 void dispatchExit();
-void dispatchSem(int fd,void * firstParam, void ** secondParam);
+void dispatchSem(int fd,void * firstParam, void * secondParam);
 void dispatchSleep();
 void dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam);
 
@@ -198,23 +198,23 @@ void dispatchExit(){
 	Exit();
 }
 
-void  dispatchSem(int fd,void * firstParam, void ** secondParam){
+void  dispatchSem(int fd,void * firstParam, void * secondParam){
 	switch (fd)
 	{
 	case 0:{
-		*secondParam=semopen((char *)firstParam);
+		*(int *) secondParam = semopen((char *)firstParam, (int) secondParam);
 		break;
 		}
 	case 1:{
-		*(bool *)secondParam =  semwait((SemData_t *)firstParam);
+		*(bool *)secondParam =  semwait((char *)firstParam);
 		break;
 		}
 	case 2:{
-		sempost((SemData_t *)firstParam);
+		sempost((char *)firstParam);
 		break;
 		}
 	case 3:{
-		semclose((SemData_t *)firstParam);
+		semclose((char *)firstParam);
 		break;
 	}
 	case 4:{
