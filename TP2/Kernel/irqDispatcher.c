@@ -259,7 +259,7 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 
 			char * buffer = (char *) firstParam;
       int bufferSize = secondParam;
-			read(buffer,bufferSize);			
+			read(buffer,bufferSize,(int *) thirdParam);			
 			// int i = 0;		
 			// int temp;
 			// do{
@@ -314,7 +314,7 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 		default:{
 			char * buffer = (char *) firstParam;
 			int * bufferSize = secondParam;
-			readPipe(fd,buffer,bufferSize,true);			
+			readPipe(fd,buffer,bufferSize,(int *)thirdParam);			
 			
 		}
 	}
@@ -399,7 +399,7 @@ void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdPara
 		}
 		default:{
 			char * buffer = firstParam;
-			writePipe(fd,buffer,(int *)secondParam,true);
+			writePipe(fd,buffer,(int *)secondParam);
 			break;
 						
 		}

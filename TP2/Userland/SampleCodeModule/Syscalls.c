@@ -1,4 +1,5 @@
 #include "../Include/Syscalls.h"
+
 extern void _exit();
 extern void sleep_process();
 extern void get_pid(int * ret);
@@ -24,6 +25,15 @@ void BlockAndSwitchProcess(int * pid){
 
 void SleepUntilUserInput(){
 	sleep_process();
+}
 
-
+int read(int fd,char * buffer,int size){
+	int ans;
+	_read(fd, buffer, size, &ans,NULL);
+	return ans;
+}
+int write(int fd, char * buffer){
+	int ans;
+	_write( fd, buffer, &ans, NULL, NULL);
+	return ans;
 }

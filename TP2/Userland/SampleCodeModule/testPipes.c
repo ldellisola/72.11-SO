@@ -6,25 +6,23 @@
 
 int stop=1;
 
-void ReadingEnd(){
+void WritingEnd(){
   int x=0;
-  stop=0;
-  char buffer[1024];
-  read(FD_STDIN,buffer,1024,0,0);
-  printf("lei %s\n",buffer);
+  //char EOF=-20;
+  printf("hola, funciona!\n");
   exit_process();
 }
-
-
-
+void ReadingEnd(){
+  char aux[100];
+  read(FD_STDIN,aux,100);
+  printf("lei: %s",aux);
+  exit_process();
+}
 void testPipes(){
   int fdw=openPipe("hola",WRITE);
   int fdr=openPipe("hola",READ);
   exec("reading",1,ReadingEnd,fdr,-1,0,NULL);
-  int x=0;
-  char aux[100];
-  while(stop==1){}
-  writePipe(fdw,"Holis como andas?");
+  exec("writing",1,WritingEnd,-1,fdw,0,NULL);
   //pipe();
 }
 
