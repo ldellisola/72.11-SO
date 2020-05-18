@@ -8,14 +8,18 @@
 #include <stdlib.h>
 #include "../Include/deviceInfo.h"
 
-
+#include "include/Process.h"
 extern void __halt__();
 
 
 int main() {	
-	
-	exec("terminal",0,runTerminal,0);
+	char * args[] = {"TP2 de SO"};
 
+	exec("terminal",0,runTerminal,-1,-1,1,args);
+
+	__halt__();
+	__halt__();
+	__halt__();
 	__halt__();
 	
 	return 0xDEA;

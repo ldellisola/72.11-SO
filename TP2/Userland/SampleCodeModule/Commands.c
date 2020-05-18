@@ -13,65 +13,90 @@
 extern void __UD2__();
 
 
-int quotient(int a, int b){
+void quotient(int argc, char ** argv){
+
+    if(argc != 2){
+        printf("This functions take 2 arguments");
+        return;
+    }
+    
+    int a = stringToInt(argv[0]), b = stringToInt(argv[1]);
 
     printf("I'm going to calculate the quotient of %d divided by %d\n",a,b);
 
     int result =  (a)/ (b);
     
     printf("The result is %d\n",result);
-    return 0;
+    return;
 }
 
-int help(){
-    printf("\nCOMMANDS\n\nArqui\n\ntime\ninvalidOpcode\ninfoReg\nquotient\nprintMem\nclear\n\nSO\n\nblock\nkill\nnice\nloop\nmem\n\nTESTS\n\ntestMem\n\nhelp\n");
-    return 0;
+
+
+void blockProcess(int argc, char ** argv){
+
+    if(argc != 1){
+        printf("this function takes 1 argument\n");
+        return;
+    }
+
+    int pid=stringToInt(argv[0]);
+    block_process(&pid);
+
+    if(pid == -2)
+        printf("No tiene permiso para acceder a ese proceso\n");
+    else if(pid == -1)
+        printf("No es un proceso %s, no esta permitida esa accion\n",argv[0]);
 }
 
-int explainCommand(char * command){
-
-    if(strcmp(command,"time")){
-        printf("Command:\n        time\n");
-        printf("It shows the current date and time.\n");
-    }
-    else if(strcmp(command,"help")){
-        printf("Command:\n        help ?[Argument_1]\n");
-        printf("It enumerates all the commands available on this shell\n");
-        printf("If there's an argument, it will tell you the funcition of that command\n");
-    }
-    else if(strcmp(command,"infoReg")){
-        printf("Command:\n        infoReg\n");
-        printf("It prints on screen the actual value of the registers\n");
-    }
-    else if(strcmp(command,"printMem")){
-        printf("Command:\n        printMem [Argument_1]\n");
-        printf("It prints on screen the first 32 bytes of memory from any given memory position.\n");
-    }
-    else if(strcmp(command,"invalidOpcode")){
-        printf("Command:\n        invalidOpcode\n");
-        printf("It is a test to validate the INVALID OPCODE exception.\n");
-    }
-    else if(strcmp(command,"clear")){
-        printf("Command:\n        clear\n");
-        printf("It clears the screen.\n");
-    }
-    else if(strcmp(command,"quotient")){
-        printf("Command:\n        quotient [Argument_1] [Argument_2]\n");
-        printf("It calculates the quotient of the division of [Argument_1] by [Argument_2]. This can be used to test the DIVISION BY ZERO exception.\n");
-    }else{
-        printf("That command does not exist!\n");
-    }
-    return 0;
+void ProcessState(int argc, char ** argv){
+    ps();
 }
 
-int invalidOpcode(){
+void killProcess(int argc, char **argv){
+
+    if( argc != argc){
+        printf("The function only takes 1 parameter\n");
+        return;
+    }
+
+    int pid = stringToInt(argv[0]);
+
+    kill_process(&pid);
+    if(pid==-1)
+        printf("No es un proceso %s, no esta permitida esa accion\n",argv[0]);
+    else if(pid== -2)
+        printf("No tiene permiso para acceder a ese proceso\n");
+}
+
+void niceProcess(int argc, char ** argv){
+
+    if(argc != 2){
+        printf("This function only takes 2 arguments\n");
+        return;
+    }
+
+    int pid=stringToInt(argv[0]);
+    int prior=stringToInt(argv[1]);
+
+    nice_process(&pid,prior);
+
+    if(pid==-1)
+        printf("No es un proceso %s, no esta permitida esa accion\n",argv[0]);
+    else if(pid == -2)
+        printf("No tiene permiso para acceder a ese proceso\n");
+    else if(pid == -3)
+        printf("No es una prioridad aceptada, seleccione 0-1-2\n");
+}
+
+
+void invalidOpcode(){
     
     __UD2__();
 
-    return 0;
+    return;
 }
 
-int printMemoryState(){
+void printMemoryState(int argc, char ** argv){
     void * first=NULL;
     void * last=NULL;
     void *next=NULL;
@@ -79,10 +104,22 @@ int printMemoryState(){
     memory_state(&first,&last,&next);
     printf("\nMemory starts at: 0x%x and finishes at : 0x%x\n",first,last);
     printf("Next free position: 0x%x\n",next);
-    return 0;
+    return;
 }
 
-int printMem(uint64_t memDirection){
+void printMem(int argc, char ** argv){
+
+    if(argc != 1){
+        printf("Invalid Arguments");
+        return;
+    }
+
+    uint64_t memDirection = stringToHexa(argv[0]);
+
+    if(memDirection == -1){
+        printf("Invalid Position\n");
+        return;
+    }
 
     char rawMem[32];
     readMem(memDirection,rawMem,32);
@@ -97,7 +134,7 @@ int printMem(uint64_t memDirection){
         printf("%s\n",printStr);
     }
 
-    return 0;
+    return;
 
 }
 
@@ -108,7 +145,7 @@ void cleanArr(char * arr, int size){
 }
 
 
-int printRegisters(uint64_t * storage){
+void printRegisters(uint64_t * storage){
     
 	printf("RAX: 0x%x\n",storage[14]);
     
@@ -141,11 +178,11 @@ int printRegisters(uint64_t * storage){
 	printf("R15: 0x%x\n",storage[0]);
 
 	printf("RSP: 0x%x\n",storage[10]);	
-    return 0;
+    return ;
 
 }
 
-int time(){
+void time(){
     int dayofMonth = GetDayOfMonth();
     int month = GetMonth();
     int year = GetYear();
@@ -153,47 +190,49 @@ int time(){
     int minutes = GetMinutes();
     int seconds = GetSeconds();
     printf("%d/%d/%d %d:%d:%d \n",dayofMonth,month,year,hour, minutes,seconds);   
-    return 0;
+    return;
 
 }
 
-int malloc_test() {
+void malloc_test(int argc, char ** argv) {
 
-    printMemoryState();
+    printMemoryState(0,NULL);
     printf("TEST PIDE 100:");
     char * test = (char *) malloc(100);
     printf("Mi direccion es %x \n",test);
-    printMemoryState();
+    printMemoryState(0,NULL);
     
     printf("\nTEST 0 PIDE 10:");
     char * test0= (char *) malloc(10);
     printf("Mi direccion es %x \n",test0);
-    printMemoryState();
+    printMemoryState(0,NULL);
     printf("\nTEST LIBERA 100\n");
     free(test);
-    printMemoryState();
+
+    printMemoryState(0,NULL);
     printf("\nTEST PIDE 2\n");
     test = (char *) malloc(2);
     printf("Mi direccion es %x \n",test);
-    printMemoryState();
+    printMemoryState(0,NULL);
     printf("\nTEST 1 PIDE 5:");
     char * test1 = (char *) malloc(5);
     printf("Mi direccion es %x \n",test1);
-    printMemoryState();
+    printMemoryState(0,NULL);
     printf("\nTEST LIBERA 2\n");
     printf("\nTEST 1 LIBERA 5\n");    
     free(test);
     free(test1);
-    printMemoryState();
+    printMemoryState(0,NULL);
     printf("\nTEST 2 PIDE 10:");
     char * test2= (char *) malloc(10);
     printf("Mi direccion es %x \n",test2);
-    printMemoryState();
+    printMemoryState(0,NULL);
     free(test);
     free(test1);
     free(test2);
     free(test0);
-    return 0;
+
+    return ;
 }
 
 void fillString(char * test) {

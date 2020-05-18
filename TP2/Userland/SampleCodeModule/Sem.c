@@ -1,67 +1,42 @@
 #include "../Include/Sem.h"
 #include "../Include/Syscalls.h"
 #include "../Include/Curses.h"
-#include "include/SpinLock.h"
 #include <stdbool.h>
 
 
 
 int var = 0;
 
-sem_t semopen(char *name)
+uint64_t semopen(char *name,uint64_t initValue)
 {
-    sem_t aux;
-    sem(0, (void *)name, (void **)&aux);
+    uint64_t aux=initValue;
+    sem(0, (void *)name, &aux);
     return aux;
 }
 
-void semwait(void *semp)
+uint64_t semwait(char * semp)
 {
-    bool try = true;
-    do
-    {
-        SpinLock();
-        //printf("Hola %d\n",getpid());
-        sem(1, (void *)semp, &try);
-        //printf("Sali %d y devolvio %d\n",getpid(),try);
-        SpinUnlock();
-        if(try){
-            int pid=getpid();
-            block_process(&pid);
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-            __asm__("hlt");
-        }
-        //DEBUG("checkeando %d\n",getpid());
-        
-    } while (try);
-    //DEBUG("chau %d\n",getpid());
+    uint64_t aux;
+    sem(1, (void *)semp, &aux);
+    return aux;
     
 }
 
-void sempost(void *semp)
+uint64_t sempost(char * semp)
 {
-    SpinLock();
-
-    sem(2, (void *)semp, NULL);
-    SpinUnlock();
+    uint64_t aux;
+    sem(2, (void *)semp, &aux);
+    return aux;
 }
 
-void semclose(void *semp)
+uint64_t semclose(char *semp)
 {
-    sem(3, (void *)semp, NULL);
+    uint64_t aux;
+    sem(3, (void *)semp, &aux);
+    return aux;
 }
 
-void semInfo()
+void semInfo(int argc, char ** argv)
 {
     sem(4, NULL, NULL);
 }

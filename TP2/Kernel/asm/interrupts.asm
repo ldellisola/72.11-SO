@@ -30,9 +30,14 @@ GLOBAL _irq93Handler
 GLOBAL _irq94Handler
 GLOBAL _irq95Handler
 GLOBAL _irq96Handler
+GLOBAL _irq97Handler
+GLOBAL _irq98Handler
+
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
+
+GLOBAL __ForceTimerTick__
 
 
 EXTERN irqDispatcher
@@ -119,7 +124,11 @@ SECTION .text
 	%endmacro
 
 
-
+__ForceTimerTick__:
+	enter 0,0
+	int 20h
+	leave
+	ret
 
 _hlt:
 	sti
@@ -266,6 +275,14 @@ _irq95Handler:
 ;exit
 _irq96Handler:
 	irqHandlerMaster 96h		
+
+;SleepUntilInput
+_irq97Handler:
+	irqHandlerMaster 97h		
+
+;Pipes
+_irq98Handler:
+	irqHandlerMaster 98h		
 
 ;USB
 _irq05Handler:

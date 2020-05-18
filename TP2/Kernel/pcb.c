@@ -2,21 +2,23 @@
 #include "include/MemManager.h"
 #include "include/Curses.h"
 #include "include/String.h"
+#include "include/Pipe.h"
 
-#define MAX 20
 #define STACK 0x300
 #define NULL 0
+#define MAX_PROC 20
+
 static int pid = 0;
 
-uint64_t stck[MAX][STACK];
-pcb pcbs[MAX];
+uint64_t stck[MAX_PROC][STACK];
+pcb pcbs[MAX_PROC];
 int cant = 0;
 
 int findProcess(int pid);
 
 pcb *create(char *name, int *status, function_t *function,int pidp)
 {
-    if (cant == MAX)
+    if (cant == MAX_PROC)
     {
         *status = -1;
         return NULL;
@@ -24,7 +26,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
 
     int i;
     cant++;
-    for (i = 0; i < MAX && pcbs[i].state != KILL; i++);
+    for (i = 0; i < MAX_PROC && pcbs[i].state != KILL; i++);
     
     CopyString(name, pcbs[i].name, strlen(name));
     pcbs[i].pid = pid++;
@@ -44,7 +46,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     }
 
     pcbs[i].argc = function->argc;
-
+    pcbs[i].isWaitingForInput = false;
 
 
     /// Continuo
@@ -53,6 +55,10 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     pcbs[i].stack = stck[i];
     pcbs[i].state = READY;
     pcbs[i].status = *status;
+    int read=function->read;
+    int write=function->write;
+    pcbs[i].fd[READ]= (read==-1) ? STDIN : read;
+    pcbs[i].fd[WRITE]= (write==-1) ? STDOUT : write;
 
     // Set up stack
     pcb *proc = &pcbs[i];
@@ -91,6 +97,13 @@ void kill(int *pid)
     if (i != -1)
     {
         pcbs[i].state = KILL;
+        
+        //cierro los pipes desde aca
+        if(pcbs[i].fd[READ]!=STDIN)
+            closePipes(pcbs[i].fd[READ]);
+        if(pcbs[i].fd[WRITE]!=STDOUT)
+            closePipes(pcbs[i].fd[WRITE]);  
+
         for(int j = 0 ; j < pcbs[i].argc ; j++){
             free(pcbs[i].argv[j]);
         }
@@ -99,6 +112,7 @@ void kill(int *pid)
         cant--;
         return;
     }
+    DEBUG("KILL Failed%s","")
     *pid = -1;
 }
 
@@ -126,21 +140,29 @@ void block(int *pid)
     else
         *pid = -1;
 }
+
 void unlock(int pid){
     int i=findProcess(pid);
     if(i!=-1){
         pcbs[i].state=READY;
+        //pcbs[i].status = FOREGROUND;
     }
+}
+
+int getFd(int pid,int action){
+    int i=findProcess(pid);
+    if(i==-1)
+        return i;
+    return pcbs[i].fd[action];
 }
 
 int findProcess(int pid)
 {
     int i;
 
-    for (i = 0; i < MAX && pcbs[i].pid != pid; i++)
-            ;
+    for (i = 0; i < MAX_PROC && pcbs[i].pid != pid; i++);
 
-    if (i == MAX || pcbs[i].state == KILL)
+    if (i == MAX_PROC)
         return -1;
 
     return i;
@@ -149,16 +171,19 @@ int findProcess(int pid)
 void ps()
 {
     printf("pid  prioridad   stack        bp     status  estado     nombre\n");
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < MAX_PROC; i++)
     {
         if (pcbs[i].state != KILL)
         {
             printf(" %d      %d      0x%x    0x%x     %d     ", pcbs[i].pid, pcbs[i].priority, pcbs[i].stack,pcbs[i].bp, pcbs[i].status);
             if (pcbs[i].state == READY)
                 printf("ready");
-            else
+            else if(pcbs[i].state == BLOCK)
                 printf("block");
+            else 
+                printf("waiting");
             printf("    %s\n",pcbs[i].name);    
         }
     }
 }
+
