@@ -61,7 +61,9 @@ bool semwait(char * semName){
         return;
     }
 
-    if(sem->value == 0){
+    sem->value--;
+
+    if(sem->value < 0){
         int pid = getpid();
                 
         int i = 0;
@@ -78,7 +80,6 @@ bool semwait(char * semName){
         }
 
     }else{
-        (sem->value)-=1;
         hasToBeBlocked =  false;
     }
 
@@ -106,7 +107,7 @@ void sempost(char * semName){
 
     (sem->value)+=1;
 
-    if (sem->value > 0) {
+    if (sem->value <= 0) {
     //int myPID = getpid();
 
     // desbloqueo el primero, debido al Queue
