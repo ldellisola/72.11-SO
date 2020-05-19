@@ -89,10 +89,10 @@ void wc(int argc,char ** argv){
 
 void test_semaforito() {
     char * semName = "sem1";
-    int i = semopen("sem1",0);
+    int i = semopen(semName,1);
 
     if (i == 0) {
-        printf("todo ok 1");
+        printf("todo ok 1 \2");
     }
 
     while(1) {
@@ -104,10 +104,10 @@ void test_semaforito() {
 
 void test_semaforito2() {
     char * semName = "sem1";
-    int i = semopen("sem1",0);
+    int i = semopen(semName,1);
 
     if (i == 0) {
-        printf("todo ok 2");
+        printf("todo ok 2 \n");
     }
 
     while(1) {
