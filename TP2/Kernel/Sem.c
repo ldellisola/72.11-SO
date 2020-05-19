@@ -52,7 +52,6 @@ bool semwait(char * semName){
 
     SpinLock();
 
-    printf("in semwait \n");
     SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     bool hasToBeBlocked = true;
@@ -61,7 +60,6 @@ bool semwait(char * semName){
         printf("Error waiting semaphore\n");
         return;
     }
-    int aux = sem->value;
 
     if(sem->value == 0){
         int pid = getpid();
@@ -73,7 +71,6 @@ bool semwait(char * semName){
                 sem->processesBlocked[i] = pid;
             }
         }while(sem->processesBlocked[i++] != pid);
-
         blockProcess(&pid);
 
         if(pid != getpid()){
@@ -81,7 +78,7 @@ bool semwait(char * semName){
         }
 
     }else{
-        sem->value--;
+        (sem->value)-=1;
         hasToBeBlocked =  false;
     }
 
@@ -99,7 +96,6 @@ bool semwait(char * semName){
 void sempost(char * semName){
 
     SpinLock();
-    printf("in sempost\n");
 
     SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
@@ -108,7 +104,7 @@ void sempost(char * semName){
         return;
     }
 
-    sem->value++;
+    (sem->value)+=1;
 
     if (sem->value > 0) {
     //int myPID = getpid();
