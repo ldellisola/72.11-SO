@@ -8,8 +8,8 @@ int stop=1;
 
 void WritingEnd(){
   int x=0;
-  char EOF=-20;
-  printf("hola\n %c",EOF);
+  //char EOF=-20;
+  printf("hola, funciona!\n");
   exit_process();
 }
 void ReadingEnd(){
@@ -21,8 +21,8 @@ void ReadingEnd(){
 void testPipes(){
   int fdw=openPipe("hola",WRITE);
   int fdr=openPipe("hola",READ);
+  exec("reading",1,ReadingEnd,fdr,-1,0,NULL);
   exec("writing",1,WritingEnd,-1,fdw,0,NULL);
-  exec("reading",1,wc,fdr,-1,0,NULL);
   //pipe();
 }
 
