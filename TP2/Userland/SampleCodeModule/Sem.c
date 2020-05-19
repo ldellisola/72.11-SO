@@ -10,7 +10,7 @@ int var = 0;
 uint64_t semopen(char *name,uint64_t initValue)
 {
     uint64_t aux=initValue;
-    sem(0, (void *)name, (void **)&aux);
+    sem(0, (void *)name, &aux);
     return aux;
 }
 
