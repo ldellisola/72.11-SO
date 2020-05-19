@@ -13,8 +13,7 @@ typedef struct
     int processesBlocked[MAX_PROC_SEM];
 } SemData_t;
 
-
-int semopen(char * name, int initialValue);
+int semopen(char * name, int * initialValue);
 
 bool semwait(char * sem);
 

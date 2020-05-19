@@ -16,7 +16,7 @@ int FindUnusedSemaphore();
 int semCheck(SemData_t * sem);
 SemData_t * getSem(char * name);
 
-int semopen(char * name, int initialValue){
+int semopen(char * name, int * initialValue){
 
     SpinLock();
     int pos = GetSemaphoreByName(name);
@@ -31,7 +31,7 @@ int semopen(char * name, int initialValue){
         }
 
         sems[pos].id=pos+1;
-        sems[pos].value=initialValue;
+        sems[pos].value=*initialValue;
         sems[pos].cant=0;
 
         for (int i = 0; i < MAX_PROC_SEM; i++)
@@ -48,17 +48,20 @@ int semopen(char * name, int initialValue){
 }
 
 bool semwait(char * semName){
+    
 
+    SpinLock();
+
+    printf("in semwait \n");
     SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     bool hasToBeBlocked = true;
-
-    SpinLock();
 
     if (semCheck(sem) != 0) {
         printf("Error waiting semaphore\n");
         return;
     }
+    int aux = sem->value;
 
     if(sem->value == 0){
         int pid = getpid();
@@ -95,9 +98,10 @@ bool semwait(char * semName){
 
 void sempost(char * semName){
 
-    SemData_t * sem = &sems[GetSemaphoreByName(semName)];
-
     SpinLock();
+    printf("in sempost\n");
+
+    SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     if (semCheck(sem) != 0) {
         printf("Error posting semaphore\n");

@@ -202,7 +202,7 @@ void  dispatchSem(int fd,void * firstParam, void * secondParam){
 	switch (fd)
 	{
 	case 0:{
-		*(int *) secondParam = semopen((char *)firstParam, (int) secondParam);
+		*(int *) secondParam = semopen((char *)firstParam, (int *) secondParam);
 		break;
 		}
 	case 1:{
