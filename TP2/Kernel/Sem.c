@@ -8,6 +8,7 @@
 extern void __ForceTimerTick__();
 
 #define MAX 20
+#define NO_VALUE -1
 SemData_t sems[MAX];
 
 int lookSem(char * name);
@@ -36,7 +37,7 @@ int semopen(char * name, int * initialValue){
 
         for (int i = 0; i < MAX_PROC_SEM; i++)
         {
-            sems[pos].processesBlocked[i] = 0;
+            sems[pos].processesBlocked[i] = NO_VALUE;
         }
         
         CopyString(name, sems[pos].name, strlen(name));
@@ -69,7 +70,7 @@ bool semwait(char * semName){
         int i = 0;
 
         do{
-            if(sem->processesBlocked[i] == 0){
+            if(sem->processesBlocked[i] == NO_VALUE){
                 sem->processesBlocked[i] = pid;
             }
         }while(sem->processesBlocked[i++] != pid);
@@ -118,7 +119,7 @@ void sempost(char * semName){
     for(int i = 0 ; i < MAX_PROC_SEM-1; i++) {
         sem->processesBlocked[i] = sem->processesBlocked[i+1];
         }
-    sem->processesBlocked[MAX_PROC_SEM-1]=0;
+    sem->processesBlocked[MAX_PROC_SEM-1]=NO_VALUE;
 
     // for(i = 0 ; i < MAX_PROC_SEM; i++){
     //     int pid = sem->processesBlocked[i];
