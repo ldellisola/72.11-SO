@@ -33,7 +33,7 @@ void phylo() {
         // printf("Phylo process name is %s \n", aux1);
         // printf("Phylo sem name is %s \n", aux2);
         semopen(S[i],0);
-        pids[i] = exec(phylos_names[i], 1, philosopher_process,-1,-1,1,(char **) &phils[i]);
+        pids[i] = exec(phylos_names[i], 1, philosopher_process,-1,-1,1,&phils[i]);
     }
 
     // char c;
@@ -139,7 +139,7 @@ void kill_philosopher(int i) {
 
 void create_philosopher(int i) {
     semopen(S[i], 0);
-    pids[i] = exec(S[i], 1, philosopher_process,-1,-1,1,(char **) &phils[i]);
+    pids[i] = exec(S[i], 1, philosopher_process,-1,-1,1,&phils[i]);
     state[i] = ASLEEP;
     amount++;
 }
