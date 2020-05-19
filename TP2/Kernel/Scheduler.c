@@ -196,8 +196,10 @@ void SleepProcess(){
 
     process * p = GetProcess(pid);
 
+    DEBUG("AAAAAAADDDDDDDDD",0)
+
     if(p != NULL){
-        p->pcb->isWaitingForInput = true;
+        //p->pcb->isWaitingForInput = true;
         __ForceTimerTick__();
     }
 }

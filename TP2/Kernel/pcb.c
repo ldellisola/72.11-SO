@@ -45,8 +45,6 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     }
 
     pcbs[i].argc = function->argc;
-    pcbs[i].isWaitingForInput = false;
-
 
     /// Continuo
 
