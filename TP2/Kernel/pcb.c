@@ -15,6 +15,66 @@ int cant = 0;
 
 int findProcess(int pid);
 
+void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *function,int pid,int parentPid){
+
+    CopyString(name, pcb->name, strlen(name));
+    pcb->pid = pid++;
+    pcb->priority = 1;
+    pcb->pidP=parentPid;
+
+    /// Copio argumentos a pcb
+
+    pcb->argv = malloc(function->argc * sizeof(char *));
+
+    for(int j = 0 ; j < function->argc; j++){
+        int t;
+        for(t = 0 ; function->args[j][t] !=0 ; t++)
+
+        pcb->argv[j] = malloc((t+1) * sizeof(char));
+        CopyString(function->args[j],pcb->argv[j],(t+1));
+    }
+
+    pcb->argc = function->argc;
+
+    /// Continuo
+
+
+    pcb->stack = stack;
+    pcb->state = READY;
+    pcb->status = *status;
+
+    // Set up stack
+
+    pcb->sp = stack + STACK - 1;
+
+
+    *(pcb->sp--) = 0; //ss
+    pcb->bp = pcb->sp + 1;
+    *(pcb->sp--) = pcb->sp + 1; // pongo el sp al tope del stack?? PREGUNTAR
+    *(pcb->sp--) = 0x202; // flags
+    *(pcb->sp--) = 0x8; // CS
+    *(pcb->sp--) = function->function; //rip
+
+    *(pcb->sp--) = 1;              //rax
+    *(pcb->sp--) = 2;              //rbx
+    *(pcb->sp--) = 3;              //rcx
+    *(pcb->sp--) = 4;              //rdx
+    *(pcb->sp--) = pcb->bp;       //rbp
+    *(pcb->sp--) = function->argc; //rdi
+    *(pcb->sp--) = pcb->argv;   // rsi        
+    *(pcb->sp--) = 8;              //r8
+    *(pcb->sp--) = 9;              //r9
+    *(pcb->sp--) = 10;              //r10
+    *(pcb->sp--) = 11;              //r11
+    *(pcb->sp--) = 12;              //r12
+    *(pcb->sp--) = 13;              //r13
+    *(pcb->sp--) = 14;              //r14
+    *(pcb->sp) = 15;              //r15
+
+
+
+}
+
 pcb *create(char *name, int *status, function_t *function,int pidp)
 {
     if (cant == MAX_PROC)
@@ -27,63 +87,7 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     cant++;
     for (i = 0; i < MAX_PROC && pcbs[i].state != KILL; i++);
     
-    CopyString(name, pcbs[i].name, strlen(name));
-    pcbs[i].pid = pid++;
-    pcbs[i].priority = 1;
-    pcbs[i].pidP=pidp;
-
-    /// Copio argumentos a pcb
-
-    pcbs[i].argv = malloc(function->argc * sizeof(char *));
-
-    for(int j = 0 ; j < function->argc; j++){
-        int t;
-        for(t = 0 ; function->args[j][t] !=0 ; t++)
-
-        pcbs[i].argv[j] = malloc((t+1) * sizeof(char));
-        CopyString(function->args[j],pcbs[i].argv[j],(t+1));
-    }
-
-    pcbs[i].argc = function->argc;
-
-    /// Continuo
-
-
-    pcbs[i].stack = stck[i];
-    pcbs[i].state = READY;
-    pcbs[i].status = *status;
-    int read=function->read;
-    int write=function->write;
-    pcbs[i].fd[READ]= (read==-1) ? STDIN : read;
-    pcbs[i].fd[WRITE]= (write==-1) ? STDOUT : write;
-    
-    // Set up stack
-    pcb *proc = &pcbs[i];
-
-    proc->sp = stck[i] + STACK - 1;
-
-    *(proc->sp--) = 0; //ss
-    proc->bp = proc->sp + 1;
-    *(proc->sp--) = proc->sp + 1; // pongo el sp al tope del stack?? PREGUNTAR
-    *(proc->sp--) = 0x202; // flags
-    *(proc->sp--) = 0x8; // CS
-    *(proc->sp--) = function->function; //rip
-
-    *(proc->sp--) = 0;              //rax
-    *(proc->sp--) = 0;              //rbx
-    *(proc->sp--) = 0;              //rcx
-    *(proc->sp--) = 0;              //rdx
-    *(proc->sp--) = proc->bp;       //rbp
-    *(proc->sp--) = function->argc; //rdi
-    *(proc->sp--) = pcbs[i].argv;   // rsi        
-    *(proc->sp--) = 0;              //r8
-    *(proc->sp--) = 0;              //r9
-    *(proc->sp--) = 0;              //r10
-    *(proc->sp--) = 0;              //r11
-    *(proc->sp--) = 0;              //r12
-    *(proc->sp--) = 0;              //r13
-    *(proc->sp--) = 0;              //r14
-    *(proc->sp) = 123;              //r15
+    LoadPCB(&pcbs[i],stck[i],name,status,function,pid++,pidp);
 
     return &pcbs[i];
 }

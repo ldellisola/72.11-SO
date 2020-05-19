@@ -14,7 +14,7 @@ void *timer_handler(void *ptr)
 	ticks++;
 	process *old = GetCurrentProcess();
 
-	if (old == NULL || old->pcb->state == READY)
+	if ((old == NULL || old->pcb->state == READY) && !isDummyProcessRunning)
 	{
 		if (priorityCounter != 0)
 		{

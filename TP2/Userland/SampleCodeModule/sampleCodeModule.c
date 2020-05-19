@@ -17,6 +17,9 @@ int dummy (int argc, char ** argv);
 int main() {	
 	char * args[] = {"TP2 de SO"};
 
+	
+	LoadDummyProcess(dummy);
+
 	exec("terminal",0,runTerminal,-1,-1,1,args);
 
 	__halt__();

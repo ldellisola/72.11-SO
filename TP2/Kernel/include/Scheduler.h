@@ -20,6 +20,7 @@ typedef struct Priority{
 process * roundRobin();
 
 process * GetDummyProcess();
+
 void setDummyProcess( process_Func_t func);
 
 

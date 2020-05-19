@@ -132,6 +132,10 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			dispatchPipes(firstParam,secondParam,thirdParam,fourthParam);
 			break;
 		}
+		case 0x99:{
+			setDummyProcess((process_Func_t)firstParam);
+			break;
+		}
 		default: break;
 	}
 

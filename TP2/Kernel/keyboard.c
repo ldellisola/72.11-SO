@@ -95,12 +95,12 @@ static bool control = false;
 static SemData_t * keyboardSemaphore = 0;
 
 void initializeKeyboard(){
-    int value = 1;
+    int value = 0;
     keyboardSemaphore = semopen("STDIN_Semaphore",&value);
 }
 
-SemData_t * getKeyboardSem(){
-    return keyboardSemaphore;
+char * getKeyboardSem(){
+    return (char *)"STDIN_Semaphore";
 }
 
 

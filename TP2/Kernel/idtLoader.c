@@ -26,6 +26,11 @@ void load_idt() {
 
   setup_IDT_entry (0x00, (uint64_t)&_exception0Handler);
   setup_IDT_entry (0x06, (uint64_t)&_exception6Handler);
+  setup_IDT_entry (0x04, (uint64_t)&_exception4Handler); 
+  setup_IDT_entry (0x08, (uint64_t)&_exception8Handler); 
+  setup_IDT_entry (0x0C, (uint64_t)&_exception0xCHandler); 
+  setup_IDT_entry (0x0d, (uint64_t)&_exception0xDHandler); 
+  setup_IDT_entry (0x0e, (uint64_t)&_exception0xEHandler); 
 
   setup_IDT_entry (0x20, (uint64_t)&_irq00Handler);
   setup_IDT_entry (0x21, (uint64_t)&_irq01Handler);
@@ -45,6 +50,7 @@ void load_idt() {
   setup_IDT_entry(0x96,(uint64_t)&_irq96Handler);
   setup_IDT_entry(0x97,(uint64_t)&_irq97Handler);
   setup_IDT_entry(0x98,(uint64_t)&_irq98Handler);
+  setup_IDT_entry(0x99,(uint64_t)&_irq99Handler);
 
 	
   picMasterMask(0xFC); 

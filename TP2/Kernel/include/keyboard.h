@@ -9,7 +9,7 @@ void readKey();
 int returnKey();
 
 void initializeKeyboard();
-SemData_t * getKeyboardSem();
+char * getKeyboardSem();
 
 
 #endif

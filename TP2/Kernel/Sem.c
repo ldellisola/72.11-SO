@@ -36,7 +36,7 @@ int semopen(char * name, int * initialValue){
 
         for (int i = 0; i < MAX_PROC_SEM; i++)
         {
-            sems[pos].processesBlocked[i] = 0;
+            sems[pos].processesBlocked[i] = -1;
         }
         
         CopyString(name, sems[pos].name, strlen(name));
@@ -67,11 +67,13 @@ bool semwait(char * semName){
         int i = 0;
 
         do{
-            if(sem->processesBlocked[i] == 0){
+            if(sem->processesBlocked[i] == -1){
                 sem->processesBlocked[i] = pid;
             }
         }while(sem->processesBlocked[i++] != pid);
-        blockProcess(&pid);
+
+        // Cambie la funcion por que la otra no permite bloquear a la terminal
+        block(&pid);
 
         if(pid != getpid()){
             printfColor("ERROR blocking process on semaphore",0xFF0000,0);
@@ -117,7 +119,7 @@ void sempost(char * semName){
     for(int i = 0 ; i < MAX_PROC_SEM-1; i++) {
         sem->processesBlocked[i] = sem->processesBlocked[i+1];
         }
-    sem->processesBlocked[MAX_PROC_SEM-1]=0;
+    sem->processesBlocked[MAX_PROC_SEM-1]=-1;
 
     // for(i = 0 ; i < MAX_PROC_SEM; i++){
     //     int pid = sem->processesBlocked[i];

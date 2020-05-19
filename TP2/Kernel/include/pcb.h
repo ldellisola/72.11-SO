@@ -35,6 +35,8 @@ typedef struct{
     int argc;
 }pcb;
 
+void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *function,int pid,int parentPid);
+
 pcb * create(char * name, int * status, function_t * function,int pidp);
 
 void kill(int * pid);

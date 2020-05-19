@@ -7,35 +7,58 @@
 #include <Scheduler.h>
 
 #define ZERO_EXCEPTION_ID 0
-#define INVALID_OPCODE_EXCEPTION_ID 0x06
+#define OVERFLOW_EXCEPTION_ID 0x04 
+#define INVALID_OPCODE_EXCEPTION_ID 0x06 
+#define DOBLE_FAULT_EXCEPTION_ID 0x08 
+#define STACK_FAULT_EXCEPTION 0x0C 
+#define GENERAL_PROTECTION_FAULT_EXCEPTION_ID 0x0d 
+#define PAGE_FAULT_EXCEPTION_ID 0x0e 
+ 
+ 
+ 
+void exceptionDispatcher(int exception, uint64_t * stackPointer) { 
+ 
+	printfColor("Occurred Exception \n\n\n",0xFF0000,0xFFFFFF); 
+	printfColor("In Process: %d\n",0xFF0000,0xFFFFFF,getpid()); 
+		switch(exception){ 
+			case ZERO_EXCEPTION_ID: 
+			{ 
+				PrintExceptionDetails("DIVISION BY ZERO",stackPointer,*(stackPointer+15)); 
+ 
+				break; 
+			} 
+			case INVALID_OPCODE_EXCEPTION_ID: 
+			{ 
+				PrintExceptionDetails("Invalid OPCODE",stackPointer,*(stackPointer+15)); 
+ 
+				break; 
+			} 
+			case OVERFLOW_EXCEPTION_ID:{ 
+				PrintExceptionDetails("Overflow",stackPointer,*(stackPointer+15)); 
+				break; 
+			} 
+			case PAGE_FAULT_EXCEPTION_ID:{ 
+				PrintExceptionDetails("Page Fault",stackPointer,*(stackPointer+15)); 
+				break; 
+			} 
+			case DOBLE_FAULT_EXCEPTION_ID:{ 
+				PrintExceptionDetails("Double Fault",stackPointer,*(stackPointer+15)); 
+				break; 
+			} 
+			case STACK_FAULT_EXCEPTION:{ 
+				PrintExceptionDetails("Stack Fault",stackPointer,*(stackPointer+15)); 
+				break; 
+			} 
+			case GENERAL_PROTECTION_FAULT_EXCEPTION_ID:{ 
+				PrintExceptionDetails("General Protection",stackPointer,*(stackPointer+15)); 
+				break; 
+			} 
+			default:{ 
+				PrintExceptionDetails("UNKNOWN EXCEPTION",stackPointer,*(stackPointer+15)); 
+			} 
+ 
+		}	
 
-
-
-
-void exceptionDispatcher(int exception, uint64_t * stackPointer) {
-
-	printfColor("In Process: %d",0xFF0000,0xFFFFFF,getpid());
-		switch(exception){
-			case ZERO_EXCEPTION_ID:
-			{
-				PrintExceptionDetails("DIVISION BY ZERO",stackPointer,*(stackPointer+15));
-
-				break;
-			}
-			case INVALID_OPCODE_EXCEPTION_ID:
-			{
-				PrintExceptionDetails("Invalid OPCODE",stackPointer,*(stackPointer+15));
-				DEBUG("La excepcion me la tira %d",getpid());
-				break;
-			}
-			default:{
-				PrintExceptionDetails("UNKNOWN EXCEPTION",stackPointer,*(stackPointer+15));
-			}
-
-		}		
-}
-
-
-
-
+	while(1);	 
+} 
 
