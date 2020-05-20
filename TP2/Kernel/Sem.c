@@ -115,7 +115,6 @@ void sempost(char * semName){
     }
     SpinUnlock();
 
-    return pid;
 }
 
 void semclose(char * semName){
