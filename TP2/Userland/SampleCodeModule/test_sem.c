@@ -9,7 +9,7 @@ uint64_t my_create_process_sem(char * name,void (* func)(int, char **)){
   return exec(name,1,func,-1,-1,0,NULL);
 }
 
-uint64_t my_sem_open(char *sem_id, uint64_t initialValue){
+uint64_t my_sem_open(char *sem_id, int initialValue){
   return semopen(sem_id,initialValue);
 }
 
@@ -25,14 +25,19 @@ uint64_t my_sem_close(char *sem_id){
   return semclose(sem_id);
 }
 
-#define N 100000000
+void printfNeg(int64_t g) {
+  int64_t neg = g*(-1);
+  printf("Final value: -%d\n", neg);
+}
+
+#define N 1000000
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 
-uint64_t global;  //shared memory
+int64_t global;  //shared memory
 
-void slowInc(uint64_t *p, uint64_t inc){
-  uint64_t aux = *p;
+void slowInc(int64_t *p, int64_t inc){
+  int64_t aux = *p;
   aux += inc;
   *p = aux;
 }
@@ -40,7 +45,7 @@ void slowInc(uint64_t *p, uint64_t inc){
 void my_process_inc(){
   uint64_t i;
 
-  if (!my_sem_open(SEM_ID, 1)){
+  if (my_sem_open(SEM_ID, 1)){
     printf("ERROR OPENING SEM\n");
     return;
   }
@@ -53,13 +58,18 @@ void my_process_inc(){
 
   my_sem_close(SEM_ID);
   
+  if (global < 0) {
+    printfNeg(global);
+  }
   printf("Final value: %d\n", global);
+
+  exit_process();
 }
 
 void my_process_dec(){
   uint64_t i;
 
-  if (!my_sem_open(SEM_ID, 1)){
+  if (my_sem_open(SEM_ID, 1)){
     printf("ERROR OPENING SEM\n");
     return;
   }
@@ -72,7 +82,11 @@ void my_process_dec(){
 
   my_sem_close(SEM_ID);
 
+  if (global < 0) {
+    printfNeg(global);
+  }
   printf("Final value: %d\n", global);
+  exit_process();
 }
 
 void test_sync(){
@@ -86,7 +100,8 @@ void test_sync(){
     my_create_process_sem("my_process_inc",my_process_inc);
     my_create_process_sem("my_process_dec",my_process_dec);
   }
-  
+
+  exit_process();
   // The last one should print 0
 }
 
@@ -95,8 +110,12 @@ void my_process_inc_no_sem(){
   for (i = 0; i < N; i++){
     slowInc(&global, 1);
   }
-
+    if (global < 0) {
+    printfNeg(global);
+  }
   printf("Final value: %d\n", global);
+
+  exit_process();
 }
 
 void my_process_dec_no_sem(){
@@ -105,7 +124,12 @@ void my_process_dec_no_sem(){
     slowInc(&global, -1);
   }
 
+    if (global < 0) {
+    printfNeg(global);
+  }
   printf("Final value: %d\n", global);
+
+  exit_process();
 }
 
 void test_no_sync(){
@@ -120,6 +144,7 @@ void test_no_sync(){
     my_create_process_sem("my_process_dec_no_sem",my_process_dec_no_sem);
   }
 
+  exit_process();
   // The last one should not print 0
 }
 

@@ -49,10 +49,7 @@ int semopen(char * name, int * initialValue){
 }
 
 bool semwait(char * semName){
-    
-
-    SpinLock();
-
+    SpinLock(); 
     SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     bool hasToBeBlocked = true;
@@ -61,6 +58,7 @@ bool semwait(char * semName){
         printf("Error waiting semaphore\n");
         return;
     }
+    
 
     sem->value--;
 
@@ -74,8 +72,8 @@ bool semwait(char * semName){
                 sem->processesBlocked[i] = pid;
             }
         }while(sem->processesBlocked[i++] != pid);
+        
         blockProcess(&pid);
-
         if(pid != getpid()){
             printfColor("ERROR blocking process on semaphore",0xFF0000,0);
         }
@@ -83,7 +81,6 @@ bool semwait(char * semName){
     }else{
         hasToBeBlocked =  false;
     }
-
     SpinUnlock();
 
 
@@ -96,41 +93,24 @@ bool semwait(char * semName){
 }
 
 void sempost(char * semName){
-
     SpinLock();
-
     SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     if (semCheck(sem) != 0) {
         printf("Error posting semaphore\n");
         return;
     }
-
-    (sem->value)+=1;
-
+    sem->value++;
     if (sem->value <= 0) {
-    //int myPID = getpid();
-
     // desbloqueo el primero, debido al Queue
     process * p = GetProcess(sem->processesBlocked[0]);
             p->pcb->state = READY;
-
     // muevo toda la queue uno hacia adelante y actualizo el último
     for(int i = 0 ; i < MAX_PROC_SEM-1; i++) {
         sem->processesBlocked[i] = sem->processesBlocked[i+1];
         }
     sem->processesBlocked[MAX_PROC_SEM-1]=NO_VALUE;
-
-    // for(i = 0 ; i < MAX_PROC_SEM; i++){
-    //     int pid = sem->processesBlocked[i];
-    //     if(pid != 0 && pid != myPID){
-    //         process * p = GetProcess(sem->processesBlocked[i]);
-    //         p->pcb->state = READY;
-    //         break;
-    //     }
-    // }
     }
-    
     SpinUnlock();
 }
 
@@ -198,7 +178,11 @@ void semInfo(){
     printf("\n Id  Value  Cantidad  Nombre\n");
     for(i=0;i<MAX;i++){
         if(sems[i].id!=0){
-            printf("%d %d %d %s\n",sems[i].id,sems[i].value,sems[i].cant,sems[i].name);
+            if (sems[i].value < 0) {
+            int aux = sems[i].value * -1;
+            printf("%d -%d %d %s\n",sems[i].id, aux,sems[i].cant,sems[i].name);
+            }
+            else printf("%d %d %d %s\n",sems[i].id,sems[i].value,sems[i].cant,sems[i].name);
         }
     }
 }
