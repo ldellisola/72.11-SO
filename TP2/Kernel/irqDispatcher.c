@@ -264,12 +264,12 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 	switch(fd){
 		case FD_STDOUT: { break;}
 		case FD_STDERR: { break;}
-				case FD_STDIN: { 
+		case FD_STDIN: { 
 
 			char * buffer = (char *) firstParam;
       		int bufferSize = secondParam;
-	  		if (semwait(getKeyboardSem()))
-				read(buffer,bufferSize,(int *) thirdParam);			
+	  		semwait(getKeyboardSem());
+			read(buffer,bufferSize,(int *) thirdParam);			
 			// int i = 0;		
 			// int temp;
 			// do{

@@ -98,12 +98,19 @@ void putChar( char ch)
 
 int readKey()
 {
-    static char buff[2];
-    int ans=read(FD_STDIN,buff,2);
-    if(ans==-1 || ans ==-2)
-	    return ans;
-    char retValue = buff[0];
-    buff[0] = 0;
+    static char buff[300];
+    static int top;
+    static int firstLetter;
+
+    if(top == firstLetter-1){
+        top=read(FD_STDIN,buff,299);
+        firstLetter = 0;
+        if(top==-1 || top ==-2)
+	        return top;
+    }
+
+    char retValue = buff[firstLetter];
+    buff[firstLetter++] = 0;
     return retValue;
 }
 void * memset(void * destiation, int32_t c, uint64_t length) {
