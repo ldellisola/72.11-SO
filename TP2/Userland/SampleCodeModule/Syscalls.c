@@ -29,6 +29,7 @@ void SleepUntilUserInput(){
 
 int read(int fd,char * buffer,int size){
 	int ans;
+	//SleepUntilUserInput();
 	_read(fd, buffer, size, &ans,NULL);
 	return ans;
 }

@@ -48,7 +48,7 @@ void dispatchNiceProcess(int * firstParam,int secondParam);
 void dispatchPs();
 void dispatchGetPid(int * ret);
 void dispatchExit();
-void dispatchSem(int fd,void * firstParam, void ** secondParam);
+void dispatchSem(int fd,void * firstParam, void * secondParam);
 void dispatchSleep();
 void dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam);
 
@@ -132,6 +132,10 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			dispatchPipes(firstParam,secondParam,thirdParam,fourthParam);
 			break;
 		}
+		case 0x99:{
+			setDummyProcess((process_Func_t)firstParam);
+			break;
+		}
 		default: break;
 	}
 
@@ -144,7 +148,12 @@ void * int_20(void * ptr) {
 void int_21(){
 
 	readKey();
-	AwakeAllProcesses();
+
+	SemData_t * sem = getKeyboardSem();
+
+	sempost(sem);
+
+	//forceProcessNext(pid);
 
 	
 }
@@ -198,23 +207,23 @@ void dispatchExit(){
 	Exit();
 }
 
-void  dispatchSem(int fd,void * firstParam, void ** secondParam){
+void  dispatchSem(int fd,void * firstParam, void * secondParam){
 	switch (fd)
 	{
 	case 0:{
-		*secondParam=semopen((char *)firstParam);
+		*(int *) secondParam = semopen((char *)firstParam, (int *) secondParam);
 		break;
 		}
 	case 1:{
-		*(bool *)secondParam =  semwait((SemData_t *)firstParam);
+		*(bool *)secondParam =  semwait((char *)firstParam);
 		break;
 		}
 	case 2:{
-		sempost((SemData_t *)firstParam);
+		sempost((char *)firstParam);
 		break;
 		}
 	case 3:{
-		semclose((SemData_t *)firstParam);
+		semclose((char *)firstParam);
 		break;
 	}
 	case 4:{
@@ -255,10 +264,11 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 	switch(fd){
 		case FD_STDOUT: { break;}
 		case FD_STDERR: { break;}
-				case FD_STDIN: { 
+		case FD_STDIN: { 
 
 			char * buffer = (char *) firstParam;
-      int bufferSize = secondParam;
+      		int bufferSize = secondParam;
+	  		semwait(getKeyboardSem());
 			read(buffer,bufferSize,(int *) thirdParam);			
 			// int i = 0;		
 			// int temp;

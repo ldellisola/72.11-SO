@@ -32,10 +32,17 @@ GLOBAL _irq95Handler
 GLOBAL _irq96Handler
 GLOBAL _irq97Handler
 GLOBAL _irq98Handler
+GLOBAL _irq99Handler
 
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
+
+GLOBAL _exception4Handler 
+GLOBAL _exception8Handler 
+GLOBAL _exception0xCHandler 
+GLOBAL _exception0xDHandler 
+GLOBAL _exception0xEHandler 
 
 GLOBAL __ForceTimerTick__
 
@@ -284,6 +291,11 @@ _irq97Handler:
 _irq98Handler:
 	irqHandlerMaster 98h		
 
+; LoadDummy
+_irq99Handler:
+	irqHandlerMaster 99h		
+
+
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5
@@ -294,9 +306,30 @@ _exception0Handler:
 	exceptionHandler 0
 
 	
-;Invalid Opcode Exception
-_exception6Handler:
-	exceptionHandler 6
+;Overflow Exception 
+_exception4Handler: 
+	exceptionHandler 4h 
+ 
+	 
+;Invalid Opcode Exception 
+_exception6Handler: 
+	exceptionHandler 6 
+ 
+;DoubleFault Exception 
+_exception8Handler: 
+	exceptionHandler 8h 
+ 
+;Stack Fault Exception 
+_exception0xCHandler: 
+	exceptionHandler 0ch 
+ 
+;General Protection FaultException       
+_exception0xDHandler: 
+	exceptionHandler 0dh 
+ 
+;Page fault 
+_exception0xEHandler: 
+	exceptionHandler 0Eh 
 
 
 ; Excepciones custom

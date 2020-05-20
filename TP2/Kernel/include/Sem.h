@@ -2,26 +2,24 @@
 #define SEM_H
 
 #include <stdbool.h>
-typedef enum{LOCK,UNLOCK} lock;
 #define MAX_PROC_SEM 20 //maximos procesos por sem
 
 typedef struct
 {
     int id;
     char name[1024];
-    lock lock;
+    int value;
     int cant;
     int processesBlocked[MAX_PROC_SEM];
 } SemData_t;
 
+int semopen(char * name, int * initialValue);
 
-SemData_t * semopen(char * name);
+bool semwait(char * sem);
 
-bool semwait(SemData_t * sem);
+void sempost(char * sem);
 
-void sempost(SemData_t * sem);
-
-void semclose(SemData_t * sem);
+void semclose(char * sem);
 
 void semInfo();
 

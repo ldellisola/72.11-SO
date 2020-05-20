@@ -55,7 +55,7 @@ extern void ps();
 
 int getpid();
 
-extern void sem(int fd,void * first,void ** second);
+extern void sem(int fd,void * first,void * second);
 
 extern void pipes(int fd, void * name, void * action, void * pipe);
 #endif

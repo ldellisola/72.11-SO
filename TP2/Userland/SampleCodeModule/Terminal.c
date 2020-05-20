@@ -60,6 +60,11 @@ Command_t commands[] = {
     {.function = test_no_sync, .name = "testNoSync", .isProcess = true, .description = "Process that tests our semaphore no sync implementation."},
     {.function = cat, .name = "cat", .isProcess = true, .description = "Imprime en STDOOUT lo que viene por STDIN"},
     {.function = wc, .name = "wc", .isProcess = true, .description = "Cuenta las lineas de lo que viene por STDIN"},
+    {.function = filter, .name="filter", .isProcess = true, .description = "Imprime las vocales filtradas que entran por STDIN"},
+    {.function = phylo, .name="phylo", .isProcess = true, .description = "Problema de los filosofos comensales"},
+    {.function = test_semaforito, .name="s1", .isProcess = true, .description = "Prueba un semaforo 1"},
+    {.function = test_semaforito2, .name="s2", .isProcess = true, .description = "Prueba un semaforo 2"},
+    
 
     {.function = help, .name = "help", .isProcess = false, .description = "It enumerates all the commands available on this shell\nIf there's an argument, it will tell you the funcition of that command."},
     {.function = time, .name = "time", .isProcess = false, .description = "It shows the current date and time."},
@@ -103,7 +108,7 @@ int runTerminal()
     TypeIndex = 0;
     printf(">>>>  ");
     int exit = 0;
-            SleepUntilUserInput();
+            //SleepUntilUserInput();
 
     do
     {
@@ -129,7 +134,7 @@ int runTerminal()
                     clearArray(TerminalType, MAXBUFFER);
                     TypeIndex = 0;
                     printf(">>>>  ");
-                    SleepUntilUserInput();
+                    //SleepUntilUserInput();
 
                 }
             }

@@ -55,7 +55,7 @@ void read(char * buffer,int bufferSize,int * ans){
   int fd=getFd(pid,READ);
   
   if(fd==STDIN){
-    readStdin(buffer,bufferSize);
+    readStdin(buffer,bufferSize,ans);
     return;
   }
   readPipe(fd,buffer,bufferSize,ans);
@@ -303,7 +303,7 @@ int pipeCheck(int fd,actions action){
   return -1;  
 }
 
-void readStdin(char * buffer,int bufferSize){
+void readStdin(char * buffer,int bufferSize,int * lenght){
 			int i = 0;		
 			int temp;
 			do{
@@ -315,6 +315,7 @@ void readStdin(char * buffer,int bufferSize){
 
 			}while( temp!= -1 && i <bufferSize-1 );
 			buffer[i] = 0;
+      *lenght = i;
 
 }
 

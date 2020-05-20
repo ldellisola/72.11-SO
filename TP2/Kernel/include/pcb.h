@@ -5,6 +5,7 @@
 
 #define MAX_NAME 50
 
+#define STACK 0x300
 
 typedef struct{
     int (* function)(int, char **);
@@ -32,8 +33,9 @@ typedef struct{
     State state; 
     char ** argv;
     int argc;
-    bool isWaitingForInput;
 }pcb;
+
+void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *function,int pid,int parentPid);
 
 pcb * create(char * name, int * status, function_t * function,int pidp);
 

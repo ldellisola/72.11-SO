@@ -1,8 +1,11 @@
 #include "../Include/Curses.h"
 #include "../Include/Syscalls.h"
+#include "../Include/Sem.h"
 #include "../Include/Time.h"
 #include "include/Process.h"
 #include <stdbool.h>
+#include <ctype.h>
+#define MAX_SIZE 1000
 
 #define LOOP_TIME 5 // N secs
 
@@ -82,4 +85,61 @@ void wc(int argc,char ** argv){
     }
     printf("Tiene %d lineas\n",count);
     exit_process();
+}
+
+void test_semaforito() {
+    char * semName = "sem1";
+    int i = semopen(semName,1);
+
+    if (i == 0) {
+        printf("todo ok 1 \2");
+    }
+
+    while(1) {
+        semwait(semName);
+        printf("Hola soy 1 \n");
+        sempost(semName);
+    }
+}
+
+void test_semaforito2() {
+    char * semName = "sem1";
+    int i = semopen(semName,1);
+
+    if (i == 0) {
+        printf("todo ok 2 \n");
+    }
+
+    while(1) {
+        semwait(semName);
+        printf("Hola soy 2 \n");
+        sempost(semName);
+    }
+}
+
+void filter() {
+    // char buff [MAX_SIZE];
+    // char aux [MAX_SIZE];
+    // int nbytes = MAX_SIZE-1;
+    // int i, j;
+    
+    // while(1){
+	// j = 0;
+	// read(FD_STDIN,buff,&nbytes,0,0);
+    // buff[MAX_SIZE-1] = '\0';
+	
+	// for (i = 0; i < MAX_SIZE - 1 && buff[i] != '\0'; i++) {
+	// 	if(!isVowel(buff[i])) {
+    //         aux[j++] = buff[i];
+    //     }
+    // }
+    // aux[j++] = '\0';
+
+    // printf("%s\n",aux);
+    // }
+}
+
+bool isVowel(char c) {
+    return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'
+     || c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U';
 }
