@@ -5,7 +5,7 @@
 #include "../Include/Sem.h"
 
 
-uint64_t my_create_process_sem(char * name,void (* func)(int, char **)){
+uint64_t my_create_process_sem(char * name,void (* func)){
   return exec(name,1,func,-1,-1,0,NULL);
 }
 
@@ -30,7 +30,7 @@ void printfNeg(int64_t g) {
   printf("Final value: -%d\n", neg);
 }
 
-#define N 100000000
+#define N 1000000
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 
@@ -61,7 +61,7 @@ void my_process_inc(){
   if (global < 0) {
     printfNeg(global);
   }
-  printf("Final value: %d\n", global);
+  else printf("Final value: %d\n", global);
 
   exit_process();
 }
@@ -85,7 +85,7 @@ void my_process_dec(){
   if (global < 0) {
     printfNeg(global);
   }
-  printf("Final value: %d\n", global);
+  else printf("Final value: %d\n", global);
   exit_process();
 }
 
@@ -113,7 +113,7 @@ void my_process_inc_no_sem(){
     if (global < 0) {
     printfNeg(global);
   }
-  printf("Final value: %d\n", global);
+  else printf("Final value: %d\n", global);
 
   exit_process();
 }
@@ -127,7 +127,7 @@ void my_process_dec_no_sem(){
     if (global < 0) {
     printfNeg(global);
   }
-  printf("Final value: %d\n", global);
+  else printf("Final value: %d\n", global);
 
   exit_process();
 }
