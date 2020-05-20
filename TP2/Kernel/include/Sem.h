@@ -17,7 +17,7 @@ int semopen(char * name, int * initialValue);
 
 bool semwait(char * sem);
 
-void sempost(char * sem);
+int sempost(char * sem);
 
 void semclose(char * sem);
 

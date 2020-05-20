@@ -36,6 +36,11 @@ void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *
 
     pcb->argc = function->argc;
 
+    // Armo FDs
+
+    pcb->fd[READ] = function->read == -1 ? STDIN : function->read ;
+    pcb->fd[WRITE] = function->write == -1 ? STDOUT : function->write ;
+
     /// Continuo
 
 

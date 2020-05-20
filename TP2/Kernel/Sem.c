@@ -97,7 +97,7 @@ bool semwait(char * semName){
 
 }
 
-void sempost(char * semName){
+int sempost(char * semName){
 
     SpinLock();
 
@@ -110,12 +110,14 @@ void sempost(char * semName){
 
     (sem->value)+=1;
 
+    int pid = sem->processesBlocked[0];
+
     if (sem->value <= 0) {
     //int myPID = getpid();
 
     // desbloqueo el primero, debido al Queue
     process * p = GetProcess(sem->processesBlocked[0]);
-            p->pcb->state = READY;
+    p->pcb->state = READY;
 
     // muevo toda la queue uno hacia adelante y actualizo el último
     for(int i = 0 ; i < MAX_PROC_SEM-1; i++) {
@@ -132,8 +134,13 @@ void sempost(char * semName){
     //     }
     // }
     }
+    else{
+        pid = -1;
+    }
     
     SpinUnlock();
+
+    return pid;
 }
 
 void semclose(char * semName){

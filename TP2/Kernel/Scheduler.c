@@ -25,10 +25,18 @@ bool killedCurrentProcess = false;
 void insertQueue(process * process);
 void deleteQueue(int * pid,process ** process);
 
-void AwakeAllProcesses(){
+void forceProcessNext(int pid){
+    //         DEBUG("PID: %d", pid );
 
-    
+    // // pid = 0;
+    // if(pid >= 0){
+    //     process * p = GetProcess(pid);
+    //     process * aux = curr->next;
 
+    //     pcb* temp = p->pcb;
+    //     p->pcb = aux->pcb;
+    //     aux->pcb = temp;
+    // }
 }
 
 void setDummyProcess( process_Func_t func){
@@ -39,6 +47,7 @@ void setDummyProcess( process_Func_t func){
     function.function = func;
     function.argc = 0;
     function.args = NULL;
+    function.read = function.write = -1;
 
     LoadPCB(&DummyProcessPCB,DummyProcessStack,"Dummy",&status,&function,-100,0);
 

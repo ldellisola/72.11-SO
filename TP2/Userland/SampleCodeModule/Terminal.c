@@ -112,7 +112,6 @@ int runTerminal()
 
     do
     {
-        DEBUG("Esperando INPUT","");
         int key = readKey();
         if (key > 0)
         {
@@ -135,7 +134,7 @@ int runTerminal()
                     clearArray(TerminalType, MAXBUFFER);
                     TypeIndex = 0;
                     printf(">>>>  ");
-                    SleepUntilUserInput();
+                    //SleepUntilUserInput();
 
                 }
             }

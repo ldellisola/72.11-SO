@@ -151,9 +151,9 @@ void int_21(){
 
 	SemData_t * sem = getKeyboardSem();
 
-	sempost(sem);
+	int pid = sempost(sem);
 
-	//AwakeAllProcesses();
+	forceProcessNext(pid);
 
 	
 }

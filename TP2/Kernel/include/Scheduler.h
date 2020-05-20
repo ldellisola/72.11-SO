@@ -24,7 +24,7 @@ process * GetDummyProcess();
 void setDummyProcess( process_Func_t func);
 
 
-void AwakeAllProcesses();
+void forceProcessNext(int pid);
 
 process * GetCurrentProcess();
 

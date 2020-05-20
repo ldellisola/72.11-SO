@@ -9,6 +9,11 @@
 #include "../Include/deviceInfo.h"
 
 #include "include/Process.h"
+
+#define STDIN 0
+#define STDOUT 1
+
+
 extern void __halt__();
 extern void LoadDummyProcess(process_Function_t func); 
 
@@ -20,7 +25,7 @@ int main() {
 	
 	LoadDummyProcess(dummy);
 
-	exec("terminal",0,runTerminal,-1,-1,1,args);
+	exec("terminal",0,runTerminal,STDIN,STDOUT,1,args);
 
 	__halt__();
 	__halt__();
