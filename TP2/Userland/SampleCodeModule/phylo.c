@@ -1,5 +1,6 @@
-#include "include/Phylo.h"
+#include "include/phylo.h"
 #include "include/Exec.h"
+#include "include/Process.h"
 #include "../Include/Sem.h"
 #include "../Include/Curses.h"
 #include "../Include/String.h"
@@ -7,87 +8,92 @@
 
 #define MAX 20
 
-enum State {ASLEEP = 0, EATING};
 enum State state[MAX];
-int pids[MAX];
+// int pids[MAX];
 int phils[MAX];
 int amount;
-char * S[] = {"s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"
-    "s11", "s12", "s13", "s14", "s15", "s16", "s17", "s18", "s19", "s20"};
-char * phylos_names[] = {"f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10"
-    "f11", "f12", "f13", "f14", "f15", "f16", "f17", "f18", "f19", "f20"};
+char table[MAX] = {0};
+int g_var;
+int pids[MAX];
+char * mutex = "phmutex";
+char * S[] = {"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"
+    "s11", "s12", "s13", "s14", "s15", "s16", "s17", "s18", "s19"};
+char * phylos_names[] = {"f0","f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10"
+    "f11", "f12", "f13", "f14", "f15", "f16", "f17", "f18", "f19"};
 
-void philosopher_process(int num);
 
 
 void phylo() {
     int initial_number = 5;
-    int mutex = semopen("phmutex",1);
+    semopen(mutex,1);
     amount = initial_number;
+    g_var = 0;
     
+    semwait(mutex);
     for(int i = 0; i < amount; i++) {
         state[i] = ASLEEP;
-        phils[i] = i;
-        // aux1 = philo_p_name(i);
-        // aux2 = philo_sem_name(i);
-        // printf("Phylo process name is %s \n", aux1);
-        // printf("Phylo sem name is %s \n", aux2);
-        semopen(S[i],0);
-        pids[i] = exec(phylos_names[i], 1, philosopher_process,-1,-1,1,&phils[i]);
+        table[i] = '.';
+        semopen(S[i], 0);
+        exec(phylos_names[i], 1, philosopher_process,-1,-1,0,NULL);
     }
+    sempost(mutex);
 
-    // char c;
-    // int aux = 0;
+    char c;
+    bool trying;
     while(1) {
-        // if (aux++ == 1000) {
-        // printf("Press 'a' to Add philo, 'r' to Remove philo, any key to continue\n");
-        // c = getchar();
-        // switch(c) {
-        //     case 'a':
-        //         if (amount < MAX) {
-        //             create_philosopher(amount);
-        //         }
-        //         aux=0;
-        //         break;
-        //     case 'r':
-        //         if (amount > 1) {
-        //             /* redefine this */
-        //             kill_philosopher(amount);
-        //         }
-        //         aux=0;
-        //         break;
-        //     default:
-        //         aux=0;
-        //         break;
-        // }
-        // }
-
-        for (int i = 0; i < amount; i++) {
-            printf("%c", (state[i] == ASLEEP) ? '.' : 'E');
+        c = readKey();
+        switch(c) {
+            case 'a':
+                if (amount < MAX) {
+                    trying = true;
+                    while(trying) {
+                        if ((state[0] != EATING) && (state[amount-1] != EATING)) {
+                            create_philosopher();
+                            trying = false;
+                        }
+                    }
+                }
+                break;
+            case 'r':
+                if (amount > 1) {
+                    kill_philosopher();
+                }
+                break;
+            default:
+                break;
         }
-        printf("\n");
+
+        semwait(mutex);
+        // for (int i = 0; i < amount; i++) {
+        //     putChar((state[i] == ASLEEP) ? '.' : 'E');
+        // }
+        // printf("\n");
+        table[amount] = '\0';
+        printf("%s\n",table);
+        sempost(mutex);
     }
 }
 
 void take_fork(int phnum) {
-    semwait("phmutex");
+    semwait(mutex);
     test(phnum);
-    sempost("phmutex");
+    sempost(mutex);
     semwait(S[phnum]);
 }
 
 void put_fork(int phnum) {
-    semwait("phmutex");
+    semwait(mutex);
     state[phnum] = ASLEEP;
+    table[phnum] = '.';
     test(left(phnum));
     test(right(phnum));
-    sempost("phmutex");
+    sempost(mutex);
 }
 
 void test(int phnum) {
     if ((state[left(phnum)] != EATING) && (state[right(phnum)] != EATING)) {
-        printf("El philo nro %d entro a comer\n", phnum);
         state[phnum] = EATING;
+        table[phnum] = 'E';
         sempost(S[phnum]);
     }
 }
@@ -122,24 +128,33 @@ int right (int phnum) { return (phnum + 1) % amount;}
 //     return pname;
 // }
 
-void philosopher_process(int num) {
-    int *i = &num;
+void philosopher_process() {
+    int i = g_var++;
+    pids[i] = getpid();
     while (1) {
-       take_fork(*i);
-       put_fork(*i);
+       take_fork(i);
+       put_fork(i);
     }
 }
 
-void kill_philosopher(int i) {
-    semclose(S[i]);
-    kill_process(&pids[i]);
-    state[i] = ASLEEP;
+void kill_philosopher() {
+    semwait(mutex);
     amount--;
+    kill_process(&pids[amount]);
+    semclose(S[amount]);
+    state[amount] = ASLEEP;
+    table[amount] = '.';
+    sempost(mutex);
+    return;
 }
 
-void create_philosopher(int i) {
-    semopen(S[i], 0);
-    pids[i] = exec(S[i], 1, philosopher_process,-1,-1,1,&phils[i]);
-    state[i] = ASLEEP;
+void create_philosopher() {
+    semwait(mutex);
+    semopen(S[amount], 0);
+    state[amount] = ASLEEP;
+    table[amount] = '.';
+    exec(phylos_names[amount], 1, philosopher_process,-1,-1,0,NULL);
     amount++;
+    sempost(mutex);
+    return;
 }
