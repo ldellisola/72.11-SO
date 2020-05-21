@@ -1,5 +1,3 @@
-// void * philosopher_process(void * num);
-
 enum State {ASLEEP = 0, EATING};
 
 void philosopher_process();
