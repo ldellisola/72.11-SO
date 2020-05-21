@@ -3,7 +3,7 @@
 #include "pcb.h"
 #include <stdbool.h>
 
-typedef void (*process_Func_t)(int, char**);
+typedef int (*process_Func_t)(int, char**);
 
 
 typedef struct process{
@@ -43,5 +43,7 @@ void killCurrentForegroundProcess();
 int getpid();
 
 void Exit();
+
+void SleepProcess();
 
 #endif

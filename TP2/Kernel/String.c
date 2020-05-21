@@ -47,14 +47,12 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 
 	char *p = buffer;
 	char *p1, *p2;
-	uint32_t digits = 0;
 
 	//Calculate characters for each digit
 	do
 	{
 		uint32_t remainder = num % 16;
 		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
 	}
 	while (num /= 16);
 
@@ -71,8 +69,6 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 		p1++;
 		p2--;
 	}
-
-	return digits;
 	
 }
 
