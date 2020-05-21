@@ -50,7 +50,7 @@ void getRegisters(Registers * reg,uint64_t * stackPointer,uint64_t * instruction
     reg->r13 = *(stackPointer+2);
     reg->r14 = *(stackPointer+1);
     reg->r15 = *(stackPointer);
-    reg->rip = instructionPointer;
+    reg->rip = (uint64_t)instructionPointer;
 
 }
 

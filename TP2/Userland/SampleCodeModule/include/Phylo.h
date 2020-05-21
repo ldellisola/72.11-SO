@@ -1,6 +1,6 @@
 // void * philosopher_process(void * num);
 
-void philosopher_process(int num);
+int philosopher_process(int num, char ** argv);
 
 void kill_philosopher(int i);
 

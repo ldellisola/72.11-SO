@@ -7,13 +7,14 @@
 
 
 //TO BE INCLUDED
-void  endless_loop(){
+int  endless_loop(int argc,char ** argv){
   while(1);
+  return 0;
 }
 
 uint32_t my_create_process(char * name){
     int status=1;//background
-  return exec(name,status,endless_loop,-1,-1,0,NULL);;
+  return exec(name,status,endless_loop,-1,-1,0,NULL);
 }
 
 uint32_t my_kill(uint32_t pid){
@@ -46,7 +47,7 @@ typedef struct P_rq{
   enum State state;
 }p_rq;
 
-void test_processes(){
+int test_processes(int argc,char ** argv){
   p_rq p_rqs[MAX_PROCESSES];
   uint8_t rq;
   uint8_t alive = 0;
@@ -59,7 +60,8 @@ void test_processes(){
 
       if (p_rqs[rq].pid == -1){                           // TODO: Port this as required
         printf("Error creating process\n");               // TODO: Port this as required
-        return;
+        exit_process();
+        return 0;
       }else{
         p_rqs[rq].state = RUNNING;
         alive++;
@@ -76,7 +78,8 @@ void test_processes(){
             if (p_rqs[rq].state == RUNNING || p_rqs[rq].state == BLOCKED){
               if (my_kill(p_rqs[rq].pid) == -1){          // TODO: Port this as required
                 printf("Error killing process\n");        // TODO: Port this as required
-                return;
+                exit_process();
+                return 0;
               }
               p_rqs[rq].state = KILLED; 
               alive--;
@@ -87,7 +90,8 @@ void test_processes(){
             if (p_rqs[rq].state == RUNNING){
               if(my_block(p_rqs[rq].pid) == -1){          // TODO: Port this as required
                 printf("Error blocking process\n");       // TODO: Port this as required
-                return;
+                exit_process();
+                return 0;
               }
               p_rqs[rq].state = BLOCKED; 
             }
@@ -99,10 +103,13 @@ void test_processes(){
         if (p_rqs[rq].state == BLOCKED && GetUniform(2) % 2){
           if(my_unblock(p_rqs[rq].pid) == -1){            // TODO: Port this as required
             printf("Error unblocking process\n");         // TODO: Port this as required
-            return;
+            exit_process();
+            return 0;
           }
           p_rqs[rq].state = RUNNING; 
         }
     } 
   }
+  exit_process();
+  return 0;
 }

@@ -28,6 +28,7 @@ int handleTimeRequest(int id){
         case MONTH:     return GetMonth();
         case YEAR:      return GetYear();
     }
+    return 0;   
 }
 
 

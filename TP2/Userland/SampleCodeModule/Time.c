@@ -7,7 +7,7 @@ SECONDS, MINUTES, HOURS, DAYOFWEEK, DAYOFMONTH, MONTH, YEAR
 
 
 
-int getTime(int id);
+int getTime(uint64_t id);
 
 int GetSeconds(){
     int ret = getTime(SECONDS);
@@ -41,10 +41,10 @@ int GetYear(){
 }
 
 
-int getTime(int id){
+int getTime(uint64_t id){
     int time = 0;
 
-    _read(FD_TIME,id,&time,0,0);
+    _read(FD_TIME,(void *)id,&time,0,0);
 
     return time;
 }

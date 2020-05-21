@@ -19,9 +19,10 @@ typedef struct{
 
 
 
-void clearConsole()
+int clearConsole(int argc, char **argv)
 {
-    delete(FD_STDOUT,DELETE_ALL_DISPLAY,NULL,NULL,NULL);
+    delete(FD_STDOUT,(void *)DELETE_ALL_DISPLAY,NULL,NULL,NULL);
+    return 0;
 }
 
 
@@ -83,7 +84,7 @@ void printfError(const char * format,...){
 
 
 void RemoveLastCharFromDisplay(){
-    delete(FD_STDOUT,DELETE_CURRENT_CHAR,NULL,NULL,NULL);
+    delete(FD_STDOUT,(void *)DELETE_CURRENT_CHAR,NULL,NULL,NULL);
 }
 
 

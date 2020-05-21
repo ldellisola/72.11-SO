@@ -4,7 +4,7 @@
 #include "Sem.h"
 
 #define BUFFER 1024
-#define MAX_NAME 100
+#define MAX_NAM 100
 #define STDIN 0
 #define STDOUT 1
 
@@ -12,7 +12,7 @@ typedef enum{READ,WRITE} actions;
 typedef struct t_pipe
 {
   int state;
-  char name[MAX_NAME];
+  char name[MAX_NAM];
   int fd[2];
   char buffer[BUFFER];
   char * read;

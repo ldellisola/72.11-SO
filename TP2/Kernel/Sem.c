@@ -56,7 +56,7 @@ bool semwait(char * semName){
 
     if (semCheck(sem) != 0) {
         printf("Error waiting semaphore\n");
-        return;
+        return false;
     }
     
 

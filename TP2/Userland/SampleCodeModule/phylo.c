@@ -3,6 +3,7 @@
 #include "../Include/Sem.h"
 #include "../Include/Curses.h"
 #include "../Include/String.h"
+#include "include/Process.h"
 #include "../Include/Syscalls.h"
 
 #define MAX 20
@@ -17,12 +18,13 @@ char * S[] = {"s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"
 char * phylos_names[] = {"f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10"
     "f11", "f12", "f13", "f14", "f15", "f16", "f17", "f18", "f19", "f20"};
 
-void philosopher_process(int num);
+int philosopher_process(int num,char ** argv);
 
 
-void phylo() {
+int phylo(int argc,char ** argv) {
     int initial_number = 5;
-    int mutex = semopen("phmutex",1);
+    //int mutex = semopen("phmutex",1); LUCHO NO USABAS ESTA VARIABLE Y LOS WARNINGS...
+    semopen("phmutex",1);
     amount = initial_number;
     
     for(int i = 0; i < amount; i++) {
@@ -33,7 +35,7 @@ void phylo() {
         // printf("Phylo process name is %s \n", aux1);
         // printf("Phylo sem name is %s \n", aux2);
         semopen(S[i],0);
-        pids[i] = exec(phylos_names[i], 1, philosopher_process,-1,-1,1,&phils[i]);
+        pids[i] = exec(phylos_names[i], 1, philosopher_process,-1,-1,1,(char **)&phils[i]);
     }
 
     // char c;
@@ -67,6 +69,7 @@ void phylo() {
         }
         printf("\n");
     }
+ return 0;   
 }
 
 void take_fork(int phnum) {
@@ -122,12 +125,13 @@ int right (int phnum) { return (phnum + 1) % amount;}
 //     return pname;
 // }
 
-void philosopher_process(int num) {
+int philosopher_process(int num,char ** argv) {
     int *i = &num;
     while (1) {
        take_fork(*i);
        put_fork(*i);
     }
+   return 0; 
 }
 
 void kill_philosopher(int i) {
@@ -139,7 +143,7 @@ void kill_philosopher(int i) {
 
 void create_philosopher(int i) {
     semopen(S[i], 0);
-    pids[i] = exec(S[i], 1, philosopher_process,-1,-1,1,&phils[i]);
+    pids[i] = exec(S[i], 1, philosopher_process,-1,-1,1,(char **)&phils[i]);
     state[i] = ASLEEP;
     amount++;
 }

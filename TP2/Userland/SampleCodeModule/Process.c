@@ -9,7 +9,7 @@
 
 #define LOOP_TIME 5 // N secs
 
-void loop()
+int loop(int argc, char ** argv)
 {
     bool flag = true;
     unsigned int startSeconds = GetSeconds();
@@ -42,10 +42,11 @@ void loop()
         }
         
     } while (1);
+    return 0;
 }
 
 
-void cat(int argc, char ** argv){
+int cat(int argc, char ** argv){
 
     int c;
     int index = 0;
@@ -73,10 +74,11 @@ void cat(int argc, char ** argv){
     putChar(c);
     printf("\n");
     exit_process();
+    return 0;
     
 }
 
-void wc(int argc,char ** argv){
+int wc(int argc,char ** argv){
     int count=0;
     char c;
     while( (c=readKey()) != -20 && c!=-1 && c !=-2){
@@ -85,9 +87,10 @@ void wc(int argc,char ** argv){
     }
     printf("Tiene %d lineas\n",count);
     exit_process();
+    return 0;
 }
 
-void test_semaforito() {
+int test_semaforito(int argc,char ** argv) {
     char * semName = "sem1";
     int i = semopen(semName,1);
 
@@ -100,9 +103,10 @@ void test_semaforito() {
         printf("Hola soy 1 \n");
         sempost(semName);
     }
+    return 0;
 }
 
-void test_semaforito2() {
+int test_semaforito2(int argc,char ** argv) {
     char * semName = "sem1";
     int i = semopen(semName,1);
 
@@ -115,9 +119,10 @@ void test_semaforito2() {
         printf("Hola soy 2 \n");
         sempost(semName);
     }
+    return 0;
 }
 
-void filter() {
+int filter(int argc,char ** argv) {
     // char buff [MAX_SIZE];
     // char aux [MAX_SIZE];
     // int nbytes = MAX_SIZE-1;
@@ -137,6 +142,7 @@ void filter() {
 
     // printf("%s\n",aux);
     // }
+    return 0;
 }
 
 bool isVowel(char c) {

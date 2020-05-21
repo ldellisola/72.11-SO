@@ -39,9 +39,6 @@ void openPipe(char * name,actions action,int*fd){
     CopyString(name,files[i].name,strlen(name));
     files[i].read=files[i].buffer;
     files[i].write=files[i].buffer;
-    int buffer=files[i].buffer;
-    int read=files[i].read;
-    int write=files[i].write;
     files[i].processesBlocked=-1;
     //me aseguro que lo primero sea 0 por read y write
     *files[i].buffer=0;

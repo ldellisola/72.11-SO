@@ -6,7 +6,7 @@
 
 
 
-void clearConsole();
+int clearConsole(int argc, char **argv);
 
 void RemoveLastCharFromDisplay();
 

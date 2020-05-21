@@ -2,9 +2,9 @@
 #include "../Include/Syscalls.h"
 
 
-void playSound(int frecuency){
+void playSound(uint64_t frecuency){
 
-    _write(FD_SPEAKER,frecuency,0,0,0);
+    _write(FD_SPEAKER,(void *)frecuency,0,0,0);
 
 }
 

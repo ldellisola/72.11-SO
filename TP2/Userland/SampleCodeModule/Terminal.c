@@ -32,7 +32,7 @@ typedef struct
 
 } ParsedCommand_t;
 
-typedef void (*processFunction)(int, char **);
+typedef int (*processFunction)(int, char **);
 
 typedef struct
 {
@@ -152,7 +152,7 @@ unsigned long sdbm(char *str)
 {
     unsigned long hash = 0;
     int c;
-    while (c = *str++)
+    while ((c = *(str++)))
         hash = c + (hash << 6) + (hash << 16) - hash;
 
     return hash;
@@ -163,11 +163,11 @@ void InitializeTerminal()
 
     for (int i = 0; commands[i].function != NULL; i++)
     {
-        commands[i].hash = sdbm(commands[i].name);
+        commands[i].hash = sdbm((char *)commands[i].name);
     }
 }
 
-void help(int argc, char **argv)
+int help(int argc, char **argv)
 {
     if (argc == 0)
     {
@@ -188,12 +188,13 @@ void help(int argc, char **argv)
             {
                 printf("%s      |  %s\n", commands[i].isProcess ? "Proceso" : "Comando", commands[i].name);
                 printf("           %s\n", commands[i].description);
-                return;
+                return 0;
             }
         }
 
         printfError("%s  Unkown command\n",argv[0]);
     }
+    return 0;
 }
 
 void ProcessCommandString(char *command, ParsedCommand_t * cmd)
@@ -230,7 +231,7 @@ void ProcessCommandString(char *command, ParsedCommand_t * cmd)
 void createCommand(int i,ParsedCommand_t * parsedCommand,int fdw,int fdr){
     if (commands[i].isProcess)
     {
-        exec(commands[i].name, parsedCommand->isBackground, commands[i].function,fdr,fdw,parsedCommand->argc, parsedCommand->argv);
+        exec((char *)commands[i].name, parsedCommand->isBackground, commands[i].function,fdr,fdw,parsedCommand->argc, parsedCommand->argv);
     }
     else
     {

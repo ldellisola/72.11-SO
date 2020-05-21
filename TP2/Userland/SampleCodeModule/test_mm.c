@@ -11,7 +11,7 @@ typedef struct MM_rq{
   uint32_t size;
 }mm_rq;
 
-void test_mm(){
+int test_mm(int argc,char ** argv){
   mm_rq mm_rqs[MAX_BLOCKS];
   uint8_t rq;
   uint32_t total;
@@ -55,7 +55,8 @@ void test_mm(){
       if (mm_rqs[i].address != NULL)
         free(mm_rqs[i].address);  // TODO: Port this call as required   
     }
-  } 
+  }
+  return 0; 
 }
 
 /*int main(){
