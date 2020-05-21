@@ -98,14 +98,12 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 
 	char *p = buffer;
 	char *p1, *p2;
-	uint32_t digits = 0;
 
 	//Calculate characters for each digit
 	do
 	{
 		uint32_t remainder = num % 16;
 		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
 	}
 	while (num /= 16);
 
@@ -122,8 +120,6 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 		p1++;
 		p2--;
 	}
-
-	return digits;
 	
 }
 
@@ -203,7 +199,7 @@ int strcmp(char * s1,char * s2){
     return 0; 
 }
 
-void formatString(char * string, int size,char format,...){
+void formatString(char * string, int size,char * format,...){
 	va_list args;
 	va_start(args,format);
 	snprintf(string,size,format,args);
@@ -251,7 +247,7 @@ void handleFormat(char type,int * k,char * string,int size,va_list args){
 		}
 		case 'p':{
 			
-			HexToString(string+(*k),size-1-(*k),va_arg(args,void *));
+			HexToString(string+(*k),size-1-(*k),(uint64_t)va_arg(args,void *));
 
 			break;
 		}

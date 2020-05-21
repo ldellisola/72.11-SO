@@ -6,6 +6,7 @@
         "idtloader.h": "c",
         "interrupts.h": "c",
         "typeinfo": "c",
-        "limits": "c"
+        "limits": "c",
+        "cstdio": "c"
     }
 }

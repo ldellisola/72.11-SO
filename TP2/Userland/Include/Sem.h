@@ -12,6 +12,6 @@ uint64_t sempost(char * semp);
 
 uint64_t semclose(char * semp);
 
-void semInfo(int argc, char ** argv);
+int semInfo(int argc, char ** argv);
 
 #endif

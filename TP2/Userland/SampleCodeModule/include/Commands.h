@@ -9,29 +9,29 @@ void SemTestPrint(int argc, char ** argv);
 
 void printMem(int argc, char ** argv);
 
-extern int infoReg();
+extern int infoReg(int argc, char **argv);
 
-void time();
+int time(int argc, char **argv);
 
-void help();
+int help(int argc, char **argv);
 
-void killProcess(int argc, char **argv);
+int killProcess(int argc, char **argv);
 
-void niceProcess(int argc, char ** argv);
+int niceProcess(int argc, char ** argv);
 
-void blockProcess(int argc, char ** argv);
+int blockProcess(int argc, char ** argv);
 
-void ProcessState(int argc, char ** argv);
+int ProcessState(int argc, char ** argv);
 
-void quotient(int argc, char ** argv);
+int quotient(int argc, char ** argv);
 
-void invalidOpcode();
+int invalidOpcode(int argc, char **argv);
 
-void malloc_test(int argc, char ** argv);
+int malloc_test(int argc, char ** argv);
 
 void fillString(char * test);
 
-void printMemoryState(int argc, char ** argv);
+int printMemoryState(int argc, char ** argv);
 
 
 #endif

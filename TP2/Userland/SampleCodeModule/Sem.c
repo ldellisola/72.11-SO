@@ -36,7 +36,8 @@ uint64_t semclose(char *semp)
     return aux;
 }
 
-void semInfo(int argc, char ** argv)
+int semInfo(int argc, char ** argv)
 {
     sem(4, NULL, NULL);
+    return 0;
 }

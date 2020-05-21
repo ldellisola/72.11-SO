@@ -92,7 +92,7 @@ static bool control = false;
 
 #include <Curses.h>
 
-static SemData_t * keyboardSemaphore = 0;
+static int keyboardSemaphore = 0;
 
 void initializeKeyboard(){
     int value = 0;
@@ -215,7 +215,7 @@ void handleCommands(int PressedKey)
     switch (PressedKey)
     {
     case CapsLock:
-        Mayusc != Mayusc;
+        Mayusc = !Mayusc;
         break;
     case LShift:
     case Rshift:

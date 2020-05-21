@@ -1,7 +1,6 @@
 #include "include/String.h"
 #include <stdarg.h>
 
-void snprintf(char * string, int size, char * format, va_list args);
 void handleFormat(char type,int * k,char * string,int size,va_list args);
 
 int strlen(char * str){
@@ -114,14 +113,6 @@ void preppend(char * src, char * dest, unsigned size){
 
 }
 
-
-void formatString(char * string, int size,char *format,...){
-	va_list args;
-	va_start(args,format);
-	snprintf(string,size,format,args);
-	va_end(args);
-}
-
 void snprintf(char * string, int size, char * format, va_list args){
 	int i=0,k=0;
 	char c;
@@ -139,6 +130,12 @@ void snprintf(char * string, int size, char * format, va_list args){
 	*(string+k)=0;
 }
 
+void formatString(char * string, int size,char *format,...){
+	va_list args;
+	va_start(args,format);
+	snprintf(string,size,format,args);
+	va_end(args);
+}
 
 void handleFormat(char type,int * k,char * string,int size,va_list args){
 	switch(type){
