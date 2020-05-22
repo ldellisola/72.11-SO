@@ -123,25 +123,35 @@ int test_semaforito2(int argc,char ** argv) {
 }
 
 int filter(int argc,char ** argv) {
-    // char buff [MAX_SIZE];
-    // char aux [MAX_SIZE];
-    // int nbytes = MAX_SIZE-1;
-    // int i, j;
-    
-    // while(1){
-	// j = 0;
-	// read(FD_STDIN,buff,&nbytes,0,0);
-    // buff[MAX_SIZE-1] = '\0';
-	
-	// for (i = 0; i < MAX_SIZE - 1 && buff[i] != '\0'; i++) {
-	// 	if(!isVowel(buff[i])) {
-    //         aux[j++] = buff[i];
-    //     }
-    // }
-    // aux[j++] = '\0';
 
-    // printf("%s\n",aux);
-    // }
+    int c;
+    int index = 0;
+    char arr[1000];
+
+    for(int i = 0 ; i < 1000 ; i ++)
+        arr[i]  =0;
+
+    while ( (c=readKey()) != -20 && c!=-1 && c !=-2)
+    {
+        
+        if(c >0){
+            if(index < 999) {
+                if (!isVowel((char) c)) {
+                     arr[index++] = (char) c;
+                }
+            }
+            //DEBUG("TEST: %s", arr)
+        }
+
+        if( (char) c == '\n'){
+            arr[index] = 0;
+            printf("FILTER: %s",arr);
+            index = 0;
+        }
+    }
+    putChar(c);
+    printf("\n");
+    exit_process();
     return 0;
 }
 
