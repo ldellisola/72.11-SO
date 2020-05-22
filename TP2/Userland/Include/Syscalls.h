@@ -2,6 +2,8 @@
 #define SYSCALLS_H
 
 #include <stdlib.h>
+#include <stdint.h>
+
 
 #define FD_STDOUT 				(0x01)
 #define FD_STDERR 				(0x02)
@@ -22,7 +24,7 @@ extern void _write(int fd, void * first, void *second, void * third, void * fort
 
 extern void _read(int fd, void * first, void *second, void * third, void * forth);
 
-int read(int fd,char * buffer, int size);
+int read(int fd,char * buffer, uint64_t size);
 
 int write(int fd, char * buffer);
 

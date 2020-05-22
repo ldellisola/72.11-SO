@@ -13,11 +13,11 @@
 extern void __UD2__();
 
 
-void quotient(int argc, char ** argv){
+int quotient(int argc, char ** argv){
 
     if(argc != 2){
         printf("This functions take 2 arguments");
-        return;
+        return 0;
     }
     
     int a = stringToInt(argv[0]), b = stringToInt(argv[1]);
@@ -27,16 +27,16 @@ void quotient(int argc, char ** argv){
     int result =  (a)/ (b);
     
     printf("The result is %d\n",result);
-    return;
+    return 0;
 }
 
 
 
-void blockProcess(int argc, char ** argv){
+int blockProcess(int argc, char ** argv){
 
     if(argc != 1){
         printf("this function takes 1 argument\n");
-        return;
+        return 0;
     }
 
     int pid=stringToInt(argv[0]);
@@ -46,17 +46,19 @@ void blockProcess(int argc, char ** argv){
         printf("No tiene permiso para acceder a ese proceso\n");
     else if(pid == -1)
         printf("No es un proceso %s, no esta permitida esa accion\n",argv[0]);
+    return 0;
 }
 
-void ProcessState(int argc, char ** argv){
+int ProcessState(int argc, char ** argv){
     ps();
+    return 0;
 }
 
-void killProcess(int argc, char **argv){
+int killProcess(int argc, char **argv){
 
     if( argc != argc){
         printf("The function only takes 1 parameter\n");
-        return;
+        return 0;
     }
 
     int pid = stringToInt(argv[0]);
@@ -66,13 +68,14 @@ void killProcess(int argc, char **argv){
         printf("No es un proceso %s, no esta permitida esa accion\n",argv[0]);
     else if(pid== -2)
         printf("No tiene permiso para acceder a ese proceso\n");
+    return 0;
 }
 
-void niceProcess(int argc, char ** argv){
+int niceProcess(int argc, char ** argv){
 
     if(argc != 2){
         printf("This function only takes 2 arguments\n");
-        return;
+        return 0;
     }
 
     int pid=stringToInt(argv[0]);
@@ -86,17 +89,18 @@ void niceProcess(int argc, char ** argv){
         printf("No tiene permiso para acceder a ese proceso\n");
     else if(pid == -3)
         printf("No es una prioridad aceptada, seleccione 0-1-2\n");
+    return 0;
 }
 
 
-void invalidOpcode(){
+int invalidOpcode(int argc, char **argv){
     
     __UD2__();
 
-    return;
+    return 0;
 }
 
-void printMemoryState(int argc, char ** argv){
+int printMemoryState(int argc, char ** argv){
     void * first=NULL;
     void * last=NULL;
     void *next=NULL;
@@ -104,7 +108,7 @@ void printMemoryState(int argc, char ** argv){
     memory_state(&first,&last,&next);
     printf("\nMemory starts at: 0x%x and finishes at : 0x%x\n",first,last);
     printf("Next free position: 0x%x\n",next);
-    return;
+    return 0;
 }
 
 void printMem(int argc, char ** argv){
@@ -178,11 +182,11 @@ void printRegisters(uint64_t * storage){
 	printf("R15: 0x%x\n",storage[0]);
 
 	printf("RSP: 0x%x\n",storage[10]);	
-    return ;
+    return;
 
 }
 
-void time(){
+int time(int argc, char **argv){
     int dayofMonth = GetDayOfMonth();
     int month = GetMonth();
     int year = GetYear();
@@ -190,11 +194,11 @@ void time(){
     int minutes = GetMinutes();
     int seconds = GetSeconds();
     printf("%d/%d/%d %d:%d:%d \n",dayofMonth,month,year,hour, minutes,seconds);   
-    return;
+    return 0;
 
 }
 
-void malloc_test(int argc, char ** argv) {
+int malloc_test(int argc, char ** argv) {
 
     printMemoryState(0,NULL);
     printf("TEST PIDE 100:");
@@ -232,7 +236,7 @@ void malloc_test(int argc, char ** argv) {
     free(test2);
     free(test0);
 
-    return ;
+    return 0;
 }
 
 void fillString(char * test) {

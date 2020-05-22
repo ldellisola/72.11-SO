@@ -4,7 +4,7 @@
 
 int openPipe(char * name,actions action){
   int fd;
-  pipes(0,(void*)name,(int)action,&fd);
+  pipes(0,(void*)name,(void *)action,(void *)&fd);
   return fd;
 }
 
@@ -25,6 +25,7 @@ int closePipes(int pipe){
   return ans;
 }
 
-void pipe(){
+int pipe(int argc, char **argv){
   pipes(2,NULL,NULL,NULL);
+  return 0;
 }

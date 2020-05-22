@@ -1,7 +1,6 @@
 #include "include/String.h"
 #include <stdarg.h>
 
-void snprintf(char * string, int size, char * format, va_list args);
 void handleFormat(char type,int * k,char * string,int size,va_list args);
 
 int strlen(char * str){
@@ -47,14 +46,12 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 
 	char *p = buffer;
 	char *p1, *p2;
-	uint32_t digits = 0;
 
 	//Calculate characters for each digit
 	do
 	{
 		uint32_t remainder = num % 16;
 		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
 	}
 	while (num /= 16);
 
@@ -71,8 +68,6 @@ void HexToString(char * buffer, int buffSize, uint64_t num){
 		p1++;
 		p2--;
 	}
-
-	return digits;
 	
 }
 
@@ -118,14 +113,6 @@ void preppend(char * src, char * dest, unsigned size){
 
 }
 
-
-void formatString(char * string, int size,char *format,...){
-	va_list args;
-	va_start(args,format);
-	snprintf(string,size,format,args);
-	va_end(args);
-}
-
 void snprintf(char * string, int size, char * format, va_list args){
 	int i=0,k=0;
 	char c;
@@ -143,6 +130,12 @@ void snprintf(char * string, int size, char * format, va_list args){
 	*(string+k)=0;
 }
 
+void formatString(char * string, int size,char *format,...){
+	va_list args;
+	va_start(args,format);
+	snprintf(string,size,format,args);
+	va_end(args);
+}
 
 void handleFormat(char type,int * k,char * string,int size,va_list args){
 	switch(type){

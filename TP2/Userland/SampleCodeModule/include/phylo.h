@@ -1,6 +1,6 @@
 enum State {ASLEEP = 0, EATING};
 
-void philosopher_process();
+int philosopher_process();
 
 void kill_philosopher();
 

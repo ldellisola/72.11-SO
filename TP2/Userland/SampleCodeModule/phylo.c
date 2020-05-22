@@ -4,6 +4,7 @@
 #include "../Include/Sem.h"
 #include "../Include/Curses.h"
 #include "../Include/String.h"
+#include "include/Process.h"
 #include "../Include/Syscalls.h"
 
 #define MAX 15
@@ -20,7 +21,7 @@ char * S[] = {"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"
 char * phylos_names[] = {"f0","f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10",
     "f11", "f12", "f13", "f14"};
 
-void phylo() {
+int phylo(int argc,char ** argv) {
     int initial_number = 5;
     semopen(mutex,1);
     amount = initial_number;
@@ -68,6 +69,7 @@ void phylo() {
         printf("%s\n",table);
         sempost(mutex);
     }
+ return 0;   
 }
 
 void take_fork(int phnum) {
@@ -98,13 +100,14 @@ int left (int phnum) { return (phnum + amount - 1) % amount;}
 
 int right (int phnum) { return (phnum + 1) % amount;}
 
-void philosopher_process() {
+int philosopher_process(int num,char ** argv) {
     int i = g_var++;
     pids[i] = getpid();
     while (1) {
        take_fork(i);
        put_fork(i);
     }
+   return 0; 
 }
 
 void kill_philosopher() {

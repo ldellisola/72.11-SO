@@ -56,7 +56,7 @@ bool semwait(char * semName){
 
     if (semCheck(sem) != 0) {
         printf("Error waiting semaphore\n");
-        return;
+        return false;
     }
     
     SpinLock(); 
@@ -70,8 +70,10 @@ bool semwait(char * semName){
                 sem->processesBlocked[i] = pid;
             }
         }while(sem->processesBlocked[i++] != pid);
-        
-        blockProcess(&pid);
+
+        // Cambie la funcion por que la otra no permite bloquear a la terminal
+        block(&pid);
+
         if(pid != getpid()){
             printfColor("ERROR blocking process on semaphore",0xFF0000,0);
         }
@@ -111,6 +113,7 @@ void sempost(char * semName){
     }
     else sem->value++;
     SpinUnlock();
+
 }
 
 void semclose(char * semName){

@@ -10,7 +10,7 @@ int readPipe(int pipe,char * buffer,int bufferSize);
 
 int writePipe(int pipe,char * buffer);
 
-void pipe();
+int pipe(int argc, char **argv);
 
 int closePipes(int pipe);
 

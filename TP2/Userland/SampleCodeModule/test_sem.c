@@ -5,7 +5,7 @@
 #include "../Include/Sem.h"
 
 
-uint64_t my_create_process_sem(char * name,void (* func)){
+uint64_t my_create_process_sem(char * name,int (* func)(int, char **)){
   return exec(name,1,func,-1,-1,0,NULL);
 }
 
@@ -42,12 +42,13 @@ void slowInc(int64_t *p, int64_t inc){
   *p = aux;
 }
 
-void my_process_inc(){
+int my_process_inc(int argc,char ** argv){
   uint64_t i;
 
   if (my_sem_open(SEM_ID, 1)){
     printf("ERROR OPENING SEM\n");
-    return;
+    exit_process();
+    return 0;
   }
   
   for (i = 0; i < N; i++){
@@ -64,14 +65,16 @@ void my_process_inc(){
   else printf("Final value: %d\n", global);
 
   exit_process();
+  return 0;
 }
 
-void my_process_dec(){
+int my_process_dec(int argc,char ** argv){
   uint64_t i;
 
   if (my_sem_open(SEM_ID, 1)){
     printf("ERROR OPENING SEM\n");
-    return;
+    exit_process();
+    return 0;
   }
   
   for (i = 0; i < N; i++){
@@ -87,9 +90,10 @@ void my_process_dec(){
   }
   else printf("Final value: %d\n", global);
   exit_process();
+  return 0;
 }
 
-void test_sync(){
+int test_sync(int argc,char ** argv){
   uint64_t i;
 
   global = 0;
@@ -102,10 +106,11 @@ void test_sync(){
   }
 
   exit_process();
+  return 0;
   // The last one should print 0
 }
 
-void my_process_inc_no_sem(){
+int my_process_inc_no_sem(int argc,char ** argv){
   uint64_t i;
   for (i = 0; i < N; i++){
     slowInc(&global, 1);
@@ -116,9 +121,10 @@ void my_process_inc_no_sem(){
   else printf("Final value: %d\n", global);
 
   exit_process();
+  return 0;
 }
 
-void my_process_dec_no_sem(){
+int my_process_dec_no_sem(int argc,char ** argv){
   uint64_t i;
   for (i = 0; i < N; i++){
     slowInc(&global, -1);
@@ -130,9 +136,10 @@ void my_process_dec_no_sem(){
   else printf("Final value: %d\n", global);
 
   exit_process();
+  return 0;
 }
 
-void test_no_sync(){
+int test_no_sync(int argc,char ** argv){
   uint64_t i;
 
   global = 0;
@@ -145,6 +152,7 @@ void test_no_sync(){
   }
 
   exit_process();
+  return 0;
   // The last one should not print 0
 }
 

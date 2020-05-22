@@ -39,9 +39,6 @@ void openPipe(char * name,actions action,int*fd){
     CopyString(name,files[i].name,strlen(name));
     files[i].read=files[i].buffer;
     files[i].write=files[i].buffer;
-    int buffer=files[i].buffer;
-    int read=files[i].read;
-    int write=files[i].write;
     files[i].processesBlocked=-1;
     //me aseguro que lo primero sea 0 por read y write
     *files[i].buffer=0;
@@ -55,7 +52,7 @@ void read(char * buffer,int bufferSize,int * ans){
   int fd=getFd(pid,READ);
   
   if(fd==STDIN){
-    readStdin(buffer,bufferSize);
+    readStdin(buffer,bufferSize,ans);
     return;
   }
   readPipe(fd,buffer,bufferSize,ans);
@@ -303,7 +300,7 @@ int pipeCheck(int fd,actions action){
   return -1;  
 }
 
-void readStdin(char * buffer,int bufferSize){
+void readStdin(char * buffer,int bufferSize,int * lenght){
 			int i = 0;		
 			int temp;
 			do{
@@ -315,6 +312,7 @@ void readStdin(char * buffer,int bufferSize){
 
 			}while( temp!= -1 && i <bufferSize-1 );
 			buffer[i] = 0;
+      *lenght = i;
 
 }
 

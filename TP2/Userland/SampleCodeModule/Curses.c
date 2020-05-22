@@ -19,9 +19,10 @@ typedef struct{
 
 
 
-void clearConsole()
+int clearConsole(int argc, char **argv)
 {
-    delete(FD_STDOUT,DELETE_ALL_DISPLAY,NULL,NULL,NULL);
+    delete(FD_STDOUT,(void *)DELETE_ALL_DISPLAY,NULL,NULL,NULL);
+    return 0;
 }
 
 
@@ -83,7 +84,7 @@ void printfError(const char * format,...){
 
 
 void RemoveLastCharFromDisplay(){
-    delete(FD_STDOUT,DELETE_CURRENT_CHAR,NULL,NULL,NULL);
+    delete(FD_STDOUT,(void *)DELETE_CURRENT_CHAR,NULL,NULL,NULL);
 }
 
 
@@ -98,12 +99,19 @@ void putChar( char ch)
 
 int readKey()
 {
-    static char buff[2];
-    int ans=read(FD_STDIN,buff,2);
-    if(ans==-1 || ans ==-2)
-	    return ans;
-    char retValue = buff[0];
-    buff[0] = 0;
+    static char buff[300];
+    static int top;
+    static int firstLetter;
+
+    if(top == firstLetter-1){
+        top=read(FD_STDIN,buff,299);
+        firstLetter = 0;
+        if(top==-1 || top ==-2)
+	        return top;
+    }
+
+    char retValue = buff[firstLetter];
+    buff[firstLetter++] = 0;
     return retValue;
 }
 void * memset(void * destiation, int32_t c, uint64_t length) {

@@ -27,9 +27,10 @@ void SleepUntilUserInput(){
 	sleep_process();
 }
 
-int read(int fd,char * buffer,int size){
+int read(int fd,char * buffer,uint64_t size){
 	int ans;
-	_read(fd, buffer, size, &ans,NULL);
+	//SleepUntilUserInput();
+	_read(fd, buffer, (void *)size, &ans,NULL);
 	return ans;
 }
 int write(int fd, char * buffer){

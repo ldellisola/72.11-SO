@@ -16,6 +16,7 @@
 #include <ConsoleDriver.h>
 #include <pcb.h>
 #include <Sem.h>
+#include <sbrk.h>
 
 
 #define FD_STDOUT 				(0x01)
@@ -71,41 +72,41 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			int_21();
 			break;
 		case 0x80:
-			dispatchRead(firstParam,secondParam,thirdParam,fourthParam,fifthParam);
+			dispatchRead((uint64_t)firstParam,secondParam,thirdParam,fourthParam,fifthParam);
 			break;
 		case 0x81:
-			dispatchWrite(firstParam,secondParam,thirdParam,fourthParam,fifthParam);
+			dispatchWrite((uint64_t)firstParam,secondParam,thirdParam,fourthParam,fifthParam);
 		break;
 		case 0x82:
-			dispatchDelete(firstParam,secondParam,thirdParam,fourthParam,fifthParam);
+			dispatchDelete((uint64_t)firstParam,secondParam,thirdParam,fourthParam,fifthParam);
 			break;
 		case 0x86:{
 		
-			dispatchMalloc(firstParam, secondParam);
+			dispatchMalloc((uint64_t)firstParam,(void **) secondParam);
 			break;
 		}
 		case 0x87:{ 
-			dispatchFree(firstParam);
+			dispatchFree((void **)firstParam);
 			break;
 			}
 		case 0x88:{ 
-			dispatchMemState(firstParam, secondParam,thirdParam);
+			dispatchMemState((void **)firstParam, (void **)secondParam,(void **)thirdParam);
 			break;
 			}
 		case 0x89:{ 
-			dispatchCreateProcess(firstParam, secondParam,thirdParam);
+			dispatchCreateProcess((char *)firstParam,(int *) secondParam,(function_t *)thirdParam);
 			break;
 			}
 		case 0x90:{ 
-			dispatchKillProcess(firstParam);
+			dispatchKillProcess((int *)firstParam);
 			break;
 			}
 		case 0x91:{ 
-			dispatchNiceProcess(firstParam,secondParam);
+			dispatchNiceProcess((int *)firstParam,(uint64_t)secondParam);
 			break;
 			}
 		case 0x92:{ 
-			dispatchBlockProcess(firstParam);
+			dispatchBlockProcess((int*)firstParam);
 			break;
 			}
 		case 0x93:{ 
@@ -113,7 +114,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 			}					
 		case 0x94:{ 
-			dispatchGetPid(firstParam);
+			dispatchGetPid((int*)firstParam);
 			break;
 			}					
 		case 0x95:{ 
@@ -121,7 +122,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 			}
 		case 0x96:{ 
-			dispatchSem(firstParam,secondParam,thirdParam);
+			dispatchSem((uint64_t)firstParam,secondParam,thirdParam);
 			break;
 			}	
 		case 0x97:{
@@ -129,7 +130,11 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 		}
 		case 0x98:{
-			dispatchPipes(firstParam,secondParam,thirdParam,fourthParam);
+			dispatchPipes((uint64_t)firstParam,secondParam,(uint64_t)thirdParam,(int*)fourthParam);
+			break;
+		}
+		case 0x99:{
+			setDummyProcess((process_Func_t)firstParam);
 			break;
 		}
 		default: break;
@@ -144,9 +149,13 @@ void * int_20(void * ptr) {
 void int_21(){
 
 	readKey();
-	AwakeAllProcesses();
 
-	
+	char * sem = getKeyboardSem();
+
+	sempost(sem);
+
+	//forceProcessNext(pid);
+
 }
 
 
@@ -255,10 +264,11 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 	switch(fd){
 		case FD_STDOUT: { break;}
 		case FD_STDERR: { break;}
-				case FD_STDIN: { 
+		case FD_STDIN: { 
 
 			char * buffer = (char *) firstParam;
-      int bufferSize = secondParam;
+      		int bufferSize = (uint64_t)secondParam;
+	  		semwait(getKeyboardSem());
 			read(buffer,bufferSize,(int *) thirdParam);			
 			// int i = 0;		
 			// int temp;
@@ -278,9 +288,9 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 		case FD_SQUARES: { break;}
 		case FD_MEMORY: { 
 			
-			uint64_t position = firstParam;
+			uint64_t position = (uint64_t)firstParam;
 			char * buff = secondParam;
-			int size = thirdParam;
+			int size = (uint64_t)thirdParam;
 
 			readMem(position,buff,size);
 
@@ -306,14 +316,14 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 		}
 		case FD_TIME: { 
 			int * value = secondParam;
-			*value = handleTimeRequest(firstParam);
+			*value = handleTimeRequest((uint64_t)firstParam);
 
 			break;
 			}
 		case FD_STDOUT_COLOR: { break;}
 		default:{
 			char * buffer = (char *) firstParam;
-			int * bufferSize = secondParam;
+			int bufferSize = (uint64_t)secondParam;
 			readPipe(fd,buffer,bufferSize,(int *)thirdParam);			
 			
 		}
@@ -327,9 +337,9 @@ void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdPar
 	switch(fd){
 		case FD_STDOUT: { 
 
-			if(firstParam == DELETE_CURRENT_CHAR){
+			if((uint64_t)firstParam == DELETE_CURRENT_CHAR){
 				removeLastChar();
-			}else if(firstParam == DELETE_ALL_DISPLAY){
+			}else if((uint64_t)firstParam == DELETE_ALL_DISPLAY){
 				clearConsole();
 			}
 			break;
@@ -372,14 +382,14 @@ void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdPara
         }
 		case FD_STDIN: break;
         case FD_SPEAKER:{
-            playSound(firstParam);
+            playSound((uint64_t)firstParam);
             break;
         }
 		case FD_SQUARES:{ 
 			int * pos = firstParam;
-			int length = secondParam;
-			int height=thirdParam;
-			int fontColor=fourthParam;
+			int length = (uint64_t)secondParam;
+			int height=(uint64_t)thirdParam;
+			int fontColor=(uint64_t)fourthParam;
 			
 			print(pos,length,height,fontColor);
 			break;
@@ -387,7 +397,7 @@ void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdPara
 		case FD_MEMORY: break;
 		case FD_REGISTERS: break;
 		case FD_DEVICE_INFO: {
-			setSize(firstParam);
+			setSize((uint64_t)firstParam);
 			break;
 		}
 		case FD_TIMER: break;

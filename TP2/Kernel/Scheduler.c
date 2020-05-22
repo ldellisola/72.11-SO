@@ -10,6 +10,10 @@ extern void __ForceTimerTick__();
 #define quantum 20/1000
 #define INIT_QUEUE 1
 
+pcb DummyProcessPCB;
+process DummyProcess;
+uint64_t DummyProcessStack[STACK];
+
 Priority priority;
 process * curr=0;
 int currPr=0;
@@ -21,30 +25,51 @@ bool killedCurrentProcess = false;
 void insertQueue(process * process);
 void deleteQueue(int * pid,process ** process);
 
-void AwakeAllProcesses(){
+void forceProcessNext(int pid){
+    //         DEBUG("PID: %d", pid );
 
-    process * p = curr;
+    // // pid = 0;
+    // if(pid >= 0){
+    //     process * p = GetProcess(pid);
+    //     process * aux = curr->next;
 
-    do{
-        if(p->pcb->isWaitingForInput){
-            p->pcb->isWaitingForInput = false;
-            //DEBUG("WAKE UP %d",p->pcb->pid)
-        }
-        
-        p = p->next;
+    //     pcb* temp = p->pcb;
+    //     p->pcb = aux->pcb;
+    //     aux->pcb = temp;
+    // }
+}
 
-    }while(p != curr);
+void setDummyProcess( process_Func_t func){
+     
+    int status = BACKGROUND;
 
+    function_t function;
+    function.function = func;
+    function.argc = 0;
+    function.args = NULL;
+    function.read = function.write = -1;
+
+    LoadPCB(&DummyProcessPCB,DummyProcessStack,"Dummy",&status,&function,-100,0);
+
+    DummyProcess.next = NULL;
+    DummyProcess.prev = NULL;
+    DummyProcess.pcb = &DummyProcessPCB;
 }
 
 
-void roundRobin(){
+process * GetDummyProcess(){
+    return &DummyProcess;
+}
+
+
+
+process * roundRobin(){
     killedCurrentProcess = false;
     if(priority.cant == 0){
         // DEBUG("No process%s","");
 
         curr = NULL;
-        return ;
+        return curr;
     }
 
     if(hasTodelete > 0){
@@ -67,15 +92,25 @@ void roundRobin(){
 
     if(priority.cant == 1){
         curr = priority.first;
-        return;
+        if (curr->pcb->state == BLOCK)
+            return GetDummyProcess();
+        else
+            return curr;    
     }
 
 
+
     
+    int counter = 0;
     do{
+        if (counter++ == priority.cant){
+            return GetDummyProcess();
+        }
         curr=curr->next;
-    }while(curr->pcb->state==BLOCK || curr->pcb->isWaitingForInput);
-    
+    }while(curr->pcb->state==BLOCK  || curr->pcb->state == KILL);
+
+    return curr;
+
 }
 
 
@@ -171,8 +206,10 @@ void SleepProcess(){
 
     process * p = GetProcess(pid);
 
+    DEBUG("AAAAAAADDDDDDDDD",0)
+
     if(p != NULL){
-        p->pcb->isWaitingForInput = true;
+        //p->pcb->isWaitingForInput = true;
         __ForceTimerTick__();
     }
 }
