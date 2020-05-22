@@ -6,15 +6,17 @@
 #include "../Include/String.h"
 #include "include/Process.h"
 #include "../Include/Syscalls.h"
+#include "../Include/Time.h"
 
 #define MAX 15
+#define ALIVE 1
+#define DEAD 0
 
 enum State state[MAX];
 int phils[MAX];
 int amount;
-char table[MAX] = {0};
+char table[MAX];
 int g_var;
-int pids[MAX];
 char * mutex = "phmutex";
 char * S[] = {"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"
     "s11", "s12", "s13", "s14"};
@@ -26,11 +28,18 @@ int phylo(int argc,char ** argv) {
     semopen(mutex,1);
     amount = initial_number;
     g_var = 0;
+
+    for(int i = 0; i < amount; i++) {
+        state[i] = ASLEEP;
+        phils[i] = DEAD;
+        table[i] = '.';
+    }
     
     semwait(mutex);
     for(int i = 0; i < amount; i++) {
         state[i] = ASLEEP;
         table[i] = '.';
+        phils[i] = ALIVE;
         semopen(S[i], 0);
         exec(phylos_names[i], 1, philosopher_process,-1,-1,0,NULL);
     }
@@ -38,31 +47,27 @@ int phylo(int argc,char ** argv) {
 
     char c;
     while(1) {
-        // c = readKey();
-        // switch(c) {
-        //     case 'A':
-        //     case 'a':
-        //         if (amount < MAX) {
-        //             create_philosopher();
-        //         }
-        //         break;
-        //     case 'R':
-        //     case 'r':
-        //         if (amount > 1) {
-        //             kill_philosopher();
-        //         }
-        //         break;
-        //     case 'I':
-        //     case 'i':
-        //         semwait(mutex);
-        //         printf("INFO \n");
-        //         for (int j = 0; j < amount; j++) {
-        //             printf ("Phylo %d, PID: %d \n", j, pids[j]);
-        //         }
-        //         sempost(mutex);
-        //     default:
-        //         break;
-        // }
+        c = readKeyNoBlock();
+        switch(c) {
+            case 'A':
+            case 'a':
+                if (amount < MAX) {
+                    semwait(mutex);
+                    create_philosopher();
+                    sempost(mutex);
+                }
+                break;
+            case 'R':
+            case 'r':
+                if (amount > 1) {
+                    semwait(mutex);
+                    phils[amount-1] = DEAD;
+                    sempost(mutex);
+                }
+                break;
+            default:
+                break;
+        }
 
         semwait(mutex);
         table[amount] = '\0';
@@ -101,11 +106,18 @@ int left (int phnum) { return (phnum + amount - 1) % amount;}
 int right (int phnum) { return (phnum + 1) % amount;}
 
 int philosopher_process(int num,char ** argv) {
+    semwait(mutex);
     int i = g_var++;
-    pids[i] = getpid();
+    sempost(mutex);
+
     while (1) {
+       if (phils[i] == DEAD) {
+           kill_philosopher();
+           exit_process();
+       } 
        take_fork(i);
        put_fork(i);
+       sleep();
     }
    return 0; 
 }
@@ -113,19 +125,24 @@ int philosopher_process(int num,char ** argv) {
 void kill_philosopher() {
     semwait(mutex);
     amount--;
-    semclose(S[amount]);
-    int aux = pids[amount];
-    kill_process(&aux);
+    g_var--;
     state[amount] = ASLEEP;
     table[amount] = '.';
+    semclose(S[amount]);
     sempost(mutex);
+    return;
 }
 
 void create_philosopher() {
     semopen(S[amount], 0);
     state[amount] = ASLEEP;
     table[amount] = '.';
-    semwait(mutex);
+    phils[amount] = ALIVE;
     exec(phylos_names[amount++], 1, philosopher_process,-1,-1,0,NULL);
-    sempost(mutex);
+}
+
+void sleep() {
+    int i = GetSeconds();
+    while(i - GetSeconds());
+    return;
 }

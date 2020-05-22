@@ -15,3 +15,5 @@ void test(int phnum);
 int left (int phnum);
 
 int right (int phnum);
+
+void sleep();
