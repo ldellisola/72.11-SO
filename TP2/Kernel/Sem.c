@@ -117,7 +117,6 @@ void sempost(char * semName){
 }
 
 void semclose(char * semName){
-    printf("reached semclose \n");
     SemData_t * sem = getSem(semName);
 
     if (semCheck(sem) != 0) {

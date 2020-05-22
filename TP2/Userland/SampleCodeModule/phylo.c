@@ -38,31 +38,31 @@ int phylo(int argc,char ** argv) {
 
     char c;
     while(1) {
-        c = readKey();
-        switch(c) {
-            case 'A':
-            case 'a':
-                if (amount < MAX) {
-                    create_philosopher();
-                }
-                break;
-            case 'R':
-            case 'r':
-                if (amount > 1) {
-                    kill_philosopher();
-                }
-                break;
-            case 'I':
-            case 'i':
-                semwait(mutex);
-                printf("INFO \n");
-                for (int j = 0; j < amount; j++) {
-                    printf ("Phylo %d, PID: %d \n", j, pids[j]);
-                }
-                sempost(mutex);
-            default:
-                break;
-        }
+        // c = readKey();
+        // switch(c) {
+        //     case 'A':
+        //     case 'a':
+        //         if (amount < MAX) {
+        //             create_philosopher();
+        //         }
+        //         break;
+        //     case 'R':
+        //     case 'r':
+        //         if (amount > 1) {
+        //             kill_philosopher();
+        //         }
+        //         break;
+        //     case 'I':
+        //     case 'i':
+        //         semwait(mutex);
+        //         printf("INFO \n");
+        //         for (int j = 0; j < amount; j++) {
+        //             printf ("Phylo %d, PID: %d \n", j, pids[j]);
+        //         }
+        //         sempost(mutex);
+        //     default:
+        //         break;
+        // }
 
         semwait(mutex);
         table[amount] = '\0';
@@ -114,8 +114,8 @@ void kill_philosopher() {
     semwait(mutex);
     amount--;
     semclose(S[amount]);
-    uint64_t aux = pids[amount];
-    kill_process(aux);
+    int aux = pids[amount];
+    kill_process(&aux);
     state[amount] = ASLEEP;
     table[amount] = '.';
     sempost(mutex);
