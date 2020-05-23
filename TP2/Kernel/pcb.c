@@ -40,6 +40,8 @@ void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *
     pcb->fd[READ] = function->read == -1 ? STDIN : function->read ;
     pcb->fd[WRITE] = function->write == -1 ? STDOUT : function->write ;
 
+    pcb->isWaitingForInput = false;
+
     /// Continuo
 
 
@@ -174,7 +176,7 @@ int findProcess(int pid)
 
 void ps()
 {
-    printf("pid  prioridad   stack        bp     status  estado   fdr  fdw  nombre\n");
+    printf("pid  prioridad   stack        bp     status  estado   fdr  fdw  nombre  waitingInput\n");
     for (int i = 0; i < MAX_PROC; i++)
     {
         if (pcbs[i].state != KILL)
@@ -187,7 +189,14 @@ void ps()
             else 
                 printf("waiting");
             printf("    %d   %d",pcbs[i].fd[READ],pcbs[i].fd[WRITE]);    
-            printf("    %s\n",pcbs[i].name);    
+            printf("    %s",pcbs[i].name);    
+
+            if(pcbs[i].isWaitingForInput){
+                printf("      yes\n");
+            }
+            else{
+                printf("      no\n");
+            }
         }
     }
 }

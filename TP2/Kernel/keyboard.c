@@ -1,8 +1,30 @@
 #include <keyboard.h>
-#include <stdbool.h>
-#include <Scheduler.h>
+#include <stdlib.h>
+
+/***************************************************************************\
+ *                              Estructuras                                 *
+ \***************************************************************************/
+
+typedef struct
+{
+    int (*func)();
+    int key
+} KeyboardShortCut_t;
+
+/***************************************************************************\
+ *                              Dependencias ASM                            *
+ \***************************************************************************/
+
 extern int __ReadKey__();
 
+/***************************************************************************\
+ *                          Defines y Enums                                  *
+ \***************************************************************************/
+
+#define F(x) (CapsLock - x)
+#define BUFFER_SIZE 256
+#define EOF -20
+#define MAX_SHORTCUTS 30
 
 enum Commands
 {
@@ -23,14 +45,21 @@ enum Commands
     End = -15,
     PageUp = -16,
     Delete = -17
-
 };
 
-#define F(x) (CapsLock - x)
-#define BUFFER_SIZE  256
+/***************************************************************************\
+ *                          Variables estaticas                              *
+ \***************************************************************************/
 
-#define QUIT -30
-#define EOF -20
+static char keyboardBuffer[BUFFER_SIZE];
+static unsigned int bufferIndex = 0;
+static unsigned int returnIndex = 0;
+
+static bool Mayusc = false;
+static bool Shift = false;
+static bool control = false;
+
+KeyboardShortCut_t shortcuts[MAX_SHORTCUTS];
 
 static const int KeyMap[] = {
     //1
@@ -50,7 +79,7 @@ static const int KeyMap[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, F(11), F(12), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-static const int ShiftKeyMap[] = {    
+static const int ShiftKeyMap[] = {
     //0
     0, 0, 0, 0, 0, 0, 0, 0, 8, 0, '\n', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     //32
@@ -60,107 +89,81 @@ static const int ShiftKeyMap[] = {
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}',
     '^', '_', '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
     'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{',
-    '|', '}', '~', 0
-};
+    '|', '}', '~', 0};
 
-
-
-static const int ControlKeyMap[] = {    
+static const int ControlKeyMap[] = {
     //0
     0, 0, 0, 0, 0, 0, 0, 0, 8, 0, '\n', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     //32
     ' ', '!', '\"', '#', '&', '%', '\"', '(', ')', '*', '+', '<', '_', '>', '?', ')',
     '!', '@', '#', '$', '%', '^', '&', '*', '(', ':', ':', '<', '+', '>', '?',
-    '@', 'a', 'b', QUIT, 'd', EOF, 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+    '@', 'a', 'b', 'c', 'd', EOF, 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}',
-    '^', '_', '~', 'A', 'B', QUIT, 'D', EOF, 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+    '^', '_', '~', 'A', 'B', 'C', 'D', EOF, 'F', 'G', 'H', 'I', 'J', 'K', 'L',
     'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{',
-    '|', '}', '~', 0
-    };
+    '\\', '}', '~', 0};
 
-
+/***************************************************************************\
+  *                  Declaracion de Funciones Privadas                      *
+ \***************************************************************************/
 
 void handleBreaks(int input);
-
 int handleASCII(int PressedKey);
 void handleCommands(int PressedKey);
 int processKeyboardInput(int input);
+bool tryToRunShortcuts(int key);
 
-static bool Mayusc = false;
-static bool Shift = false;
-static bool control = false;
+/***************************************************************************\
+  *                Implementacion de Funciones Publicas                      *
+ \***************************************************************************/
 
-#include <Curses.h>
-
-static int keyboardSemaphore = 0;
-
-void initializeKeyboard(){
-    int value = 0;
-    keyboardSemaphore = semopen("STDIN_Semaphore",&value);
-}
-
-char * getKeyboardSem(){
-    return (char *)"STDIN_Semaphore";
-}
-
-
-
-static char keyboardBuffer[BUFFER_SIZE]; 
-static unsigned int bufferIndex = 0;
-static unsigned int returnIndex = 0;
-
-void readKey()
+void initializeKeyboard()
 {
-    if(bufferIndex + 1 == returnIndex )
-        returnIndex++;
-        
-    int temp = processKeyboardInput(__ReadKey__());
-   
-    if(temp != -1){
-        keyboardBuffer[bufferIndex++ % BUFFER_SIZE] = temp;
-
+    for (int i = 0; i < MAX_SHORTCUTS; i++)
+    {
+        shortcuts[i].func = NULL;
+        shortcuts[i].key = -1;
     }
 }
 
+void SetKeyboardShortcut(int (*func)(), int key)
+{
 
+    int i = -1;
+    while (shortcuts[++i].func != NULL)
+        ;
 
-int returnKey(){
+    shortcuts[i].func = func;
+    shortcuts[i].key = key;
+}
 
-    if(returnIndex == bufferIndex)
+void readKey()
+{
+    if (bufferIndex + 1 == returnIndex)
+        returnIndex++;
+
+    int temp = processKeyboardInput(__ReadKey__());
+
+    if (temp != -1)
+        keyboardBuffer[bufferIndex++ % BUFFER_SIZE] = temp;
+}
+
+bool isThereInputInSTDIN()
+{
+    return returnIndex != bufferIndex;
+}
+
+int returnKey()
+{
+    if (returnIndex == bufferIndex)
         return -1;
-    
 
     return keyboardBuffer[returnIndex++ % BUFFER_SIZE];
 }
 
-
-int processKeyboardInput(int input)
-{
-
-
-    handleBreaks(input);
-
-    if (input <= 0 || input > 86)
-        return -1;
-
-    int PressedKey = KeyMap[input];
-
-    if (PressedKey > 0)
-    {
-        int asciiValue = handleASCII(PressedKey);
-
-        if(asciiValue > 0 || asciiValue == EOF){
-            return asciiValue;
-        }
-        else if(asciiValue == QUIT){
-            killCurrentForegroundProcess();
-        }      
-    }
-
-    handleCommands(PressedKey);
-
-    return -1;
-}
+/***************************************************************************\
+  *               Implementacion de Funciones Privadas                      *
+ \***************************************************************************/
 
 void handleBreaks(int input)
 {
@@ -193,19 +196,22 @@ int handleASCII(int PressedKey)
         if (Shift)
             PressedKey = ShiftKeyMap[PressedKey];
         if (control)
-            PressedKey = ControlKeyMap[PressedKey];
+        {
+
+            if (tryToRunShortcuts(PressedKey))
+                PressedKey = -1;
+            else
+                PressedKey = ControlKeyMap[PressedKey];
+        }
         return PressedKey;
     }
-    else if ((' ' <= PressedKey && PressedKey <= '?') || ('Z' < PressedKey && PressedKey < 'a') 
-                || (PressedKey == '\n') || (PressedKey == 8))
+    else if ((' ' <= PressedKey && PressedKey <= '?') || ('Z' < PressedKey && PressedKey < 'a') || (PressedKey == '\n') || (PressedKey == 8))
     {
         if (Shift)
             return ShiftKeyMap[PressedKey];
         else
             return PressedKey;
     }
-
-    
 
     return -1;
 }
@@ -224,7 +230,7 @@ void handleCommands(int PressedKey)
     case Control:
         control = true;
         break;
-    
+
     default:
         break;
     }
@@ -233,17 +239,54 @@ void handleCommands(int PressedKey)
         if (Mayusc)
         {
             Mayusc = false;
-            // printfAt( "CAPS OFF", 0, 10);
         }
         else
         {
             Mayusc = true;
-            // printfAt( "CAPS ON ", 0, 10);
         }
     }
     else if (PressedKey == LShift || PressedKey == Rshift)
     {
         Shift = true;
-        // printfAt( "SHIFT ON ", 0, 11);
     }
+}
+
+int processKeyboardInput(int input)
+{
+
+    handleBreaks(input);
+
+    if (input <= 0 || input > 86)
+        return -1;
+
+    int PressedKey = KeyMap[input];
+
+    if (PressedKey > 0)
+    {
+        int asciiValue = handleASCII(PressedKey);
+
+        if (asciiValue > 0 || asciiValue == EOF)
+            return asciiValue;
+    }
+
+    handleCommands(PressedKey);
+
+    return -1;
+}
+
+bool tryToRunShortcuts(int key)
+{
+
+    int i = -1;
+
+    while (shortcuts[++i].func != NULL)
+    {
+        if (shortcuts[i].key == key)
+        {
+            shortcuts[i].func();
+            return true;
+        }
+    }
+
+    return false;
 }

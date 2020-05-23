@@ -59,6 +59,7 @@ void read(char * buffer,int bufferSize,int * ans){
   
 }
 
+
 void readPipe(int fd,char * buffer,int bufferSize,int * ans){
 
   //DEBUG("get in readPipe with %d",getpid());
@@ -300,9 +301,16 @@ int pipeCheck(int fd,actions action){
   return -1;  
 }
 
+
+
 void readStdin(char * buffer,int bufferSize,int * lenght){
 			int i = 0;		
 			int temp;
+
+      if(!isThereInputInSTDIN()){
+        SleepProcess();
+      }
+
 			do{
 				temp = returnKey();
 				
