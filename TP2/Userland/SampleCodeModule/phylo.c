@@ -45,6 +45,10 @@ int phylo(int argc,char ** argv) {
     }
     sempost(mutex);
 
+    printf("Welcome to phylo. Press (a) to add. (r) to remove. (q) to exit\n");
+    sleep();
+    sleep();
+
     char c;
     while(1) {
         c = readKeyNoBlock();
@@ -64,6 +68,19 @@ int phylo(int argc,char ** argv) {
                     phils[amount-1] = DEAD;
                     sempost(mutex);
                 }
+                break;
+            case 'Q':
+            case 'q':
+                semwait(mutex);
+                printf("Killing phylos... \n");
+                for (int aux = 0; aux < amount; aux++) {
+                    phils[aux] = DEAD;
+                }
+                sempost(mutex);
+                sleep();
+                sleep();
+                semclose(mutex);
+                exit_process();
                 break;
             default:
                 break;
@@ -117,7 +134,6 @@ int philosopher_process(int num,char ** argv) {
        } 
        take_fork(i);
        put_fork(i);
-       sleep();
     }
    return 0; 
 }
@@ -143,6 +159,6 @@ void create_philosopher() {
 
 void sleep() {
     int i = GetSeconds();
-    while(i - GetSeconds());
+    while((i - GetSeconds()) == 0);
     return;
 }

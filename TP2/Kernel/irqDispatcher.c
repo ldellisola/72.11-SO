@@ -314,7 +314,7 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 		case FD_STDINNOBLOCK: {
 			char * buffer = (char *) firstParam;
       		int bufferSize = (uint64_t)secondParam;
-			read(buffer,bufferSize,(int *) thirdParam);	
+			readNoBlock(buffer,bufferSize,(int *) thirdParam);	
 			break;
 		}
 		default:{
