@@ -25,7 +25,32 @@ bool killedCurrentProcess = false;
 void insertQueue(process * process);
 void deleteQueue(int * pid,process ** process);
 
-void forceProcessNext(int pid){
+void AwakeProcess(){
+    process * aux = curr;
+
+    bool found = false;
+
+    for(int i = 0 ; i < priority.cant ; i++){
+        
+        if(aux->pcb->state == BLOCK && aux->pcb->isWaitingForInput){
+            found = true;
+            break;
+        }else{
+            aux = aux->next;
+        }
+    }
+
+    if(found){
+        process * next = curr->next;
+        pcb * temp = aux->pcb;
+        temp->state = READY;
+        temp->isWaitingForInput = false;
+
+        aux->pcb = next->pcb;
+        next->pcb = temp;
+    }
+
+
     //         DEBUG("PID: %d", pid );
 
     // // pid = 0;
@@ -159,10 +184,13 @@ void createProcess(char * name, int * status, function_t * function){
         //checkear status
         //bloquear al que esta corriendo y correr a este
         if(*status==0 && pidP!=-1){
+            DEBUG("SDSDSDSDSDS","")
             int pid=curr->pcb->pid;
             curr->pcb->state=BLOCK;
             //curr->pcb->status = BACKGROUND;
             procs->pcb->pidP = pid;
+
+            // __ForceTimerTick__();
         }
         else if(pidP==-1){
             new->priority=3;
@@ -206,10 +234,11 @@ void SleepProcess(){
 
     process * p = GetProcess(pid);
 
-    DEBUG("AAAAAAADDDDDDDDD",0)
+    // DEBUG("AAAAAAADDDDDDDDD",0)
 
     if(p != NULL){
-        //p->pcb->isWaitingForInput = true;
+        p->pcb->isWaitingForInput = true;
+        p->pcb->state = BLOCK;
         __ForceTimerTick__();
     }
 }
@@ -301,18 +330,21 @@ void insertQueue(process * procs){
 }
 void deleteQueue(int * pid, process ** process){
     if(priority.cant==0){
+        priority.first=NULL;
+        priority.last=NULL;
+        return;
+    }
 
-            priority.first=NULL;
-            priority.last=NULL;
-            return;
-        }
+    while((*process)->pcb->pid!=*pid){
+        *process=(*process)->next;
+    }
 
-        while((*process)->pcb->pid!=*pid){
-            *process=(*process)->next;
-        }
+    (*process)->prev->next=(*process)->next;
+    (*process)->next->prev=(*process)->prev;
 
-        (*process)->prev->next=(*process)->next;
-        (*process)->next->prev=(*process)->prev;
+    if(priority.first->pcb->state == KILL){
+        priority.first = priority.first->next;
+    }
 
 }
 

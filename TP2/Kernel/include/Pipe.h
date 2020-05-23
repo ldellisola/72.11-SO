@@ -25,6 +25,8 @@ void openPipe(char * name,actions action,int * fd);
 
 void read(char * buffer,int bufferSize, int * ans);
 
+bool WasThePipeUpdated(int fd);
+
 //devuelve si pudo leer por el bufferSize, -1 error sino cantidad de caracteres
 void readPipe(int fd,char * buffer,int bufferSize,int * ans);
 
