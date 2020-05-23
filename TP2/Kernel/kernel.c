@@ -58,11 +58,25 @@ void * initializeKernelBinary()
 #include <ConsoleDriver.h>
 #include <font.h>
 #include <keyboard.h>
+#include <Pipe.h>
+#include <Scheduler.h>
 int main()
 {	
 	startVideoDriver();
 	initializeKeyboard();
 	initializeConsoleDriver(CHAR_HEIGHT,CHAR_WIDTH, SCREEN_HEIGHT,SCREEN_WIDTH); 
+
+	SetKeyboardShortcut(semInfo,'s');
+	SetKeyboardShortcut(semInfo,'S');
+	
+	SetKeyboardShortcut(clearConsole,'C');
+	SetKeyboardShortcut(clearConsole,'c');
+
+	SetKeyboardShortcut(pipes,'i');
+	SetKeyboardShortcut(pipes,'I');
+
+	SetKeyboardShortcut(ps,'p');
+	SetKeyboardShortcut(ps,'P');
 
 	// printf("SCREEN H: %d, W: %d\n", SCREEN_WIDTH, SCREEN_WIDTH);
 

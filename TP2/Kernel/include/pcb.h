@@ -33,6 +33,7 @@ typedef struct{
     State state; 
     char ** argv;
     int argc;
+    bool isWaitingForInput;
 }pcb;
 
 void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *function,int pid,int parentPid);

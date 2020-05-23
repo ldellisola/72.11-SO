@@ -12,6 +12,8 @@
 #include "include/Process.h"
 #include "../Include/Sem.h"
 
+extern void __ForceTimerTick__();
+
 /***************************************************************/
 /*                        Constantes                           */
 /***************************************************************/
@@ -309,6 +311,11 @@ int interpretCommand()
             createCommand(aux,&parsedCommand[i],fd[i][WRITE],fd[i][READ]);
         }
     }
+
+
+    __ForceTimerTick__();
+
+
     return 0;
 }
 

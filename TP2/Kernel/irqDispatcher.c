@@ -150,11 +150,11 @@ void int_21(){
 
 	readKey();
 
-	char * sem = getKeyboardSem();
+	//char * sem = getKeyboardSem();
 
-	sempost(sem);
+	//sempost(sem);
 
-	//forceProcessNext(pid);
+	AwakeProcess();
 
 }
 
@@ -268,19 +268,8 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 
 			char * buffer = (char *) firstParam;
       		int bufferSize = (uint64_t)secondParam;
-	  		semwait(getKeyboardSem());
+			
 			read(buffer,bufferSize,(int *) thirdParam);			
-			// int i = 0;		
-			// int temp;
-			// do{
-			// 	temp = returnKey();
-				
-			// 	if( temp != -1 ){
-			// 		buffer[i++]=temp;
-			// 	}
-
-			// }while( temp!= -1 && i <bufferSize-1 );
-			// buffer[i] = 0;
 			
 			break;
 		}

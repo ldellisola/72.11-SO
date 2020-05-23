@@ -3,6 +3,7 @@ GLOBAL __UD2__
 GLOBAL __MEM__
 
 GLOBAL __halt__
+GLOBAL __ForceTimerTick__
 
 EXTERN printRegisters
 
@@ -51,9 +52,17 @@ section .text
 
 
 
+__ForceTimerTick__:
+	enter 0,0
 
+	pushState
 
+	int 20h
 
+	popState
+
+	leave
+	ret
 
 __halt__:
 		enter 0,0
