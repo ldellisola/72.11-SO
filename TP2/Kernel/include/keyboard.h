@@ -12,7 +12,8 @@ void readKey();
 // Unmapped keys will return 0.
 int returnKey();
 
-// Binds a function to a key. When CTRL + key is pressed, it will execute said function
+// Binds a function to a key. When CTRL + key is pressed, it will execute said function.
+// Some keys are already mapped to functions, such as CTRL + D will cause EOF.
 void SetKeyboardShortcut(int (* func ) (), int key);
 
 // checks if there was new input on STDIN.
