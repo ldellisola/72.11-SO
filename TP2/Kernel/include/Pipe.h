@@ -37,4 +37,6 @@ void writePipe(int fd,char * buffer,int * ans);
 void pipes();
 
 void closePipes(int * fd);
+
+void readNoBlock(char * buffer,int bufferSize,int * lenght);
 #endif

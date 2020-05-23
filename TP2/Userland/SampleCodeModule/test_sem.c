@@ -30,7 +30,7 @@ void printfNeg(int64_t g) {
   printf("Final value: -%d\n", neg);
 }
 
-#define N 100000000
+#define N 1000000
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 
@@ -62,7 +62,7 @@ int my_process_inc(int argc,char ** argv){
   if (global < 0) {
     printfNeg(global);
   }
-  printf("Final value: %d\n", global);
+  else printf("Final value: %d\n", global);
 
   exit_process();
   return 0;
@@ -88,7 +88,7 @@ int my_process_dec(int argc,char ** argv){
   if (global < 0) {
     printfNeg(global);
   }
-  printf("Final value: %d\n", global);
+  else printf("Final value: %d\n", global);
   exit_process();
   return 0;
 }
@@ -118,7 +118,7 @@ int my_process_inc_no_sem(int argc,char ** argv){
     if (global < 0) {
     printfNeg(global);
   }
-  printf("Final value: %d\n", global);
+  else printf("Final value: %d\n", global);
 
   exit_process();
   return 0;
@@ -133,7 +133,7 @@ int my_process_dec_no_sem(int argc,char ** argv){
     if (global < 0) {
     printfNeg(global);
   }
-  printf("Final value: %d\n", global);
+  else printf("Final value: %d\n", global);
 
   exit_process();
   return 0;

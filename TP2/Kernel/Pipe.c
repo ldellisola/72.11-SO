@@ -324,6 +324,24 @@ void readStdin(char * buffer,int bufferSize,int * lenght){
 
 }
 
+void readNoBlock(char * buffer,int bufferSize,int * lenght) {
+
+			int i = 0;		
+			int temp;
+
+			do{
+				temp = returnKey();
+				
+				if( temp != -1 ){
+					buffer[i++]=temp;
+				}
+
+			}while( temp!= -1 && i <bufferSize-1 );
+			buffer[i] = 0;
+      *lenght = i;
+
+}
+
 void writeStdout(char * buffer){
   if(buffer[1] == 0)
     putChar(*buffer);

@@ -49,7 +49,7 @@ int semopen(char * name, int * initialValue){
 }
 
 bool semwait(char * semName){
-    SpinLock(); 
+
     SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     bool hasToBeBlocked = true;
@@ -59,10 +59,8 @@ bool semwait(char * semName){
         return false;
     }
     
-
-    sem->value--;
-
-    if(sem->value < 0){
+    SpinLock(); 
+    if(sem->value < 1){
         int pid = getpid();
                 
         int i = 0;
@@ -82,6 +80,7 @@ bool semwait(char * semName){
 
     }else{
         hasToBeBlocked =  false;
+        sem->value--;
     }
     SpinUnlock();
 
@@ -95,15 +94,14 @@ bool semwait(char * semName){
 }
 
 void sempost(char * semName){
-    SpinLock();
     SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     if (semCheck(sem) != 0) {
         printf("Error posting semaphore\n");
         return;
     }
-    sem->value++;
-    if (sem->value <= 0) {
+    SpinLock(); 
+    if (sem->processesBlocked[0] != NO_VALUE) {
     // desbloqueo el primero, debido al Queue
     process * p = GetProcess(sem->processesBlocked[0]);
             p->pcb->state = READY;
@@ -113,6 +111,7 @@ void sempost(char * semName){
         }
     sem->processesBlocked[MAX_PROC_SEM-1]=NO_VALUE;
     }
+    else sem->value++;
     SpinUnlock();
 
 }
