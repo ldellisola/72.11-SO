@@ -1,4 +1,4 @@
-#include "../Include/Syscalls.h"
+#include "include/Syscalls.h"
 
 extern void _exit();
 extern void sleep_process();

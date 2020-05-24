@@ -1,9 +1,9 @@
 #include "include/Process.h"
-#include "../Include/Pipes.h"
-#include "../Include/Syscalls.h"
+#include "include/Pipes.h"
+#include "include/Syscalls.h"
 #include "include/Exec.h"
-#include "../Include/String.h"
-#include "../Include/Curses.h"
+#include "include/String.h"
+#include "include/Curses.h"
 
 int stop=1;
 

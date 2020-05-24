@@ -1,12 +1,12 @@
 /* sampleCodeModule.c */
-#include "../Include/Time.h"
-#include "../Include/String.h"
-#include "../Include/Syscalls.h"
+#include "include/Time.h"
+#include "include/String.h"
+#include "include/Syscalls.h"
 #include "include/Exec.h"
 #include "include/Terminal.h"
-#include "../Include/Curses.h"
+#include "include/Curses.h"
 #include <stdlib.h>
-#include "../Include/deviceInfo.h"
+#include "include/deviceInfo.h"
 
 #include "include/Process.h"
 

@@ -1,16 +1,16 @@
 #include <stdarg.h>
-#include "../Include/Syscalls.h"
+#include "include/Syscalls.h"
 #include "include/Terminal.h"
-#include "../Include/Curses.h"
-#include "../Include/Pipes.h"
+#include "include/Curses.h"
+#include "include/Pipes.h"
 #include "include/Commands.h"
-#include "../Include/String.h"
+#include "include/String.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include "include/Exec.h"
 #include "include/test_util.h"
 #include "include/Process.h"
-#include "../Include/Sem.h"
+#include "include/Sem.h"
 
 extern void __ForceTimerTick__();
 

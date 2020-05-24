@@ -1,5 +1,5 @@
 #include "include/Speaker.h"
-#include "../Include/Syscalls.h"
+#include "include/Syscalls.h"
 
 
 void playSound(uint64_t frecuency){

@@ -1,5 +1,5 @@
-#include "../Include/Curses.h"
-#include "../Include/Syscalls.h"
+#include "include/Curses.h"
+#include "include/Syscalls.h"
 #include "include/Exec.h"
 #include "include/Process.h"
 

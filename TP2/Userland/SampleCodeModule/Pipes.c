@@ -1,6 +1,6 @@
-#include "../Include/Pipes.h"
-#include "../Include/Syscalls.h"
-#include "../Include/MemManager.h"
+#include "include/Pipes.h"
+#include "include/Syscalls.h"
+#include "include/MemManager.h"
 
 int openPipe(char * name,actions action){
   int fd;

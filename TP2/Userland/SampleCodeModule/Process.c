@@ -1,7 +1,7 @@
-#include "../Include/Curses.h"
-#include "../Include/Syscalls.h"
-#include "../Include/Sem.h"
-#include "../Include/Time.h"
+#include "include/Curses.h"
+#include "include/Syscalls.h"
+#include "include/Sem.h"
+#include "include/Time.h"
 #include "include/Process.h"
 #include <stdbool.h>
 #include <ctype.h>

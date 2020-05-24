@@ -1,12 +1,12 @@
 #include "include/phylo.h"
 #include "include/Exec.h"
 #include "include/Process.h"
-#include "../Include/Sem.h"
-#include "../Include/Curses.h"
-#include "../Include/String.h"
+#include "include/Sem.h"
+#include "include/Curses.h"
+#include "include/String.h"
 #include "include/Process.h"
-#include "../Include/Syscalls.h"
-#include "../Include/Time.h"
+#include "include/Syscalls.h"
+#include "include/Time.h"
 
 #define MAX 15
 #define ALIVE 1

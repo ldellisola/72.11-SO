@@ -1,5 +1,5 @@
-#include "../Include/MemManager.h"
-#include "../Include/Curses.h"
+#include "include/MemManager.h"
+#include "include/Curses.h"
 #include "include/test_util.h"
 #include "include/Process.h"
 

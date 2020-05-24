@@ -1,6 +1,6 @@
-#include "../Include/Sem.h"
-#include "../Include/Syscalls.h"
-#include "../Include/Curses.h"
+#include "include/Sem.h"
+#include "include/Syscalls.h"
+#include "include/Curses.h"
 #include <stdbool.h>
 
 

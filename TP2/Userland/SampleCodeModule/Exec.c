@@ -1,6 +1,6 @@
 #include "include/Exec.h"
-#include "../Include/Syscalls.h"
-#include "../Include/Curses.h"
+#include "include/Syscalls.h"
+#include "include/Curses.h"
 /*
 
     - name: name of the process

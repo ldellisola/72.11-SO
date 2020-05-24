@@ -1,5 +1,5 @@
-#include "../Include/deviceInfo.h"
-#include "../Include/Syscalls.h"
+#include "include/deviceInfo.h"
+#include "include/Syscalls.h"
 
 /***************************************************************/
 /*                         Estructuras                          */

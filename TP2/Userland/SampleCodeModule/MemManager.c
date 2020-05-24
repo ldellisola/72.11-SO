@@ -1,7 +1,7 @@
 
-#include "../Include/MemManager.h"
-#include "../Include/Syscalls.h"
-#include "../Include/Curses.h"
+#include "include/MemManager.h"
+#include "include/Syscalls.h"
+#include "include/Curses.h"
 
 void *malloc(size_t size)
 {

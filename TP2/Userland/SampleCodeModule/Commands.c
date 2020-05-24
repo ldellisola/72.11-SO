@@ -2,13 +2,13 @@
 
 #include <stdbool.h>
 
-#include "../Include/deviceInfo.h"
-#include "../Include/String.h"
-#include "../Include/Curses.h"
-#include "../Include/Time.h"
-#include "../Include/MemManager.h"
-#include "../Include/Sem.h"
-#include "../Include/Syscalls.h"
+#include "include/deviceInfo.h"
+#include "include/String.h"
+#include "include/Curses.h"
+#include "include/Time.h"
+#include "include/MemManager.h"
+#include "include/Sem.h"
+#include "include/Syscalls.h"
 
 extern void __UD2__();
 

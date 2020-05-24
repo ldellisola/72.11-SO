@@ -1,7 +1,7 @@
 #include "include/test_util.h"
 #include "include/Exec.h"
-#include "../Include/Syscalls.h"
-#include "../Include/Curses.h"
+#include "include/Syscalls.h"
+#include "include/Curses.h"
 #include "include/Process.h"
 
 

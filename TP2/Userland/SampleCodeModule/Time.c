@@ -1,6 +1,6 @@
-#include "../Include/Time.h"
+#include "include/Time.h"
 #include <stdint.h>
-#include "../Include/Syscalls.h"
+#include "include/Syscalls.h"
 enum{
 SECONDS, MINUTES, HOURS, DAYOFWEEK, DAYOFMONTH, MONTH, YEAR
 };
