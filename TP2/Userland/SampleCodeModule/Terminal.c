@@ -49,6 +49,19 @@ typedef struct
 } Command_t;
 
 /***************************************************************/
+/*                         Declaraciones                       */
+/***************************************************************/
+
+void clearArray(char *arr, int size);
+void overwriteArray(char *src, char *dest);
+void printTerminal();
+int interpretCommand();
+void overwriteArrayUpTo(char *src, char *dest, char c);
+void InitializeTerminal();
+unsigned long sdbm(char *str);
+int help(int argc, char **argv);
+
+/***************************************************************/
 /*                         Variables                           */
 /***************************************************************/
 
@@ -89,17 +102,6 @@ Command_t commands[] = {
 
     {.function = NULL, .name = NULL, .isProcess = false, .description = NULL}};
 
-/***************************************************************/
-/*                         Declaraciones                       */
-/***************************************************************/
-
-void clearArray(char *arr, int size);
-void overwriteArray(char *src, char *dest);
-void printTerminal();
-int interpretCommand();
-void overwriteArrayUpTo(char *src, char *dest, char c);
-void InitializeTerminal();
-unsigned long sdbm(char *str);
 
 /***************************************************************/
 /*                      Funciones Publicas                     */

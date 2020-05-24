@@ -1,8 +1,11 @@
 #ifndef EXEC_H
 #define EXEC_H
 
-typedef  int (* process_Function_t)(int, char **);
+/***************************************************************/
+/*                         Estructuras                         */
+/***************************************************************/
 
+typedef  int (* process_Function_t)(int, char **);
 
 typedef struct function_t{
     process_Function_t function;
@@ -12,6 +15,12 @@ typedef struct function_t{
     int write;
 }function_t;
 
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
 
+//  Crea un nuevo proceso
 int exec(char * name, int status, int (* func)(int, char **),int read,int write,int argc,char ** argv);
+
+
 #endif
