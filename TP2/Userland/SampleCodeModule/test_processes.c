@@ -22,21 +22,21 @@ uint32_t my_create_process(char * name){
 uint32_t my_kill(uint32_t pid){
     int process=pid;
     //devuelve en el param que le mando la respuesta
-    kill_process(&process);
+    process_manager(1,(void *)&process,0,0);
   return process;  
 }
 
 uint32_t my_block(uint32_t pid){
     int process=pid;
     //devuelve en el param que le mando la respuesta
-    block_process(&process);
+    	process_manager(3,(void *)&process,0,0);
     return process;
 }
 
 uint32_t my_unblock(uint32_t pid){
   int process=pid;
     //devuelve en el param que le mando la respuesta
-    block_process(&process);
+    process_manager(3,(void *)&process,0,0);
     return process;
 }
 

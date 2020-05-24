@@ -23,19 +23,10 @@ void _irq83Handler(void *firstParam, void *secondParam, void *thirdParam, void *
 
 void _irq85Handler(void *ptr, void *timeid);
 void _irq86Handler(void *increment, void *buffer);
-void _irq87Handler(void *address, int *retValue);
-void _irq88Handler(void *address, int *retValue);
+void _irq87Handler(void *firstParam, void *secondParam, void *thirdParam);
+void _irq88Handler(void *firstParam, void *secondParam, void *thirdParam);
 void _irq89Handler(void *firstParam, void *secondParam, void *thirdParam);
 void _irq90Handler(int *firstParam);
-void _irq91Handler(int *firstParam, int secondParam);
-void _irq92Handler(int *firstParam);
-void _irq93Handler(int *firstParam);
-void _irq94Handler(int *firstParam);
-void _irq95Handler();
-void _irq96Handler(int fd, void *first, void **second);
-void _irq97Handler();
-void _irq98Handler();
-void _irq99Handler();
 
 void _exception0Handler(void);
 void _exception6Handler(void);

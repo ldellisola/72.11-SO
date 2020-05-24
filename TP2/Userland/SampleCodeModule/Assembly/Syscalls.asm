@@ -1,18 +1,11 @@
 GLOBAL _read
 GLOBAL _write
 GLOBAL delete
-GLOBAL _malloc
-GLOBAL _free
-GLOBAL memory_state
-GLOBAL create_process
-GLOBAL kill_process
-GLOBAL block_process
-GLOBAL nice_process
-GLOBAL ps
-GLOBAL get_pid
-GLOBAL _exit
+
+GLOBAL mem_manager
+GLOBAL process_manager
+
 GLOBAL sem
-GLOBAL sleep_process
 GLOBAL pipes
 GLOBAL LoadDummyProcess 
 
@@ -115,134 +108,33 @@ _write:
         leave
         ret
 
- _malloc:
+mem_manager:
         enter 0,0
 
         pushState
+        mov r15, rdx    ; guardo el valor
 
-        mov rbx, rsi    ;segundo arg
-        mov rax, rdi    ; primer arg
+        mov rdx, rcx    ;tercer arg
+        mov rcx, r15    ;segundo arg
+        mov rbx, rsi    ;primer arg
+        mov rax, rdi    ; fd        
         int 86h
 
         popState
 
         leave
         ret
-
- _free:
+process_manager:
         enter 0,0
 
         pushState
+        mov r15, rdx    ; guardo el valor
 
-        mov rax, rdi    ; primer arg
+        mov rdx, rcx    ;tercer arg
+        mov rcx, r15    ;segundo arg
+        mov rbx, rsi    ;primer arg
+        mov rax, rdi    ; fd        
         int 87h
-
-        popState
-
-        leave
-        ret
-
-memory_state:
-        enter 0,0
-
-        pushState
-
-        mov rcx, rdx    ;tercer arg
-        mov rbx, rsi    ;segundo arg
-        mov rax, rdi    ;primer arg        
-        int 88h
-
-        popState
-
-        leave
-        ret
-
-create_process:
-        enter 0,0
-
-        pushState
-
-        mov rcx, rdx    ;tercer arg
-        mov rbx, rsi    ;segundo arg
-        mov rax, rdi    ;primer arg          
-        int 89h
-
-        popState
-
-        leave
-        ret
-
-kill_process:
-        enter 0,0
-
-        pushState
-
-        mov rax, rdi    ;primer arg     
-        int 90h
-
-        popState
-
-        leave
-        ret
-nice_process:
-        enter 0,0
-
-        pushState
-
-        mov rbx, rsi    ;segundo arg
-        mov rax, rdi    ;primer arg        
-        int 91h
-
-        popState
-
-        leave
-        ret
-
-block_process:
-        enter 0,0
-
-        pushState
-        
-        mov rax, rdi    ;primer arg     
-        int 92h
-
-        popState
-
-        leave
-        ret
-
-
-
-ps:
-        enter 0,0
-
-        pushState
-        
-        int 93h
-
-        popState
-
-        leave
-        ret        
-                
-get_pid:
-        enter 0,0
-
-        pushState
-
-        mov rax, rdi    ;primer arg  
-        int 94h
-
-        popState
-
-        leave
-        ret
-_exit:
-        enter 0,0
-
-        pushState
-        
-        int 95h
 
         popState
 
@@ -256,25 +148,13 @@ sem:
         mov rcx, rdx    ;segundo arg
         mov rbx, rsi    ;primer arg
         mov rax, rdi    ;fd        
-        int 96h
+        int 88h
 
         popState
 
         leave
         ret
 
-sleep_process:
-        enter 0,0
-
-        pushState
-        
-        mov rax, rdi    ;primer arg     
-        int 97h
-
-        popState
-
-        leave
-        ret
 pipes:
     enter 0,0
     
@@ -286,7 +166,7 @@ pipes:
     mov rcx, r15    ;segundo arg
     mov rbx, rsi    ;primer arg
     mov rax, rdi    ; ind
-    int 98h
+    int 89h
 
     popState
 
@@ -299,7 +179,7 @@ LoadDummyProcess:
         pushState 
          
         mov rax, rdi    ;primer arg      
-        int 99h 
+        int 90h 
  
         popState 
  

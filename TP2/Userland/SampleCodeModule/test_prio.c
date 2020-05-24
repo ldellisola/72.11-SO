@@ -20,10 +20,10 @@ uint64_t my_create_process_prio(char *name)
   return exec(name, 1, endless_loop_prio, -1, -1, 0, 0);
 }
 
-uint64_t my_nice(uint64_t pid, uint64_t newPrio)
-{
-  uint64_t aux = pid;
-  nice_process((int *)&aux, newPrio);
+uint64_t my_nice(uint64_t pid, uint64_t newPrio){
+  uint64_t aux=pid;
+  
+  process_manager(4,(void *)&aux,(void *)newPrio,0);
   return aux;
 }
 

@@ -1,7 +1,7 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/Pipe.h"
-#include "include/SpinLock.h"
+#include "include/Sem.h"
 #include "include/pcb.h"
 #include "include/String.h"
 #include "include/Scheduler.h"
@@ -67,6 +67,15 @@ void openPipe(char *name, actions action, int *fd)
     //me aseguro que lo primero sea 0 por read y write
     *files[i].buffer = 0;
     files[i].state = 1;
+    char aux[10];
+    aux[0]='p';
+    aux[1]='i';
+    aux[2]='p';
+    aux[3]='e';
+    IntToString(aux+4,6,i);
+    int x = 1;
+    semopen(aux,&x);
+    CopyString(aux, files[i].sem, strlen(aux));
   }
   *fd = files[i].fd[action];
 }
@@ -104,7 +113,7 @@ void readPipe(int fd, char *buffer, int bufferSize, int *ans)
   char *write = files[i].write;
 
   //aseguro que soy yo solo
-  SpinLock();
+  semwait(files[i].sem);
 
   //cuando el write dio la vuelta
   if (read == write)
@@ -142,7 +151,7 @@ void readPipe(int fd, char *buffer, int bufferSize, int *ans)
   //genero la interrupcion
   if (blocking)
   {
-    SpinUnlock();
+    sempost(files[i].sem);
     __ForceTimerTick__();
     write = files[i].write;
   }
@@ -170,7 +179,7 @@ void readPipe(int fd, char *buffer, int bufferSize, int *ans)
         *ans = count;
         return;
       }
-      SpinUnlock();
+      sempost(files[i].sem);
       *ans = count;
       return;
     }
@@ -196,7 +205,7 @@ void readPipe(int fd, char *buffer, int bufferSize, int *ans)
     *ans = count;
     return;
   }
-  SpinUnlock();
+  sempost(files[i].sem);
   *ans = count;
   return;
 }
@@ -224,6 +233,7 @@ void writePipe(int fd, char *buffer, int *ans)
   }
   if (files[i].state == 0)
   {
+    closePipes(files[i].sem);
     *ans = -1;
     return;
   }
@@ -232,7 +242,8 @@ void writePipe(int fd, char *buffer, int *ans)
   char *read = files[i].read;
   int count = 0;
   bool flag = false;
-  SpinLock();
+  semwait(files[i].sem);
+
 
   while (buffer[j] != 0)
   {
@@ -247,7 +258,7 @@ void writePipe(int fd, char *buffer, int *ans)
 
     if (flag)
     {
-      SpinUnlock();
+      sempost(files[i].sem);
       __ForceTimerTick__();
       read = files[i].read;
     }
@@ -269,7 +280,7 @@ void writePipe(int fd, char *buffer, int *ans)
     block(&files[i].processesBlocked);
     files[i].processesBlocked = -1;
   }
-  SpinUnlock();
+  sempost(files[i].sem);
   return;
 }
 
