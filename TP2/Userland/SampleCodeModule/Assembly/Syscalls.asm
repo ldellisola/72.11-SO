@@ -1,8 +1,7 @@
 GLOBAL _read
 GLOBAL _write
 GLOBAL delete
-GLOBAL _malloc
-GLOBAL _free
+GLOBAL mem_manager
 GLOBAL memory_state
 GLOBAL create_process
 GLOBAL kill_process
@@ -109,6 +108,22 @@ _write:
         mov rbx, rsi    ;primer arg
         mov rax, rdi    ; fd        
         int 82h
+
+        popState
+
+        leave
+        ret
+mem_manager:
+        enter 0,0
+
+        pushState
+        mov r15, rdx    ; guardo el valor
+
+        mov rdx, rcx    ;tercer arg
+        mov rcx, r15    ;segundo arg
+        mov rbx, rsi    ;primer arg
+        mov rax, rdi    ; fd        
+        int 86h
 
         popState
 

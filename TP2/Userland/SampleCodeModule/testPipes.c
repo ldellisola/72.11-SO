@@ -10,6 +10,7 @@ int stop=1;
 int WritingEnd(int argc,char ** argv){
   //char EOF=-20;
   printf("hola, funciona!\n");
+  stop=0;
   exit_process();
   return 0;
 }

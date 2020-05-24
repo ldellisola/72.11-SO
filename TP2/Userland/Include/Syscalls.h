@@ -32,9 +32,11 @@ int write(int fd, char * buffer);
 
 extern void delete(int fd, void * first, void *second, void * third, void * forth);
 
-extern 	void _malloc(int increment, void ** resp);
+extern void mem_manager(int fd, void * param1, void * param2, void * param3);
 
-extern  void _free(void ** address);
+//extern 	void _malloc(int increment, void ** resp);
+
+//extern  void _free(void ** address);
 
 extern void memory_state(void ** first, void ** last, void ** next);
 

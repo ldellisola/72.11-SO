@@ -40,9 +40,11 @@
 void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
+void dispatchMem(int fd, void * firstParam, void * secondParam,void * thirdParam);
 void dispatchMalloc(int increment, void ** buffer);
 void dispatchFree(void ** buffer);
 void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
+
 void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
 void dispatchKillProcess(int * firstParam);
 void dispatchBlockProcess(int * firstParam);
@@ -83,7 +85,7 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 		case 0x86:{
 		
-			dispatchMalloc((uint64_t)firstParam,(void **) secondParam);
+			dispatchMem((uint64_t)firstParam,secondParam,thirdParam,fourthParam);
 			break;
 		}
 		case 0x87:{ 
@@ -161,6 +163,26 @@ void int_21(){
 
 
 
+void dispatchMem(int fd, void * firstParam, void * secondParam,void * thirdParam){
+	switch (fd)
+	{
+	case 0:{
+		void * aux=malloc((uint64_t)firstParam);
+		*((void **)(secondParam))=aux;
+		break;
+	}
+	case 1:{
+		free(*((void **)(firstParam)));
+		break;
+	}
+	case 2:{
+		mem_state((void **)firstParam,(void **)secondParam,(void **)thirdParam);
+		break;
+	}
+	default:
+		break;
+	}
+}
 
 void dispatchMalloc(int increment, void ** buffer) { 
 	void * aux=malloc(increment);

@@ -228,7 +228,7 @@ int lookSem(char *name)
 void semInfo()
 {
     int i;
-    printf("\n Id  Value  Cantidad  Nombre\n");
+    printf("\nId  Value  Cantidad  Nombre\n");
     for (i = 0; i < MAX; i++)
     {
         if (sems[i].id != 0)
@@ -236,10 +236,10 @@ void semInfo()
             if (sems[i].value < 0)
             {
                 int aux = sems[i].value * -1;
-                printf("%d -%d %d %s\n", sems[i].id, aux, sems[i].cant, sems[i].name);
+                printf("%d -%d   %d    %s\n", sems[i].id, aux, sems[i].cant, sems[i].name);
             }
             else
-                printf("%d %d %d %s\n", sems[i].id, sems[i].value, sems[i].cant, sems[i].name);
+                printf("%d %d   %d     %s\n", sems[i].id, sems[i].value, sems[i].cant, sems[i].name);
         }
     }
 }

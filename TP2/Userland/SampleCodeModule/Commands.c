@@ -105,7 +105,7 @@ int printMemoryState(int argc, char ** argv){
     void * last=NULL;
     void *next=NULL;
 
-    memory_state(&first,&last,&next);
+    mem_manager(2,(void *)&first,(void *)&last,(void *)&next);
     printf("\nMemory starts at: 0x%x and finishes at : 0x%x\n",first,last);
     printf("Next free position: 0x%x\n",next);
     return 0;
