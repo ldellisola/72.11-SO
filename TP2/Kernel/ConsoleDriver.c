@@ -1,8 +1,5 @@
 #include "include/ConsoleDriver.h"
 #include <VideoDriver.h>
-#include <String.h>
-#include <Debugger.h>
-#include <font.h>
 
 /***************************************************************/
 /*                         CONSTANTES                          */
@@ -27,41 +24,38 @@ static int currPosition = 0;
 static int previusCurrPosition = 0;
 static int currentRows = 0;
 
-
 /***************************************************************/
 /*                         Declaraciones                       */
 /***************************************************************/
 
 void reflectBufferChangesToDisplay();
-
-int countRepetitionsOfColorString(ColorChar * str, char ch);
-int strlenColorString(ColorChar* str);
-void appendColorString(ColorChar * src, ColorChar * dest, int bufferSize);
-void removeColorString(ColorChar * str, int pos);
-int findLastReferenceOfColorString(ColorChar * buffer, int initialPosition, char element);
-
+int countRepetitionsOfColorString(ColorChar *str, char ch);
+int strlenColorString(ColorChar *str);
+void appendColorString(ColorChar *src, ColorChar *dest, int bufferSize);
+void removeColorString(ColorChar *str, int pos);
+int findLastReferenceOfColorString(ColorChar *buffer, int initialPosition, char element);
 
 /***************************************************************/
 /*                      Funciones Publicas                     */
 /***************************************************************/
 
-void initializeConsoleDriver(int charHeight_,int charWidth_, int screenHeight_, int screenWidth_){
+void initializeConsoleDriver(int charHeight_, int charWidth_, int screenHeight_, int screenWidth_)
+{
     charHeight = charHeight_;
     charWidth = charWidth_;
     screenHeight = screenHeight_;
     screenWidth = screenWidth_;
-
 }
 
-
-
-void printLine(char * string){
+void printLine(char *string)
+{
     int lenght = strlen(string);
 
     ColorChar temp[lenght];
     int i;
 
-    for( i = 0 ; string[i]!=0 ; i++){
+    for (i = 0; string[i] != 0; i++)
+    {
         temp[i].ch = string[i];
         temp[i].fontColor = DEFAULT_FONT_COLOR;
         temp[i].backgroundColor = DEFAULT_BACKGROUND_COLOR;
@@ -74,55 +68,54 @@ void printLine(char * string){
     printLineColor(temp);
 }
 
+void printLineColor(ColorChar *string)
+{
 
-
-void printLineColor(ColorChar * string){
-
-    for( previusCurrPosition = currPosition ; 
-            currPosition < MAX_BUFFER_SIZE && string[currPosition - previusCurrPosition].ch != 0;
-            currPosition++){
-        if(string[currPosition-previusCurrPosition].ch == '\n')
+    for (previusCurrPosition = currPosition;
+         currPosition < MAX_BUFFER_SIZE && string[currPosition - previusCurrPosition].ch != 0;
+         currPosition++)
+    {
+        if (string[currPosition - previusCurrPosition].ch == '\n')
             currentRows++;
-        Buffer[currPosition] = string[currPosition-previusCurrPosition];
+        Buffer[currPosition] = string[currPosition - previusCurrPosition];
     }
 
     Buffer[currPosition].ch = 0;
 
-    currentRows += findLastReferenceOfColorString(Buffer,currPosition-2,'\n') * charWidth / screenWidth;
+    currentRows += findLastReferenceOfColorString(Buffer, currPosition - 2, '\n') * charWidth / screenWidth;
 
     reflectBufferChangesToDisplay();
 }
 
-void printLineColorAt(ColorChar * string){
-    for(int i=0;string[i].ch!=0;i++){
-        drawChar(string[i].x,string[i].y,string[i].ch,string[i].fontColor,string[i].backgroundColor);
-    }
-}
-void printChar(char ch){
+void printChar(char ch)
+{
 
     ColorChar temp;
     temp.ch = ch;
     temp.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     temp.fontColor = DEFAULT_FONT_COLOR;
 
-    printCharColor(temp);    
+    printCharColor(temp);
 }
 
-void printCharColor(ColorChar ch){
+void printCharColor(ColorChar ch)
+{
 
-    if(ch.ch == '\n'){
-        currentRows += 1 + findLastReferenceOfColorString(Buffer,currPosition-2,'\n') * charWidth / screenWidth;
+    if (ch.ch == '\n')
+    {
+        currentRows += 1 + findLastReferenceOfColorString(Buffer, currPosition - 2, '\n') * charWidth / screenWidth;
         previusCurrPosition = currPosition;
     }
 
     Buffer[currPosition] = ch;
     currPosition += 1;
     Buffer[currPosition].ch = 0;
-    
+
     reflectBufferChangesToDisplay();
 }
 
-void clearConsole(){
+void clearConsole()
+{
     currentRows = 0;
     currPosition = 0;
     previusCurrPosition = 0;
@@ -131,18 +124,19 @@ void clearConsole(){
     Buffer[currPosition].fontColor = DEFAULT_FONT_COLOR;
     Buffer[currPosition].backgroundColor = DEFAULT_BACKGROUND_COLOR;
 
-    for(int x = 0 ; x <= screenWidth; x+= charWidth)
-        for(int y = 0 ; y <= screenHeight; y+= charHeight)
-            drawChar(x,y,' ',DEFAULT_FONT_COLOR,DEFAULT_BACKGROUND_COLOR);    
+    for (int x = 0; x <= screenWidth; x += charWidth)
+        for (int y = 0; y <= screenHeight; y += charHeight)
+            drawChar(x, y, ' ', DEFAULT_FONT_COLOR, DEFAULT_BACKGROUND_COLOR);
 }
 
-
-void removeLastChar(){
-    if(currPosition > 0){
+void removeLastChar()
+{
+    if (currPosition > 0)
+    {
         Buffer[currPosition].ch = 0;
         currPosition--;
 
-        if(Buffer[currPosition].ch == '\n')
+        if (Buffer[currPosition].ch == '\n')
             currentRows--;
 
         Buffer[currPosition].ch = ' ';
@@ -153,88 +147,96 @@ void removeLastChar(){
     }
 }
 
-
-
 /***************************************************************/
-/*                    Funciones Privadas                       */
+/*           Implementacion de Funciones Privadas              */
 /***************************************************************/
 
-void reflectBufferChangesToDisplay(){
+void reflectBufferChangesToDisplay()
+{
 
-    int rows = 1+ currentRows;
-    int a = findLastReferenceOfColorString(Buffer,currPosition-2,'\n') * charWidth;
-    int extrarows = a/ screenWidth;
-        
+    int rows = 1 + currentRows;
+    int a = findLastReferenceOfColorString(Buffer, currPosition - 2, '\n') * charWidth;
+    int extrarows = a / screenWidth;
 
-        int x = 0, y = rows + extrarows;
+    int x = 0, y = rows + extrarows;
 
-        if(Buffer[currPosition-1].ch == '\n' || !(a % screenWidth) ){
-            for(int tempx = 0; tempx < a ; tempx += charWidth)
-                drawChar(tempx,screenHeight - charHeight * (1),' ',DEFAULT_FONT_COLOR,DEFAULT_BACKGROUND_COLOR);
-        }
+    if (Buffer[currPosition - 1].ch == '\n' || !(a % screenWidth))
+    {
+        for (int tempx = 0; tempx < a; tempx += charWidth)
+            drawChar(tempx, screenHeight - charHeight * (1), ' ', DEFAULT_FONT_COLOR, DEFAULT_BACKGROUND_COLOR);
+    }
 
-        for(int i = 0 ; Buffer[i].ch != 0 ; i++){
-            if(Buffer[i].ch == '\n' || x >= screenWidth){
+    for (int i = 0; Buffer[i].ch != 0; i++)
+    {
+        if (Buffer[i].ch == '\n' || x >= screenWidth)
+        {
 
-                if(screenHeight - charHeight * y >=0){
-                    for(int tempx = x; tempx < screenWidth ; tempx += charWidth)
-                            drawChar(tempx,screenHeight - charHeight * y,' ',DEFAULT_FONT_COLOR,DEFAULT_BACKGROUND_COLOR);
-
-                }
-
-                if(x >= screenWidth)
-                    i--;
-
-                y--;
-                x = 0;
-            }else if (screenHeight - charHeight * y >=0 ){
-                drawChar(x,screenHeight - charHeight * y ,Buffer[i].ch,Buffer[i].fontColor,Buffer[i].backgroundColor);
-                x+= charWidth;
+            if (screenHeight - charHeight * y >= 0)
+            {
+                for (int tempx = x; tempx < screenWidth; tempx += charWidth)
+                    drawChar(tempx, screenHeight - charHeight * y, ' ', DEFAULT_FONT_COLOR, DEFAULT_BACKGROUND_COLOR);
             }
-        }
 
+            if (x >= screenWidth)
+                i--;
+
+            y--;
+            x = 0;
+        }
+        else if (screenHeight - charHeight * y >= 0)
+        {
+            drawChar(x, screenHeight - charHeight * y, Buffer[i].ch, Buffer[i].fontColor, Buffer[i].backgroundColor);
+            x += charWidth;
+        }
+    }
 }
 
-int strlenColorString(ColorChar* str){
+int strlenColorString(ColorChar *str)
+{
     int i = 0;
-    while(str[i].ch!=0){
+    while (str[i].ch != 0)
+    {
         i++;
     }
     return i;
 }
 
-int findLastReferenceOfColorString(ColorChar * buffer, int initialPosition, char element){
+int findLastReferenceOfColorString(ColorChar *buffer, int initialPosition, char element)
+{
     int counter = 0;
-    for(int i = initialPosition ; i >= 0 && buffer[i].ch != element;i--){
+    for (int i = initialPosition; i >= 0 && buffer[i].ch != element; i--)
+    {
         counter++;
     }
     return counter;
 }
 
-void removeColorString(ColorChar * str, int pos){
-    for(int i = pos; str[i].ch != 0 ; i++ ){
+void removeColorString(ColorChar *str, int pos)
+{
+    for (int i = pos; str[i].ch != 0; i++)
+    {
 
-        str[i] = str[i+1];
-
+        str[i] = str[i + 1];
     }
 }
 
-
-void appendColorString(ColorChar * src, ColorChar * dest, int bufferSize){
+void appendColorString(ColorChar *src, ColorChar *dest, int bufferSize)
+{
     int base = strlenColorString(dest);
     int i;
-	for( i = 0 ; base + i-1 < bufferSize && src[i].ch != 0 ; i++){
-		dest[base + i] = src[i];
-        dest[base + i+1].ch = 0;
-
-	}
+    for (i = 0; base + i - 1 < bufferSize && src[i].ch != 0; i++)
+    {
+        dest[base + i] = src[i];
+        dest[base + i + 1].ch = 0;
+    }
 }
 
-int countRepetitionsOfColorString(ColorChar * str, char ch){
+int countRepetitionsOfColorString(ColorChar *str, char ch)
+{
     int count = 0;
-	for( int i = 0 ; str[i].ch != 0; i++)
-		if(str[i].ch == ch)
-			count++;
+    for (int i = 0; str[i].ch != 0; i++)
+        if (str[i].ch == ch)
+            count++;
 
-	return count;
+    return count;
 }

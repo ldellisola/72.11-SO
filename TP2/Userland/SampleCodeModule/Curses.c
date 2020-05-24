@@ -38,7 +38,7 @@ void printf(const char * format, ...){
     write(FD_STDOUT,string);
 }
 
-void printfColorAt(const char * format,int fontColor, int backgroundColor,int x,int y,...){
+void printfColorAt(int fontColor, int backgroundColor,int x,int y,const char * format,...){
     unsigned int charWidth;
     getCharWidth(&charWidth);
     char string[MAXBUFFER];

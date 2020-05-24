@@ -1,11 +1,22 @@
 #include <time.h>
 
+/***************************************************************/
+/*                      Functiones ASM                         */
+/***************************************************************/
+
 extern int __GetTime__(int code);
+
+/***************************************************************/
+/*                         Enums                               */
+/***************************************************************/
 
 enum{
 SECONDS, MINUTES, HOURS, DAYOFWEEK, DAYOFMONTH, MONTH, YEAR
 };
 
+/***************************************************************/
+/*                      Declaraciones                          */
+/***************************************************************/
 
 int GetSeconds();
 int GetMinutes();
@@ -14,6 +25,10 @@ int GetDayOfWeek();
 int GetDayOfMonth();
 int GetMonth();
 int GetYear();
+
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
 
 
 int handleTimeRequest(int id){
@@ -31,6 +46,9 @@ int handleTimeRequest(int id){
     return 0;   
 }
 
+/***************************************************************/
+/*                 Functiones Privadas                         */
+/***************************************************************/
 
 int GetSeconds(){
     int ss1 = __GetTime__(0)/16;
@@ -64,8 +82,6 @@ int GetMonth(){
     int mm2 = __GetTime__(8) - mm1*16;
     return mm1*10 + mm2;
 }
-
-#include <Curses.h>
 
 int GetYear(){
     int aa1 = __GetTime__(9)/16;

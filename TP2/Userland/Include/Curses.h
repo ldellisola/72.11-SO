@@ -18,7 +18,7 @@ void putChar(char ch);
 
 int readKey();
 
-void printfColorAt(const char * format,int fontColor, int backgroundColor,int x,int y,...);
+void printfColorAt(int fontColor, int backgroundColor,int x,int y,const char * format,...);
 
 void * memset(void * destiation, int32_t c, uint64_t length);
 

@@ -1,7 +1,9 @@
 #include "../Include/deviceInfo.h"
 #include "../Include/Syscalls.h"
 
-
+/***************************************************************/
+/*                         Estructuras                          */
+/***************************************************************/
 
 typedef struct{
     unsigned int bbp;
@@ -11,7 +13,9 @@ typedef struct{
     unsigned int screenWidth;
 }DeviceInfo;
 
-
+/***************************************************************/
+/*                   Funciones Publicas                        */
+/***************************************************************/
 
 void readMem(uint64_t position, char * buff, uint64_t size){
 

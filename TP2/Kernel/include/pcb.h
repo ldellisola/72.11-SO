@@ -3,9 +3,23 @@
 #include "deviceInfo.h"
 #include <stdbool.h>
 
-#define MAX_NAME 50
+/***************************************************************/
+/*                        Constantes                           */
+/***************************************************************/
 
+#define MAX_NAME 50
 #define STACK 0x300
+
+#define STDIN 0
+#define STDOUT 1
+
+/***************************************************************/
+/*                   Estructuras  y Enums                      */
+/***************************************************************/
+
+typedef enum {KILL,READY,BLOCK}State;
+
+typedef enum {FOREGROUND,BACKGROUND}Status;
 
 typedef struct{
     int (* function)(int, char **);
@@ -14,11 +28,6 @@ typedef struct{
     int read;
     int write;
 }function_t;
-typedef enum {KILL,READY,BLOCK}State;
-typedef enum {FOREGROUND,BACKGROUND}Status;
-
-#define STDIN 0
-#define STDOUT 1
 
 typedef struct{
     char name[MAX_NAME];
@@ -36,20 +45,36 @@ typedef struct{
     bool isWaitingForInput;
 }pcb;
 
+/***************************************************************/
+/*                   Funciones Publicas                        */
+/***************************************************************/
+
+
+
+//  It sets up the structure of the PCB for any process.
+//  It copies the arguments to allocated memory and sets up the stack
 void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *function,int pid,int parentPid);
 
+//  It creates a PCB in one of the reserved lots of the program.
 pcb * create(char * name, int * status, function_t * function,int pidp);
 
+//  It kills the process , freeing all the pipes and memory used to create the process but
+//  not the memory allocated by the process during its runtime.
 void kill(int * pid);
 
+//  It pauses a process until its resumed
 void block (int *pid);
 
+//  It resumes a process
 void unlock(int pid);
 
+//  It changes the priority of a process
 void nice(int * pid, int pr);
 
+//  It prints information about all running processes
 void ps();
 
+//  It return the Read and Write File Descriptors of a given process
 int getFd(int pid,int action);
 
 #endif

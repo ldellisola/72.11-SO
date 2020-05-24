@@ -1,13 +1,19 @@
 #include "../include/timer.h"
-#include <Curses.h>
 #include <stdlib.h>
 
 #include <Scheduler.h>
+
+/***************************************************************/
+/*                 			Variables                          */
+/***************************************************************/
 
 static unsigned long ticks = 0;
 static int priorityCounter = 0;
 static bool isDummyProcessRunning = false; 
 
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
 
 void *timer_handler(void *ptr)
 {

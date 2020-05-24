@@ -1,8 +1,16 @@
 #ifndef VIDEO_DRIVER_H
 #define VIDEO_DRIVER_H
 
+/***************************************************************/
+/*                          Variables                          */
+/***************************************************************/
+
 static unsigned int SCREEN_WIDTH = 1024;
 static unsigned int SCREEN_HEIGHT = 768;
+
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
 
 
 void startVideoDriver();
