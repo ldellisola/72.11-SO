@@ -87,7 +87,7 @@ void drawChar(int x, int y, char character, int fontColor, int background){
 				drawPixel(aux_x,aux_y,background);
 			
 			aux_x++;
-		}
+		} 
 		aux_x = x;
 		aux_y++;
 	}
