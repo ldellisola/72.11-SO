@@ -3,6 +3,9 @@
 #include "include/Speaker.h"
 #include "include/Syscalls.h"
 
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
 
 void playSound(uint64_t frecuency){
 

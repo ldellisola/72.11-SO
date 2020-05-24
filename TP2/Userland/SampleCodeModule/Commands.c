@@ -12,7 +12,15 @@
 #include "include/Sem.h"
 #include "include/Syscalls.h"
 
+/***************************************************************/
+/*                      Functiones ASM                         */
+/***************************************************************/
+
 extern void __UD2__();
+
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
 
 
 int quotient(int argc, char ** argv){
@@ -206,14 +214,4 @@ int malloc_test(int argc, char ** argv) {
     free(test0);
 
     return 0;
-}
-
-void fillString(char * test) {
-
-    char * str = "works:D";
-    for(int i = 0 ; str[i]!= 0; i++){
-        test[i] = str[i];
-    }
-
-
 }

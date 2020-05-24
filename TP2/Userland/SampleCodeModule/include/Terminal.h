@@ -3,11 +3,12 @@
 
 #include <stdarg.h>
 
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
 
-
+//  runs the terminal
 int runTerminal();
 
-
-int strcmp(char * s1,char * s2);
 
 #endif

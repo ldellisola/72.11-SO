@@ -5,6 +5,16 @@
 #include <stdlib.h>
 #include "include/String.h"
 
+/***************************************************************/
+/*                 		Declaraciones                          */
+/***************************************************************/
+
+void handleFormat(char type,int * k,char * string,int size,va_list args);
+
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
+
 int strlen(char * str){
     int i = 0;
     while(str[i]!=0)

@@ -4,6 +4,10 @@
 #include "include/Syscalls.h"
 #include "include/MemManager.h"
 
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
+
 int openPipe(char * name,actions action){
   int fd;
   pipes(0,(void*)name,(void *)action,(void *)&fd);
