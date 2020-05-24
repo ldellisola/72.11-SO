@@ -7,10 +7,10 @@
  *                              Estructuras                                 *
  \***************************************************************************/
 
-typedef struct
+typedef struct KeyboardShortCut_t
 {
-    int (*func)();
-    int key
+    void (*func)();
+    int key;
 } KeyboardShortCut_t;
 
 /***************************************************************************\
@@ -128,12 +128,11 @@ void initializeKeyboard()
     }
 }
 
-void SetKeyboardShortcut(int (*func)(), int key)
+void SetKeyboardShortcut(void (*func)(), int key)
 {
 
     int i = -1;
-    while (shortcuts[++i].func != NULL)
-        ;
+    while (shortcuts[++i].func != NULL);
 
     shortcuts[i].func = func;
     shortcuts[i].key = key;
