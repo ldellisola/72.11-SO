@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/pcb.h"
 #include "include/MemManager.h"
 #include "include/Curses.h"
@@ -41,12 +43,21 @@ void LoadPCB(pcb *pcb, uint64_t *stack, char *name, int *status, function_t *fun
 
     pcb->argv = malloc(function->argc * sizeof(char *));
 
+    if(pcb->argv == NULL){
+        ERROR("Could't allocate memory to copy arguments for process %s",name)
+        return;
+    }
+
     for (int j = 0; j < function->argc; j++)
     {
         int t;
-        for (t = 0; function->args[j][t] != 0; t++)
+        for (t = 0; function->args[j][t] != 0; t++);
+        pcb->argv[j] = malloc((t + 1) * sizeof(char));
 
-            pcb->argv[j] = malloc((t + 1) * sizeof(char));
+        if(pcb->argv[j] == NULL){
+            ERROR("Could't allocate memory to copy arguments for process %s",name)
+        }
+
         CopyString(function->args[j], pcb->argv[j], (t + 1));
     }
 
@@ -67,22 +78,22 @@ void LoadPCB(pcb *pcb, uint64_t *stack, char *name, int *status, function_t *fun
 
     // Set up stack
 
-    pcb->sp = stack + STACK - 1;
+    pcb->sp = (stack + STACK) - 1;
 
     *(pcb->sp--) = 0; //ss
     pcb->bp = pcb->sp + 1;
-    *(pcb->sp--) = pcb->sp + 1;        
+    *(pcb->sp--) = (uint64_t) pcb->bp;       
     *(pcb->sp--) = 0x202;              // flags
     *(pcb->sp--) = 0x8;                // CS
-    *(pcb->sp--) = function->function; //rip
+    *(pcb->sp--) = (uint64_t) function->function; //rip
 
     *(pcb->sp--) = 1;              //rax
     *(pcb->sp--) = 2;              //rbx
     *(pcb->sp--) = 3;              //rcx
     *(pcb->sp--) = 4;              //rdx
-    *(pcb->sp--) = pcb->bp;        //rbp
-    *(pcb->sp--) = function->argc; //rdi
-    *(pcb->sp--) = pcb->argv;      // rsi
+    *(pcb->sp--) = (uint64_t) pcb->bp;        //rbp
+    *(pcb->sp--) = (uint64_t) function->argc; //rdi
+    *(pcb->sp--) = (uint64_t) pcb->argv;      // rsi
     *(pcb->sp--) = 8;              //r8
     *(pcb->sp--) = 9;              //r9
     *(pcb->sp--) = 10;             //r10
@@ -192,7 +203,7 @@ void ps()
     {
         if (pcbs[i].state != KILL)
         {
-            printf(" %d      %d      0x%x    0x%x     %d     ", pcbs[i].pid, pcbs[i].priority, pcbs[i].stack, pcbs[i].bp, pcbs[i].status);
+            printf(" %d      %d      0x%p    0x%p      %d     ", pcbs[i].pid, pcbs[i].priority, pcbs[i].stack, pcbs[i].bp, pcbs[i].status);
             if (pcbs[i].state == READY)
                 printf("ready");
             else if (pcbs[i].state == BLOCK)

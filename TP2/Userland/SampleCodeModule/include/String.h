@@ -9,11 +9,11 @@ int strlen(char * str);
 
 char * strtok(char **str,  char delim);
 
-void IntToString(char * buff, int buffSize, uint64_t num);
+void IntToString(char * buff, int buffSize, int64_t num);
 
 int stringToHexa(char *buff);
 
-void HexToString(char * buff, int buffSize, uint64_t num);
+void HexToString(char * buff, int buffSize, int64_t num);
 
 void preppend(char * src, char * dest, unsigned size);
 

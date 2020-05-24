@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -11,7 +13,7 @@ int strlen(char * str){
 }
 
 
-void IntToString(char * buffer, int buffSize, uint64_t num){
+void IntToString(char * buffer, int buffSize, int64_t num){
 
 	char *p = buffer;
 	char *p1, *p2;
@@ -94,7 +96,7 @@ void HexToStringSPECIAL(char * buffer, int buffSize, uint64_t num){
 
 
 // Taken from the base project
-void HexToString(char * buffer, int buffSize, uint64_t num){
+void HexToString(char * buffer, int buffSize, int64_t num){
 
 	char *p = buffer;
 	char *p1, *p2;
@@ -157,24 +159,12 @@ char* strtok(char ** str, char comp)
 	}
 	for(i = 0; s[i] != 0 ; i++){
 
-/*		if(s[i] == comp && t == -1){
-			t = i;
+		if(s[i] == comp ){
+				t = i;
+				*(s+t)=0;
+				*str=s+i+1;
+				return s;
 		}
-
-
-		if( t != -1 && s[i] != comp){
-			*(s+t) = 0;
-
-			*str = s+i;
-			return s;
-		}
-*/
-	if(s[i] == comp && t == -1){
-			t = i;
-			*(s+t)=0;
-			*str=s+i+1;
-			return s;
-	}
 
 
 	}
@@ -247,7 +237,7 @@ void handleFormat(char type,int * k,char * string,int size,va_list args){
 		}
 		case 'p':{
 			
-			HexToString(string+(*k),size-1-(*k),(uint64_t)va_arg(args,void *));
+			HexToString(string+(*k),size-1-(*k),(int64_t)va_arg(args,void *));
 
 			break;
 		}

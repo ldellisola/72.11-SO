@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/String.h"
 
 /***************************************************************/
@@ -174,6 +176,7 @@ void handleFormat(char type, int *k, char *string, int size, va_list args)
 	}
 	case 'x':
 	case 'X':
+	case 'p':
 	{
 		HexToString(string + (*k), size - 1 - (*k), va_arg(args, int));
 		break;

@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <stdarg.h>
 #include "include/Syscalls.h"
 #include "include/Terminal.h"
@@ -342,7 +344,7 @@ void overwriteArrayUpTo(char *src, char *dest, char c)
 {
     clearArray(dest, MAXBUFFER);
     int i;
-    for (i = 0; src[i] != 0 && src[i] != '\n' && i < MAXBUFFER && src[i] != c; i++)
+    for (i = 0; i < MAXBUFFER && src[i] != 0 && src[i] != '\n' && src[i] != c; i++)
         dest[i] = src[i];
     if (i != MAXBUFFER)
     {
