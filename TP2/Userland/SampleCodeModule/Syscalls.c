@@ -2,32 +2,35 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/Syscalls.h"
 
-extern void _exit();
+// extern void _exit();
+// extern void sleep_process();
+// extern void get_pid(int * ret);
 extern void __ForceTimerTick__();
-extern void sleep_process();
-extern void get_pid(int * ret);
 
 
 
 int getpid(){
 	int ret;
-	get_pid(&ret);
+	process_manager(6,(void *)&ret,0,0);
 	return ret;
 }
 
 void exit_process(){
-	_exit();
-	
+	process_manager(7,0,0,0);
 	__ForceTimerTick__();
 }
 
+void ps(){
+	process_manager(5,0,0,0);
+}
+
 void BlockAndSwitchProcess(int * pid){
-	block_process(pid);
+	process_manager(3,(void *)pid,0,0);
 	__ForceTimerTick__();
 }
 
 void SleepUntilUserInput(){
-	sleep_process();
+	process_manager(2,0,0,0);
 }
 
 int read(int fd,char * buffer,uint64_t size){

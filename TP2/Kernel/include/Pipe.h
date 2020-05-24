@@ -31,6 +31,7 @@ typedef struct t_pipe
   char *read;
   char *write;
   int processesBlocked;
+  char sem[15];
 } t_pipe;
 
 /***************************************************************/

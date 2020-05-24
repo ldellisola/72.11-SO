@@ -32,29 +32,27 @@ int write(int fd, char * buffer);
 
 extern void delete(int fd, int first, void *second, void * third, void * forth);
 
-extern 	void _malloc(int increment, void ** resp);
-
-extern  void _free(void ** address);
-
-extern void memory_state(void ** first, void ** last, void ** next);
-
-extern void create_process(char * name,int * state,void * function);
-
-extern void kill_process(int * pid);
+extern void mem_manager(int fd, void * param1, void * param2, void * param3);
+extern void process_manager(int fd, void * param1, void * param2, void * param3);
 
 
-extern void nice_process(int * pid,int prior);
+// extern void create_process(char * name,int * state,void * function);
+
+// extern void kill_process(int * pid);
+
+
+// extern void nice_process(int * pid,int prior);
 
 void BlockAndSwitchProcess(int * pid);
 
-extern void block_process(int * pid);
+// extern void block_process(int * pid);
 
 void SleepUntilUserInput();
 
 
 void exit_process();
 
-extern void ps();
+void ps();
 
 
 int getpid();

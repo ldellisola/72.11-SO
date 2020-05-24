@@ -18,8 +18,7 @@ int exec(char * name, int status, int (* func)(),int read,int write,int argc,cha
     function.read=read;
     function.write=write;
 
-    create_process(name,&bridge,&function);
-    
+    process_manager(0,(void *)name,(void *)&bridge,(void *)&function);
     return bridge;
         
 }

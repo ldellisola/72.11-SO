@@ -50,7 +50,7 @@ int blockProcess(int argc, char ** argv){
     }
 
     int pid=stringToInt(argv[0]);
-    block_process(&pid);
+    process_manager(3,(void *)&pid,0,0);
 
     if(pid == -2)
         printf("No tiene permiso para acceder a ese proceso\n");
@@ -73,7 +73,7 @@ int killProcess(int argc, char **argv){
 
     int pid = stringToInt(argv[0]);
 
-    kill_process(&pid);
+    process_manager(1,(void *)&pid,0,0);
     if(pid==-1)
         printf("No es un proceso %s, no esta permitida esa accion\n",argv[0]);
     else if(pid== -2)
@@ -91,7 +91,8 @@ int niceProcess(int argc, char ** argv){
     int pid=stringToInt(argv[0]);
     int prior=stringToInt(argv[1]);
 
-    nice_process(&pid,prior);
+    process_manager(4,(void *)&pid,(void *)prior,0);
+    //nice_process(&pid,prior);
 
     if(pid==-1)
         printf("No es un proceso %s, no esta permitida esa accion\n",argv[0]);
@@ -115,9 +116,9 @@ int printMemoryState(int argc, char ** argv){
     void * last=NULL;
     void *next=NULL;
 
-    memory_state(&first,&last,&next);
-    printf("\nMemory starts at: 0x%p and finishes at : 0x%p\n",first,last);
-    printf("Next free position: 0x%p\n",next);
+    mem_manager(2,(void *)&first,(void *)&last,(void *)&next);
+    printf("\nMemory starts at: 0x%x and finishes at : 0x%x\n",first,last);
+    printf("Next free position: 0x%x\n",next);
     return 0;
 }
 
