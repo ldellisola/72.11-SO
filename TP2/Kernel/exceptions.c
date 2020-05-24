@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <Curses.h>
 #include <stdint.h>
 #include <String.h>
@@ -23,38 +25,38 @@ void exceptionDispatcher(int exception, uint64_t * stackPointer) {
 		switch(exception){ 
 			case ZERO_EXCEPTION_ID: 
 			{ 
-				PrintExceptionDetails("DIVISION BY ZERO",stackPointer,*(stackPointer+15)); 
+				PrintExceptionDetails("DIVISION BY ZERO",stackPointer,(uint64_t *) *(stackPointer+15)); 
  
 				break; 
 			} 
 			case INVALID_OPCODE_EXCEPTION_ID: 
 			{ 
-				PrintExceptionDetails("Invalid OPCODE",stackPointer,*(stackPointer+15)); 
+				PrintExceptionDetails("Invalid OPCODE",stackPointer,(uint64_t *)*(stackPointer+15)); 
  
 				break; 
 			} 
 			case OVERFLOW_EXCEPTION_ID:{ 
-				PrintExceptionDetails("Overflow",stackPointer,*(stackPointer+15)); 
+				PrintExceptionDetails("Overflow",stackPointer,(uint64_t *)*(stackPointer+15)); 
 				break; 
 			} 
 			case PAGE_FAULT_EXCEPTION_ID:{ 
-				PrintExceptionDetails("Page Fault",stackPointer,*(stackPointer+15)); 
+				PrintExceptionDetails("Page Fault",stackPointer,(uint64_t *)*(stackPointer+15)); 
 				break; 
 			} 
 			case DOBLE_FAULT_EXCEPTION_ID:{ 
-				PrintExceptionDetails("Double Fault",stackPointer,*(stackPointer+15)); 
+				PrintExceptionDetails("Double Fault",stackPointer,(uint64_t *)*(stackPointer+15)); 
 				break; 
 			} 
 			case STACK_FAULT_EXCEPTION:{ 
-				PrintExceptionDetails("Stack Fault",stackPointer,*(stackPointer+15)); 
+				PrintExceptionDetails("Stack Fault",stackPointer,(uint64_t *)*(stackPointer+15)); 
 				break; 
 			} 
 			case GENERAL_PROTECTION_FAULT_EXCEPTION_ID:{ 
-				PrintExceptionDetails("General Protection",stackPointer,*(stackPointer+15)); 
+				PrintExceptionDetails("General Protection",stackPointer,(uint64_t *)*(stackPointer+15)); 
 				break; 
 			} 
 			default:{ 
-				PrintExceptionDetails("UNKNOWN EXCEPTION",stackPointer,*(stackPointer+15)); 
+				PrintExceptionDetails("UNKNOWN EXCEPTION",stackPointer,(uint64_t *)*(stackPointer+15)); 
 			} 
  
 		}	

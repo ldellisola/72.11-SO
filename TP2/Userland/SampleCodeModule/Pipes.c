@@ -1,6 +1,8 @@
-#include "../Include/Pipes.h"
-#include "../Include/Syscalls.h"
-#include "../Include/MemManager.h"
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "include/Pipes.h"
+#include "include/Syscalls.h"
+#include "include/MemManager.h"
 
 int openPipe(char * name,actions action){
   int fd;

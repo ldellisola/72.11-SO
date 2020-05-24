@@ -1,5 +1,7 @@
-#include "../Include/MemManager.h"
-#include "../Include/Curses.h"
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "include/MemManager.h"
+#include "include/Curses.h"
 #include "include/test_util.h"
 #include "include/Process.h"
 

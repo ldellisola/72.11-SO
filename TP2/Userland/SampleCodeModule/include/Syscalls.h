@@ -19,8 +19,8 @@
 
 #define FD_STDINNOBLOCK         (0x0C)
 
-#define DELETE_CURRENT_CHAR 1
-#define DELETE_ALL_DISPLAY 3
+#define DELETE_CURRENT_CHAR 0x1
+#define DELETE_ALL_DISPLAY 0x3
 
 extern void _write(int fd, void * first, void *second, void * third, void * forth );
 
@@ -30,7 +30,7 @@ int read(int fd,char * buffer, uint64_t size);
 
 int write(int fd, char * buffer);
 
-extern void delete(int fd, void * first, void *second, void * third, void * forth);
+extern void delete(int fd, int first, void *second, void * third, void * forth);
 
 extern 	void _malloc(int increment, void ** resp);
 

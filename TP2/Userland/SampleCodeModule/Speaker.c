@@ -1,5 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/Speaker.h"
-#include "../Include/Syscalls.h"
+#include "include/Syscalls.h"
 
 
 void playSound(uint64_t frecuency){
@@ -10,5 +12,5 @@ void playSound(uint64_t frecuency){
 
 
 void stopSound(){
-    delete(FD_SPEAKER,NULL,NULL,NULL,NULL);
+    delete(FD_SPEAKER,0,NULL,NULL,NULL);
 }

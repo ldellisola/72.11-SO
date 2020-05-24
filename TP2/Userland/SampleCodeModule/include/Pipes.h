@@ -1,6 +1,6 @@
 #ifndef PIPES_H
 #define PIPES_H
-#include "../Include/Sem.h"
+#include "Sem.h"
 
 typedef enum{READ,WRITE} actions;
 

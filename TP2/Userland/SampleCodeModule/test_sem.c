@@ -1,8 +1,10 @@
-#include "../Include/Curses.h"
-#include "../Include/Syscalls.h"
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "include/Curses.h"
+#include "include/Syscalls.h"
 #include "include/Exec.h"
 #include "include/Process.h"
-#include "../Include/Sem.h"
+#include "include/Sem.h"
 
 
 uint64_t my_create_process_sem(char * name,int (* func)(int, char **)){

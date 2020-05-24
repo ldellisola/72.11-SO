@@ -1,7 +1,9 @@
-#include "../Include/Curses.h"
-#include "../Include/String.h"
-#include "../Include/Syscalls.h"
-#include "../Include/deviceInfo.h"
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "include/Curses.h"
+#include "include/String.h"
+#include "include/Syscalls.h"
+#include "include/deviceInfo.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -21,7 +23,7 @@ typedef struct{
 
 int clearConsole(int argc, char **argv)
 {
-    delete(FD_STDOUT,(void *)DELETE_ALL_DISPLAY,NULL,NULL,NULL);
+    delete(FD_STDOUT,DELETE_ALL_DISPLAY,NULL,NULL,NULL);
     return 0;
 }
 
@@ -84,7 +86,7 @@ void printfError(const char * format,...){
 
 
 void RemoveLastCharFromDisplay(){
-    delete(FD_STDOUT,(void *)DELETE_CURRENT_CHAR,NULL,NULL,NULL);
+    delete(FD_STDOUT,DELETE_CURRENT_CHAR,NULL,NULL,NULL);
 }
 
 
@@ -106,7 +108,7 @@ int readKey()
     if(top == firstLetter-1){
         top=read(FD_STDIN,buff,299);
         firstLetter = 0;
-        if(top==-1 || top ==-2)
+        if(top < 0)
 	        return top;
     }
 
@@ -132,7 +134,7 @@ int readKeyNoBlock() {
     if(top == firstLetter-1){
         top=read(FD_STDINNOBLOCK,buff,299);
         firstLetter = 0;
-        if(top==-1 || top ==-2)
+        if(top < 0)
 	        return top;
     }
 

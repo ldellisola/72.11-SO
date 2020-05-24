@@ -1,14 +1,16 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/Commands.h"
 
 #include <stdbool.h>
 
-#include "../Include/deviceInfo.h"
-#include "../Include/String.h"
-#include "../Include/Curses.h"
-#include "../Include/Time.h"
-#include "../Include/MemManager.h"
-#include "../Include/Sem.h"
-#include "../Include/Syscalls.h"
+#include "include/deviceInfo.h"
+#include "include/String.h"
+#include "include/Curses.h"
+#include "include/Time.h"
+#include "include/MemManager.h"
+#include "include/Sem.h"
+#include "include/Syscalls.h"
 
 extern void __UD2__();
 
@@ -56,7 +58,7 @@ int ProcessState(int argc, char ** argv){
 
 int killProcess(int argc, char **argv){
 
-    if( argc != argc){
+    if( argc != 1){
         printf("The function only takes 1 parameter\n");
         return 0;
     }
@@ -106,40 +108,9 @@ int printMemoryState(int argc, char ** argv){
     void *next=NULL;
 
     memory_state(&first,&last,&next);
-    printf("\nMemory starts at: 0x%x and finishes at : 0x%x\n",first,last);
-    printf("Next free position: 0x%x\n",next);
+    printf("\nMemory starts at: 0x%p and finishes at : 0x%p\n",first,last);
+    printf("Next free position: 0x%p\n",next);
     return 0;
-}
-
-void printMem(int argc, char ** argv){
-
-    if(argc != 1){
-        printf("Invalid Arguments");
-        return;
-    }
-
-    uint64_t memDirection = stringToHexa(argv[0]);
-
-    if(memDirection == -1){
-        printf("Invalid Position\n");
-        return;
-    }
-
-    char rawMem[32];
-    readMem(memDirection,rawMem,32);
-    
-    char printStr[(16 * 3) + 1];
-
-    for(int j=0 ; j <2 ; j++){
-        for(int i = 0 ; i < 16 ; i++){
-            HexToStringSPECIAL(printStr + i*3,3,rawMem[16 * j +i]);
-            printStr[(i*3)-1] = ' ';
-        }
-        printf("%s\n",printStr);
-    }
-
-    return;
-
 }
 
 
@@ -151,7 +122,7 @@ void cleanArr(char * arr, int size){
 
 void printRegisters(uint64_t * storage){
     
-	printf("RAX: 0x%x\n",storage[14]);
+	printf("RAX: 0x%x\n",(uint64_t)storage[14]);
     
 	printf("RBX: 0x%x\n",storage[13]);
     
@@ -203,12 +174,12 @@ int malloc_test(int argc, char ** argv) {
     printMemoryState(0,NULL);
     printf("TEST PIDE 100:");
     char * test = (char *) malloc(100);
-    printf("Mi direccion es %x \n",test);
+    printf("Mi direccion es %p \n",test);
     printMemoryState(0,NULL);
     
     printf("\nTEST 0 PIDE 10:");
     char * test0= (char *) malloc(10);
-    printf("Mi direccion es %x \n",test0);
+    printf("Mi direccion es %p \n",test0);
     printMemoryState(0,NULL);
     printf("\nTEST LIBERA 100\n");
     free(test);
@@ -216,11 +187,11 @@ int malloc_test(int argc, char ** argv) {
     printMemoryState(0,NULL);
     printf("\nTEST PIDE 2\n");
     test = (char *) malloc(2);
-    printf("Mi direccion es %x \n",test);
+    printf("Mi direccion es %p \n",test);
     printMemoryState(0,NULL);
     printf("\nTEST 1 PIDE 5:");
     char * test1 = (char *) malloc(5);
-    printf("Mi direccion es %x \n",test1);
+    printf("Mi direccion es %p \n",test1);
     printMemoryState(0,NULL);
     printf("\nTEST LIBERA 2\n");
     printf("\nTEST 1 LIBERA 5\n");    
@@ -229,10 +200,8 @@ int malloc_test(int argc, char ** argv) {
     printMemoryState(0,NULL);
     printf("\nTEST 2 PIDE 10:");
     char * test2= (char *) malloc(10);
-    printf("Mi direccion es %x \n",test2);
+    printf("Mi direccion es %p \n",test2);
     printMemoryState(0,NULL);
-    free(test);
-    free(test1);
     free(test2);
     free(test0);
 

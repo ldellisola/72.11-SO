@@ -1,13 +1,13 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
+
+
 #include <stdarg.h>
 
 #include <stdint.h>
 
 void semTest(int argc, char ** argv);
 void SemTestPrint(int argc, char ** argv);
-
-void printMem(int argc, char ** argv);
 
 extern int infoReg(int argc, char **argv);
 

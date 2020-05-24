@@ -1,3 +1,6 @@
+#ifndef PHYILO_H
+#define PHYILO_H
+
 enum State {ASLEEP = 0, EATING};
 
 int philosopher_process(int num,char ** argv);
@@ -17,3 +20,5 @@ int left (int phnum);
 int right (int phnum);
 
 void sleep();
+
+#endif

@@ -80,3 +80,13 @@ TP2/Bootloader/BMFS/bmfs.bin
 *.bin
 *.sys
 TP2/.gdb_history
+
+TP2/.bashrc
+
+TP2/PVS-Studio.log
+
+TP2/report.tasks
+
+TP2/strace_out
+
+TP2/runPVS.sh

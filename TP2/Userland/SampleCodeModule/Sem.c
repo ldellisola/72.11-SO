@@ -1,6 +1,8 @@
-#include "../Include/Sem.h"
-#include "../Include/Syscalls.h"
-#include "../Include/Curses.h"
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "include/Sem.h"
+#include "include/Syscalls.h"
+#include "include/Curses.h"
 #include <stdbool.h>
 
 

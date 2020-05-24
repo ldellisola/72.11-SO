@@ -1,12 +1,14 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /* sampleCodeModule.c */
-#include "../Include/Time.h"
-#include "../Include/String.h"
-#include "../Include/Syscalls.h"
+#include "include/Time.h"
+#include "include/String.h"
+#include "include/Syscalls.h"
 #include "include/Exec.h"
 #include "include/Terminal.h"
-#include "../Include/Curses.h"
+#include "include/Curses.h"
 #include <stdlib.h>
-#include "../Include/deviceInfo.h"
+#include "include/deviceInfo.h"
 
 #include "include/Process.h"
 
