@@ -3,6 +3,7 @@
 #include "include/Syscalls.h"
 
 extern void _exit();
+extern void __ForceTimerTick__();
 extern void sleep_process();
 extern void get_pid(int * ret);
 
@@ -16,13 +17,13 @@ int getpid(){
 
 void exit_process(){
 	_exit();
-	__asm__("hlt");
-
+	
+	__ForceTimerTick__();
 }
 
 void BlockAndSwitchProcess(int * pid){
 	block_process(pid);
-	__asm__("hlt");
+	__ForceTimerTick__();
 }
 
 void SleepUntilUserInput(){
