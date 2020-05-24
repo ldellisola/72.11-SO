@@ -63,4 +63,6 @@ void pipes();
 //  It closes a pipe's end, wheter is the read or write end of the pipe. If the pipe
 //  is still in use, it won't close it, we only close the pipe when no one is done with it
 void closePipes(int *fd);
+
+void readNoBlock(char * buffer,int bufferSize,int * lenght);
 #endif

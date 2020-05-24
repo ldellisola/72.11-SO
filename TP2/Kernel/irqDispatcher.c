@@ -30,6 +30,7 @@
 #define FD_TIMER				(0x09)
 #define FD_TIME					(0x0A)
 #define FD_STDOUT_COLOR			(0x0B)
+#define FD_STDINNOBLOCK         (0x0C)
 
 #define DELETE_CURRENT_CHAR 1
 #define DELETE_ALL_DISPLAY 3
@@ -310,6 +311,12 @@ void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam
 			break;
 			}
 		case FD_STDOUT_COLOR: { break;}
+		case FD_STDINNOBLOCK: {
+			char * buffer = (char *) firstParam;
+      		int bufferSize = (uint64_t)secondParam;
+			readNoBlock(buffer,bufferSize,(int *) thirdParam);	
+			break;
+		}
 		default:{
 			char * buffer = (char *) firstParam;
 			int bufferSize = (uint64_t)secondParam;

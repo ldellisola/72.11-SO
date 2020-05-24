@@ -22,6 +22,8 @@ void printfColorAt(int fontColor, int backgroundColor,int x,int y,const char * f
 
 void * memset(void * destiation, int32_t c, uint64_t length);
 
+int readKeyNoBlock();
+
 #define DEBUG(mod,val) printfError("USER - DEBUG - "#mod,val); putChar('\n');
 
 // #undef DEBUG(mod,val)

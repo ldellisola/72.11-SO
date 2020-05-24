@@ -123,3 +123,20 @@ void * memset(void * destiation, int32_t c, uint64_t length) {
 
 	return destiation;
 }
+
+int readKeyNoBlock() {
+    static char buff[300];
+    static int top;
+    static int firstLetter;
+
+    if(top == firstLetter-1){
+        top=read(FD_STDINNOBLOCK,buff,299);
+        firstLetter = 0;
+        if(top==-1 || top ==-2)
+	        return top;
+    }
+
+    char retValue = buff[firstLetter];
+    buff[firstLetter++] = 0;
+    return retValue;
+}

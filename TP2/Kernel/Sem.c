@@ -71,10 +71,9 @@ int semopen(char *name, int *initialValue)
     return 0;
 }
 
-bool semwait(char *semName)
-{
-    SpinLock();
-    SemData_t *sem = &sems[GetSemaphoreByName(semName)];
+bool semwait(char * semName){
+
+    SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     bool hasToBeBlocked = true;
 
@@ -83,11 +82,9 @@ bool semwait(char *semName)
         ERROR("Waiting semaphore", 0)
         return false;
     }
-
-    sem->value--;
-
-    if (sem->value < 0)
-    {
+    
+    SpinLock(); 
+    if(sem->value < 1){
         int pid = getpid();
         int i = 0;
 
@@ -105,6 +102,10 @@ bool semwait(char *semName)
         {
             ERROR("blocking process %d on semaphore", pid)
         }
+
+    }else{
+        hasToBeBlocked =  false;
+        sem->value--;
     }
     else
     {
@@ -120,32 +121,26 @@ bool semwait(char *semName)
     return hasToBeBlocked;
 }
 
-void sempost(char *semName)
-{
-    SpinLock();
-    SemData_t *sem = &sems[GetSemaphoreByName(semName)];
+void sempost(char * semName){
+    SemData_t * sem = &sems[GetSemaphoreByName(semName)];
 
     if (semCheck(sem) != 0)
     {
         ERROR("Posting semaphore", 0);
         return;
     }
-    sem->value++;
-    if (sem->value <= 0)
-    {
-
-        // desbloqueo el primero, debido al Queue
-        process *p = GetProcess(sem->processesBlocked[0]);
-        p->pcb->state = READY;
-
-        // muevo toda la queue uno hacia adelante y actualizo el último
-        for (int i = 0; i < MAX_PROC_SEM - 1; i++)
-        {
-            sem->processesBlocked[i] = sem->processesBlocked[i + 1];
+    SpinLock(); 
+    if (sem->processesBlocked[0] != NO_VALUE) {
+    // desbloqueo el primero, debido al Queue
+    process * p = GetProcess(sem->processesBlocked[0]);
+            p->pcb->state = READY;
+    // muevo toda la queue uno hacia adelante y actualizo el último
+    for(int i = 0 ; i < MAX_PROC_SEM-1; i++) {
+        sem->processesBlocked[i] = sem->processesBlocked[i+1];
         }
         sem->processesBlocked[MAX_PROC_SEM - 1] = NO_VALUE;
     }
-
+    else sem->value++;
     SpinUnlock();
 }
 
