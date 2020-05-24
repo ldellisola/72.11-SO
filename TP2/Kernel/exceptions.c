@@ -18,8 +18,8 @@
  
 void exceptionDispatcher(int exception, uint64_t * stackPointer) { 
  
-	printfColor("Occurred Exception \n\n\n",0xFF0000,0xFFFFFF); 
-	printfColor("In Process: %d\n",0xFF0000,0xFFFFFF,getpid()); 
+	printfColor(0xFF0000,0xFFFFFF,"Occurred Exception \n\n\n"); 
+	printfColor(0xFF0000,0xFFFFFF,"In Process: %d\n",getpid()); 
 		switch(exception){ 
 			case ZERO_EXCEPTION_ID: 
 			{ 

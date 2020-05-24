@@ -5,41 +5,64 @@
 #include "include/SpinLock.h"
 #include <stdlib.h>
 
+/***************************************************************/
+/*                     Functiones ASM                          */
+/***************************************************************/
+
 extern void __ForceTimerTick__();
+
+/***************************************************************/
+/*                        Constantes                           */
+/***************************************************************/
 
 #define MAX 20
 #define NO_VALUE -1
+
+/***************************************************************/
+/*                        Variables                            */
+/***************************************************************/
+
 SemData_t sems[MAX];
 
-int lookSem(char * name);
-int GetSemaphoreByName(char * name);
+/***************************************************************/
+/*                       Declaraciones                         */
+/***************************************************************/
+
+int lookSem(char *name);
+int GetSemaphoreByName(char *name);
 int FindUnusedSemaphore();
-int semCheck(SemData_t * sem);
-SemData_t * getSem(char * name);
+int semCheck(SemData_t *sem);
+SemData_t *getSem(char *name);
 
-int semopen(char * name, int * initialValue){
+/***************************************************************/
+/*                 Functiones Publicas                         */
+/***************************************************************/
 
+int semopen(char *name, int *initialValue)
+{
     SpinLock();
     int pos = GetSemaphoreByName(name);
 
-    if(pos == -1){
+    if (pos == -1)
+    {
         // Creo el semaforo
         pos = FindUnusedSemaphore();
 
-        if (pos == -1) {
-            printf("All semaphores are occupied\n");
+        if (pos == -1)
+        {
+            ERROR("All semaphores are occupied", 0)
             return -1;
         }
 
-        sems[pos].id=pos+1;
-        sems[pos].value=*initialValue;
-        sems[pos].cant=0;
+        sems[pos].id = pos + 1;
+        sems[pos].value = *initialValue;
+        sems[pos].cant = 0;
 
         for (int i = 0; i < MAX_PROC_SEM; i++)
         {
             sems[pos].processesBlocked[i] = NO_VALUE;
         }
-        
+
         CopyString(name, sems[pos].name, strlen(name));
     }
     sems[pos].cant++;
@@ -48,93 +71,107 @@ int semopen(char * name, int * initialValue){
     return 0;
 }
 
-bool semwait(char * semName){
-    SpinLock(); 
-    SemData_t * sem = &sems[GetSemaphoreByName(semName)];
+bool semwait(char *semName)
+{
+    SpinLock();
+    SemData_t *sem = &sems[GetSemaphoreByName(semName)];
 
     bool hasToBeBlocked = true;
 
-    if (semCheck(sem) != 0) {
-        printf("Error waiting semaphore\n");
+    if (semCheck(sem) != 0)
+    {
+        ERROR("Waiting semaphore", 0)
         return false;
     }
-    
 
     sem->value--;
 
-    if(sem->value < 0){
+    if (sem->value < 0)
+    {
         int pid = getpid();
-                
         int i = 0;
 
-        do{
-            if(sem->processesBlocked[i] == NO_VALUE){
+        do
+        {
+            if (sem->processesBlocked[i] == NO_VALUE)
+            {
                 sem->processesBlocked[i] = pid;
             }
-        }while(sem->processesBlocked[i++] != pid);
+        } while (sem->processesBlocked[i++] != pid);
 
-        // Cambie la funcion por que la otra no permite bloquear a la terminal
         block(&pid);
 
-        if(pid != getpid()){
-            printfColor("ERROR blocking process on semaphore",0xFF0000,0);
+        if (pid != getpid())
+        {
+            ERROR("blocking process %d on semaphore", pid)
         }
-
-    }else{
-        hasToBeBlocked =  false;
+    }
+    else
+    {
+        hasToBeBlocked = false;
     }
     SpinUnlock();
 
-
-    if(hasToBeBlocked){
+    if (hasToBeBlocked)
+    {
         __ForceTimerTick__();
     }
 
     return hasToBeBlocked;
-
 }
 
-void sempost(char * semName){
+void sempost(char *semName)
+{
     SpinLock();
-    SemData_t * sem = &sems[GetSemaphoreByName(semName)];
+    SemData_t *sem = &sems[GetSemaphoreByName(semName)];
 
-    if (semCheck(sem) != 0) {
-        printf("Error posting semaphore\n");
+    if (semCheck(sem) != 0)
+    {
+        ERROR("Posting semaphore", 0);
         return;
     }
     sem->value++;
-    if (sem->value <= 0) {
-    // desbloqueo el primero, debido al Queue
-    process * p = GetProcess(sem->processesBlocked[0]);
-            p->pcb->state = READY;
-    // muevo toda la queue uno hacia adelante y actualizo el último
-    for(int i = 0 ; i < MAX_PROC_SEM-1; i++) {
-        sem->processesBlocked[i] = sem->processesBlocked[i+1];
-        }
-    sem->processesBlocked[MAX_PROC_SEM-1]=NO_VALUE;
-    }
-    SpinUnlock();
+    if (sem->value <= 0)
+    {
 
+        // desbloqueo el primero, debido al Queue
+        process *p = GetProcess(sem->processesBlocked[0]);
+        p->pcb->state = READY;
+
+        // muevo toda la queue uno hacia adelante y actualizo el último
+        for (int i = 0; i < MAX_PROC_SEM - 1; i++)
+        {
+            sem->processesBlocked[i] = sem->processesBlocked[i + 1];
+        }
+        sem->processesBlocked[MAX_PROC_SEM - 1] = NO_VALUE;
+    }
+
+    SpinUnlock();
 }
 
-void semclose(char * semName){
-    SemData_t * sem = getSem(semName);
+void semclose(char *semName)
+{
+    SemData_t *sem = getSem(semName);
 
-    if (semCheck(sem) != 0) {
-        printf("Error closing semaphore\n");
+    if (semCheck(sem) != 0)
+    {
+        ERROR("Closing semaphore", 0);
         return;
     }
     sem->cant--;
-    if(sem->cant==0){
+    if (sem->cant == 0)
+    {
         CopyString(0, sem->name, 1);
-        sem->id=0;    
+        sem->id = 0;
     }
 }
 
-int GetSemaphoreByName(char * name){
-    for(int i = 0; i < MAX_PROC_SEM ; i++){
-        if(strcmp(name,sems[i].name)){
-            //printf("Encontre un sem. Posicion: %d. Nombre: %s\n",i,name);
+int GetSemaphoreByName(char *name)
+{
+    for (int i = 0; i < MAX_PROC_SEM; i++)
+    {
+        if (strcmp(name, sems[i].name))
+        {
             return i;
         }
     }
@@ -142,10 +179,13 @@ int GetSemaphoreByName(char * name){
     return -1;
 }
 
-int FindUnusedSemaphore(){
+int FindUnusedSemaphore()
+{
 
-    for(int i = 0; i < MAX_PROC_SEM ; i++){
-        if(sems[i].id == 0){
+    for (int i = 0; i < MAX_PROC_SEM; i++)
+    {
+        if (sems[i].id == 0)
+        {
             return i;
         }
     }
@@ -153,48 +193,61 @@ int FindUnusedSemaphore(){
     return -1;
 }
 
-int semCheck(SemData_t * sem) {
+int semCheck(SemData_t *sem)
+{
     int i;
-    if (sem == NULL || sem->name == NULL) {
-        printf("Sem name was null\n");
+    if (sem == NULL || sem->name == NULL)
+    {
+        ERROR("Sem name was null", 0);
         return -1;
     }
-    else if ((i = lookSem(sem->name)) == -1) {
-        printf("Sem could not be found\n");
+    else if ((i = lookSem(sem->name)) == -1)
+    {
+        ERROR("Sem could not be found", 0);
         return -1;
     }
     return 0;
 }
 
-int lookSem(char * name){
+int lookSem(char *name)
+{
     int i;
-    for(i=0;i<MAX_PROC_SEM;i++) {
-        if (strcmp(name,sems[i].name)) {
+    for (i = 0; i < MAX_PROC_SEM; i++)
+    {
+        if (strcmp(name, sems[i].name))
+        {
             return i;
         }
     };
     return -1;
 }
 
-void semInfo(){
+void semInfo()
+{
     int i;
     printf("\n Id  Value  Cantidad  Nombre\n");
-    for(i=0;i<MAX;i++){
-        if(sems[i].id!=0){
-            if (sems[i].value < 0) {
-            int aux = sems[i].value * -1;
-            printf("%d -%d %d %s\n",sems[i].id, aux,sems[i].cant,sems[i].name);
+    for (i = 0; i < MAX; i++)
+    {
+        if (sems[i].id != 0)
+        {
+            if (sems[i].value < 0)
+            {
+                int aux = sems[i].value * -1;
+                printf("%d -%d %d %s\n", sems[i].id, aux, sems[i].cant, sems[i].name);
             }
-            else printf("%d %d %d %s\n",sems[i].id,sems[i].value,sems[i].cant,sems[i].name);
+            else
+                printf("%d %d %d %s\n", sems[i].id, sems[i].value, sems[i].cant, sems[i].name);
         }
     }
 }
 
-SemData_t * getSem(char * name) {
+SemData_t *getSem(char *name)
+{
     int index = GetSemaphoreByName(name);
-    if (index == -1) {
+    if (index == -1)
+    {
         return NULL;
     }
-    SemData_t * ptr = &sems[index];
+    SemData_t *ptr = &sems[index];
     return ptr;
 }

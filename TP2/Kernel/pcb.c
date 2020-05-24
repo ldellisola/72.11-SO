@@ -4,46 +4,62 @@
 #include "include/String.h"
 #include "include/Pipe.h"
 
+/***************************************************************/
+/*                      Constantes                             */
+/***************************************************************/
+
 #define MAX_PROC 20
 
-static int pid = 0;
+/***************************************************************/
+/*                        Variables                            */
+/***************************************************************/
 
+static int pid = 0;
 uint64_t stck[MAX_PROC][STACK];
 pcb pcbs[MAX_PROC];
 int cant = 0;
 
+/***************************************************************/
+/*                      Declaraciones                          */
+/***************************************************************/
+
 int findProcess(int pid);
 
-void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *function,int pid,int parentPid){
+/***************************************************************/
+/*                   Funciones Publicas                        */
+/***************************************************************/
+
+void LoadPCB(pcb *pcb, uint64_t *stack, char *name, int *status, function_t *function, int pid, int parentPid)
+{
 
     CopyString(name, pcb->name, strlen(name));
     pcb->pid = pid++;
     pcb->priority = 1;
-    pcb->pidP=parentPid;
+    pcb->pidP = parentPid;
 
     /// Copio argumentos a pcb
 
     pcb->argv = malloc(function->argc * sizeof(char *));
 
-    for(int j = 0 ; j < function->argc; j++){
+    for (int j = 0; j < function->argc; j++)
+    {
         int t;
-        for(t = 0 ; function->args[j][t] !=0 ; t++)
+        for (t = 0; function->args[j][t] != 0; t++)
 
-        pcb->argv[j] = malloc((t+1) * sizeof(char));
-        CopyString(function->args[j],pcb->argv[j],(t+1));
+            pcb->argv[j] = malloc((t + 1) * sizeof(char));
+        CopyString(function->args[j], pcb->argv[j], (t + 1));
     }
 
     pcb->argc = function->argc;
 
     // Armo FDs
 
-    pcb->fd[READ] = function->read == -1 ? STDIN : function->read ;
-    pcb->fd[WRITE] = function->write == -1 ? STDOUT : function->write ;
+    pcb->fd[READ] = function->read == -1 ? STDIN : function->read;
+    pcb->fd[WRITE] = function->write == -1 ? STDOUT : function->write;
 
     pcb->isWaitingForInput = false;
 
     /// Continuo
-
 
     pcb->stack = stack;
     pcb->state = READY;
@@ -53,35 +69,31 @@ void LoadPCB(pcb * pcb,uint64_t * stack, char * name, int * status, function_t *
 
     pcb->sp = stack + STACK - 1;
 
-
     *(pcb->sp--) = 0; //ss
     pcb->bp = pcb->sp + 1;
-    *(pcb->sp--) = pcb->sp + 1; // pongo el sp al tope del stack?? PREGUNTAR
-    *(pcb->sp--) = 0x202; // flags
-    *(pcb->sp--) = 0x8; // CS
+    *(pcb->sp--) = pcb->sp + 1;        
+    *(pcb->sp--) = 0x202;              // flags
+    *(pcb->sp--) = 0x8;                // CS
     *(pcb->sp--) = function->function; //rip
 
     *(pcb->sp--) = 1;              //rax
     *(pcb->sp--) = 2;              //rbx
     *(pcb->sp--) = 3;              //rcx
     *(pcb->sp--) = 4;              //rdx
-    *(pcb->sp--) = pcb->bp;       //rbp
+    *(pcb->sp--) = pcb->bp;        //rbp
     *(pcb->sp--) = function->argc; //rdi
-    *(pcb->sp--) = pcb->argv;   // rsi        
+    *(pcb->sp--) = pcb->argv;      // rsi
     *(pcb->sp--) = 8;              //r8
     *(pcb->sp--) = 9;              //r9
-    *(pcb->sp--) = 10;              //r10
-    *(pcb->sp--) = 11;              //r11
-    *(pcb->sp--) = 12;              //r12
-    *(pcb->sp--) = 13;              //r13
-    *(pcb->sp--) = 14;              //r14
-    *(pcb->sp) = 15;              //r15
-
-
-
+    *(pcb->sp--) = 10;             //r10
+    *(pcb->sp--) = 11;             //r11
+    *(pcb->sp--) = 12;             //r12
+    *(pcb->sp--) = 13;             //r13
+    *(pcb->sp--) = 14;             //r14
+    *(pcb->sp) = 15;               //r15
 }
 
-pcb *create(char *name, int *status, function_t *function,int pidp)
+pcb *create(char *name, int *status, function_t *function, int pidp)
 {
     if (cant == MAX_PROC)
     {
@@ -92,8 +104,8 @@ pcb *create(char *name, int *status, function_t *function,int pidp)
     int i;
     cant++;
     for (i = 0; i < MAX_PROC && pcbs[i].state != KILL; i++);
-    
-    LoadPCB(&pcbs[i],stck[i],name,status,function,pid++,pidp);
+
+    LoadPCB(&pcbs[i], stck[i], name, status, function, pid++, pidp);
 
     return &pcbs[i];
 }
@@ -104,13 +116,14 @@ void kill(int *pid)
     if (i != -1)
     {
         pcbs[i].state = KILL;
-        
+
         //cierro los pipes desde aca
-        if(pcbs[i].fd[READ]!=STDIN)
+        if (pcbs[i].fd[READ] != STDIN)
             closePipes(&pcbs[i].fd[READ]);
-        if(pcbs[i].fd[WRITE]!=STDOUT)
-            closePipes(&pcbs[i].fd[WRITE]);  
-        for(int j = 0 ; j < pcbs[i].argc ; j++){
+        if (pcbs[i].fd[WRITE] != STDOUT)
+            closePipes(&pcbs[i].fd[WRITE]);
+        for (int j = 0; j < pcbs[i].argc; j++)
+        {
             free(pcbs[i].argv[j]);
         }
 
@@ -118,7 +131,7 @@ void kill(int *pid)
         cant--;
         return;
     }
-    DEBUG("KILL Failed%s","")
+    ERROR("Failed to delete PCB of process %d", *pid)
     *pid = -1;
 }
 
@@ -143,24 +156,68 @@ void block(int *pid)
         else
             pcbs[i].state = READY;
     }
-    else
+    else{
+        ERROR("Failed to block PCB of process %d", *pid)
         *pid = -1;
-}
-
-void unlock(int pid){
-    int i=findProcess(pid);
-    if(i!=-1){
-        pcbs[i].state=READY;
-        //pcbs[i].status = FOREGROUND;
     }
 }
 
-int getFd(int pid,int action){
-    int i=findProcess(pid);
-    if(i==-1)
+void unlock(int pid)
+{
+    int i = findProcess(pid);
+    if (i != -1)
+    {
+        pcbs[i].state = READY;
+    }else
+    {
+        ERROR("Failed to unlock PCB of process %d", pid)
+    }
+    
+}
+
+int getFd(int pid, int action)
+{
+    int i = findProcess(pid);
+    if (i == -1){
+        ERROR("Failed to get File descriptor of process %d", pid)
         return i;
+    }
     return pcbs[i].fd[action];
 }
+
+void ps()
+{
+    printf("pid  prioridad   stack        bp     status  estado   fdr  fdw  nombre  Bloqueado por STDINT\n");
+    for (int i = 0; i < MAX_PROC; i++)
+    {
+        if (pcbs[i].state != KILL)
+        {
+            printf(" %d      %d      0x%x    0x%x     %d     ", pcbs[i].pid, pcbs[i].priority, pcbs[i].stack, pcbs[i].bp, pcbs[i].status);
+            if (pcbs[i].state == READY)
+                printf("ready");
+            else if (pcbs[i].state == BLOCK)
+                printf("block");
+            else
+                printf("waiting");
+            printf("    %d   %d", pcbs[i].fd[READ], pcbs[i].fd[WRITE]);
+            printf("    %s", pcbs[i].name);
+
+            if (pcbs[i].isWaitingForInput)
+            {
+                printf("      yes\n");
+            }
+            else
+            {
+                printf("      no\n");
+            }
+        }
+    }
+}
+
+
+/***************************************************************/
+/*                   Funciones Privadas                        */
+/***************************************************************/
 
 int findProcess(int pid)
 {
@@ -168,36 +225,10 @@ int findProcess(int pid)
 
     for (i = 0; i < MAX_PROC && pcbs[i].pid != pid; i++);
 
-    if (i == MAX_PROC)
+    if (i == MAX_PROC){
+        ERROR("Failed to find PCB of process %d", pid)
         return -1;
+    }
 
     return i;
 }
-
-void ps()
-{
-    printf("pid  prioridad   stack        bp     status  estado   fdr  fdw  nombre  waitingInput\n");
-    for (int i = 0; i < MAX_PROC; i++)
-    {
-        if (pcbs[i].state != KILL)
-        {
-            printf(" %d      %d      0x%x    0x%x     %d     ", pcbs[i].pid, pcbs[i].priority, pcbs[i].stack,pcbs[i].bp, pcbs[i].status);
-            if (pcbs[i].state == READY)
-                printf("ready");
-            else if(pcbs[i].state == BLOCK)
-                printf("block");
-            else 
-                printf("waiting");
-            printf("    %d   %d",pcbs[i].fd[READ],pcbs[i].fd[WRITE]);    
-            printf("    %s",pcbs[i].name);    
-
-            if(pcbs[i].isWaitingForInput){
-                printf("      yes\n");
-            }
-            else{
-                printf("      no\n");
-            }
-        }
-    }
-}
-

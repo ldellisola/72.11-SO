@@ -4,7 +4,11 @@
 
 #include <stdint.h>
 
-typedef struct 
+/***************************************************************/
+/*                        Estructuras                          */
+/***************************************************************/
+
+typedef struct
 {
     uint64_t rax;
     uint64_t rbx;
@@ -21,17 +25,21 @@ typedef struct
     uint64_t r13;
     uint64_t r14;
     uint64_t r15;
-
     uint64_t rip;
-    
-}Registers;
+} Registers;
 
+/***************************************************************/
+/*                       Declaraciones                         */
+/***************************************************************/
 
+//  It loads a structure with data about the display such as BPP, char with and height
+//  and the size of the screen
+void getDeviceInfo(void *ptr);
 
-void getDeviceInfo(void* ptr);
-void getRegisters(Registers * reg,uint64_t * stackPointer,uint64_t * instructionPointer);
-void readMem(uint64_t position, char * buff, unsigned size);
+//  It copies to a structure teh data from the registers in a given moment
+void getRegisters(Registers *reg, uint64_t *stackPointer, uint64_t *instructionPointer);
 
-
+//  It reads bytes from memory
+void readMem(uint64_t position, char *buff, unsigned size);
 
 #endif
