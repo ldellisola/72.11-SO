@@ -41,19 +41,8 @@ void dispatchWrite(int fd,void * firstParam, void * secondParam,void * thirdPara
 void dispatchDelete(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchRead(int fd,void * firstParam, void * secondParam,void * thirdParam,void * fourthParam);
 void dispatchMem(int fd, void * firstParam, void * secondParam,void * thirdParam);
-void dispatchMalloc(int increment, void ** buffer);
-void dispatchFree(void ** buffer);
-void dispatchMemState(void ** firstParam, void ** secondParam,void ** thirdParam);
-
-void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam);
-void dispatchKillProcess(int * firstParam);
-void dispatchBlockProcess(int * firstParam);
-void dispatchNiceProcess(int * firstParam,int secondParam);
-void dispatchPs();
-void dispatchGetPid(int * ret);
-void dispatchExit();
+void dispatchProcess(int fd, void * firstParam, void * secondParam,void * thirdParam);
 void dispatchSem(int fd,void * firstParam, void * secondParam);
-void dispatchSleep();
 void dispatchPipes(int ind,void * firstParam, int secondParam,int * thirdParam);
 
 
@@ -89,54 +78,18 @@ void * irqDispatcher(uint64_t irq, void * firstParam,void * secondParam, void * 
 			break;
 		}
 		case 0x87:{ 
-			dispatchFree((void **)firstParam);
+			dispatchProcess((uint64_t)firstParam,secondParam,thirdParam,fourthParam);
 			break;
 			}
 		case 0x88:{ 
-			dispatchMemState((void **)firstParam, (void **)secondParam,(void **)thirdParam);
-			break;
-			}
-		case 0x89:{ 
-			dispatchCreateProcess((char *)firstParam,(int *) secondParam,(function_t *)thirdParam);
-			break;
-			}
-		case 0x90:{ 
-			dispatchKillProcess((int *)firstParam);
-			break;
-			}
-		case 0x91:{ 
-			dispatchNiceProcess((int *)firstParam,(uint64_t)secondParam);
-			break;
-			}
-		case 0x92:{ 
-			dispatchBlockProcess((int*)firstParam);
-			break;
-			}
-		case 0x93:{ 
-			dispatchPs();
-			break;
-			}					
-		case 0x94:{ 
-			dispatchGetPid((int*)firstParam);
-			break;
-			}					
-		case 0x95:{ 
-			dispatchExit();
-			break;
-			}
-		case 0x96:{ 
 			dispatchSem((uint64_t)firstParam,secondParam,thirdParam);
 			break;
 			}	
-		case 0x97:{
-			dispatchSleep();
-			break;
-		}
-		case 0x98:{
+		case 0x89:{
 			dispatchPipes((uint64_t)firstParam,secondParam,(uint64_t)thirdParam,(int*)fourthParam);
 			break;
 		}
-		case 0x99:{
+		case 0x90:{
 			setDummyProcess((process_Func_t)firstParam);
 			break;
 		}
@@ -184,50 +137,44 @@ void dispatchMem(int fd, void * firstParam, void * secondParam,void * thirdParam
 	}
 }
 
-void dispatchMalloc(int increment, void ** buffer) { 
-	void * aux=malloc(increment);
-	*buffer=aux;
-
-}
-
-void dispatchFree(void ** ptr){
-
-	free(*ptr);
-}
-
-void dispatchMemState(void ** firstParam,void ** secondParam,void ** thirdParam){
-	mem_state(firstParam,secondParam,thirdParam);
-}
-
-void dispatchCreateProcess(char * firstParam, int * secondParam,function_t * thirdParam){
-	 createProcess(firstParam,secondParam,thirdParam);
-}
-void dispatchKillProcess(int * firstParam){
-	killProcess(firstParam);
-}
-
-void dispatchSleep(){
-	SleepProcess();
-}
-
-
-
-void dispatchBlockProcess(int * firstParam){
-	blockProcess(firstParam);
-}
-void dispatchNiceProcess(int * firstParam,int secondParam){
-	niceProcess(firstParam,secondParam);
-}
-void dispatchPs(){
-	ps();
-}
-
-void dispatchGetPid(int * ret){
-	*ret=getpid();
-}
-
-void dispatchExit(){
-	Exit();
+void dispatchProcess(int fd, void * firstParam, void * secondParam,void * thirdParam){
+	switch (fd)
+	{
+	case 0:{
+		createProcess((char *)firstParam,(int *)secondParam,(function_t *)thirdParam);
+		break;
+	}
+	case 1:{
+		killProcess((int *)firstParam);
+		break;
+	}
+	case 2:{
+		SleepProcess();
+		break;
+	}
+	case 3:{
+		blockProcess((int*)firstParam);
+		break;
+	}
+	case 4:{
+		niceProcess((int*)firstParam,(uint64_t)secondParam);
+		break;
+	}
+	case 5:{
+		ps();
+		break;
+	}
+	case 6:{
+		*((int *)firstParam)=getpid();
+		break;
+	}
+	case 7:{
+		Exit();
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 void  dispatchSem(int fd,void * firstParam, void * secondParam){

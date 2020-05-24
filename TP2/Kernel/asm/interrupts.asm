@@ -24,15 +24,6 @@ GLOBAL _irq87Handler
 GLOBAL _irq88Handler
 GLOBAL _irq89Handler
 GLOBAL _irq90Handler
-GLOBAL _irq91Handler
-GLOBAL _irq92Handler
-GLOBAL _irq93Handler
-GLOBAL _irq94Handler
-GLOBAL _irq95Handler
-GLOBAL _irq96Handler
-GLOBAL _irq97Handler
-GLOBAL _irq98Handler
-GLOBAL _irq99Handler
 
 
 GLOBAL _exception0Handler
@@ -239,61 +230,25 @@ _irq83Handler:
 _irq85Handler:
 	irqHandlerMaster 85h
 
-; _malloc
+; mem_manager
 _irq86Handler:
 	irqHandlerMaster 86h
 
-; _free
+; process_manager
 _irq87Handler:
 	irqHandlerMaster 87h
 
-;mem_state
+;sem
 _irq88Handler:
 	irqHandlerMaster 88h
 
-;create_process
+;pipes
 _irq89Handler:
 	irqHandlerMaster 89h
 
-;kill_process
-_irq90Handler:
-	irqHandlerMaster 90h
-
-;nice_process
-_irq91Handler:
-	irqHandlerMaster 91h	
-
-;block_process
-_irq92Handler:
-	irqHandlerMaster 92h	
-
-;ps
-_irq93Handler:
-	irqHandlerMaster 93h	
-
-;getpid
-_irq94Handler:
-	irqHandlerMaster 94h	
-
-;exit
-_irq95Handler:
-	irqHandlerMaster 95h
-
-;exit
-_irq96Handler:
-	irqHandlerMaster 96h		
-
-;SleepUntilInput
-_irq97Handler:
-	irqHandlerMaster 97h		
-
-;Pipes
-_irq98Handler:
-	irqHandlerMaster 98h		
-
 ; LoadDummy
-_irq99Handler:
-	irqHandlerMaster 99h		
+_irq90Handler:
+	irqHandlerMaster 90h		
 
 
 ;USB

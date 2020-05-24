@@ -8,7 +8,7 @@
 /***************************************************************/
 
 // It defines if we are compiling the Budddy memory manager or our implementation
-#define ENABLE_BUDDY
+//#define ENABLE_BUDDY
 
 /***************************************************************/
 /*                      Declaraciones                          */
