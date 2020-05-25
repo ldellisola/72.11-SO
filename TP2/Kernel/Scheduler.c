@@ -29,6 +29,7 @@ bool killedCurrentProcess = false;
 /*                     Declaraciones                           */
 /***************************************************************/
 
+bool hasToUnlockParent(int parentPID);
 void insertQueue(process *process);
 void deleteQueue(int *pid, process **process);
 
@@ -100,24 +101,28 @@ process *roundRobin()
         return curr;
     }
 
-    if (hasTodelete > 0)
+    while (hasTodelete > 0)
     {
         process *aux = curr;
 
         do
         {
-            if (curr->pcb->state == KILL)
+            if (aux->pcb->state == KILL)
             {
-                process *aux = curr->prev;
+                process *aux2 = aux->prev;
                 killProcess(&curr->pcb->pid);
                 hasTodelete--;
-                curr = aux;
+                aux = aux2;
+                break;
             }
             else
             {
                 aux = aux->next;
             }
         } while (aux != curr);
+        
+        curr = priority.first;
+
     }
 
     if (priority.cant == 1)
@@ -224,7 +229,7 @@ void killProcess(int *pid)
         process *process = priority.first;
         deleteQueue(pid, &process);
 
-        if (process->pcb->status == 0)
+        if (process->pcb->status == 0 && hasToUnlockParent(process->pcb->pidP))
         {
             int pidP = process->pcb->pidP;
             unlock(pidP);
@@ -298,6 +303,22 @@ int getpid()
 /***************************************************************/
 /*                  Funciones Privadas                         */
 /***************************************************************/
+
+bool hasToUnlockParent(int parentPID){
+
+    process * p = priority.first;
+    int processWithTheSameParent = 0;
+    for(int i = 0 ; i < priority.cant ; i++ ){
+
+        if (p->pcb->pid != parentPID && p->pcb->status == FOREGROUND && p->pcb->pidP == parentPID)
+            processWithTheSameParent++;     
+
+        p = p->next;
+    }
+
+    return processWithTheSameParent == 0;
+
+}
 
 void insertQueue(process *procs)
 {

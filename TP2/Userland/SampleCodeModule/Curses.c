@@ -110,14 +110,15 @@ void putChar( char ch)
 int readKey()
 {
     static char buff[300];
-    static int top;
-    static int firstLetter;
+    static int top = 0;
+    static int firstLetter = 0;
 
-    if(top == firstLetter-1){
+    if( top < 0 || top <= firstLetter){
         top=read(FD_STDIN,buff,299);
         firstLetter = 0;
-        if(top < 0)
+        if(top < 0){
 	        return top;
+        }
     }
 
     char retValue = buff[firstLetter];
