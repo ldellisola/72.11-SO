@@ -112,8 +112,6 @@ void readPipe(int fd, char *buffer, int bufferSize, int *ans)
   char *read = files[i].read;
   char *write = files[i].write;
 
-  //aseguro que soy yo solo
-  semwait(files[i].sem);
 
   //cuando el write dio la vuelta
   if (read == write)
@@ -127,9 +125,11 @@ void readPipe(int fd, char *buffer, int bufferSize, int *ans)
     if (files[i].state == 0)
     {
       *ans = -1;
-      DEBUG("i died in read and i %d\n", i);
       return;
     }
+    //aseguro que soy yo solo
+      semwait(files[i].sem);
+ 
     if ((*read == 0))
     {
       int pid = getpid();
@@ -145,6 +145,8 @@ void readPipe(int fd, char *buffer, int bufferSize, int *ans)
       read++;
     }
   }
+  else 
+    semwait(files[i].sem);
   //libero el lock porque ya me fije si habia alguien más y como en kernel no interrupme
   //si estoy aca nadie más está acá
 
@@ -233,7 +235,6 @@ void writePipe(int fd, char *buffer, int *ans)
   }
   if (files[i].state == 0)
   {
-    closePipes(files[i].sem);
     *ans = -1;
     return;
   }
@@ -321,6 +322,7 @@ void closePipes(int *fd)
   cantidad--;
   CopyString(0, files[i].name, 1);
   files[i].state = 0;
+  semclose(files[i].sem);
 }
 
 /***************************************************************/
