@@ -10,7 +10,7 @@
 
 int exec(char * name, int status, int (* func)(),int read,int write,int argc,char ** argv){
 
-    int bridge=status;
+    int64_t bridge=status;
     function_t  function;
     function.args=argv;
     function.function=func;

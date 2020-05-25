@@ -89,10 +89,9 @@ int niceProcess(int argc, char ** argv){
     }
 
     int pid=stringToInt(argv[0]);
-    int prior=stringToInt(argv[1]);
+    int64_t prior=stringToInt(argv[1]);
 
     process_manager(4,(void *)&pid,(void *)prior,0);
-    //nice_process(&pid,prior);
 
     if(pid==-1)
         printf("No es un proceso %s, no esta permitida esa accion\n",argv[0]);
@@ -117,8 +116,8 @@ int printMemoryState(int argc, char ** argv){
     void *next=NULL;
 
     mem_manager(2,(void *)&first,(void *)&last,(void *)&next);
-    printf("\nMemory starts at: 0x%x and finishes at : 0x%x\n",first,last);
-    printf("Next free position: 0x%x\n",next);
+    printf("\nMemory starts at: 0x%p and finishes at : 0x%p\n",first,last);
+    printf("Next free position: 0x%p\n",next);
     return 0;
 }
 
@@ -131,7 +130,7 @@ void cleanArr(char * arr, int size){
 
 void printRegisters(uint64_t * storage){
     
-	printf("RAX: 0x%x\n",(uint64_t)storage[14]);
+	printf("RAX: 0x%x\n",storage[14]);
     
 	printf("RBX: 0x%x\n",storage[13]);
     
