@@ -6,7 +6,7 @@
 #include "include/Process.h"
 
 #define MAX_BLOCKS 128
-#define MAX_MEMORY 200000 //Should be around 80% of memory managed by the MM
+#define MAX_MEMORY 150000 //Should be around 80% of memory managed by the MM
 
 typedef struct MM_rq{
   void *address;

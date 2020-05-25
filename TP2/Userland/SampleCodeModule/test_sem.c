@@ -32,7 +32,7 @@ void printfNeg(int64_t g) {
   printf("Final value: -%d\n", neg);
 }
 
-#define N 1000000
+#define N 1500000
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 

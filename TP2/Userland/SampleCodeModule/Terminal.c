@@ -45,6 +45,7 @@ typedef struct
     bool isProcess;
     unsigned long hash;
     const char *description;
+    bool isSO;
 
 } Command_t;
 
@@ -69,36 +70,36 @@ static char TerminalType[MAXBUFFER];
 static unsigned int TypeIndex = 0;
 
 Command_t commands[] = {
-    {.function = loop, .name = "loop", .isProcess = true, .description = "Infinite loop"},
-    {.function = test_mm, .name = "testMem", .isProcess = true, .description = "Process that tests our memory manager implementation."},
-    {.function = test_processes, .name = "testProcess", .isProcess = true, .description = "Process that tests our process implementation."},
-    {.function = test_prio, .name = "testPrio", .isProcess = true, .description = "Process that tests our priorities implementation."},
-    {.function = test_sync, .name = "testSync", .isProcess = true, .description = "Process that tests our semaphore sync implementation."},
-    {.function = test_no_sync, .name = "testNoSync", .isProcess = true, .description = "Process that tests our semaphore no sync implementation."},
-    {.function = cat, .name = "cat", .isProcess = true, .description = "Imprime en STDOOUT lo que viene por STDIN"},
-    {.function = wc, .name = "wc", .isProcess = true, .description = "Cuenta las lineas de lo que viene por STDIN"},
-    {.function = filter, .name="filter", .isProcess = true, .description = "Imprime las vocales filtradas que entran por STDIN"},
-    {.function = phylo, .name="phylo", .isProcess = true, .description = "Problema de los filosofos comensales"},
-    {.function = test_semaforito, .name="s1", .isProcess = true, .description = "Prueba un semaforo 1"},
-    {.function = test_semaforito2, .name="s2", .isProcess = true, .description = "Prueba un semaforo 2"},
+    {.function = loop, .name = "loop", .isProcess = true, .description = "Infinite loop", .isSO = true},
+    {.function = test_mm, .name = "testMem", .isProcess = true, .description = "Process that tests our memory manager implementation.",.isSO = true},
+    {.function = test_processes, .name = "testProcess", .isProcess = true, .description = "Process that tests our process implementation.",.isSO = true},
+    {.function = test_prio, .name = "testPrio", .isProcess = true, .description = "Process that tests our priorities implementation.",.isSO = true},
+    {.function = test_sync, .name = "testSync", .isProcess = true, .description = "Process that tests our semaphore sync implementation.",.isSO = true},
+    {.function = test_no_sync, .name = "testNoSync", .isProcess = true, .description = "Process that tests our semaphore no sync implementation.",.isSO = true},
+    {.function = cat, .name = "cat", .isProcess = true, .description = "Imprime en STDOOUT lo que viene por STDIN",.isSO = true},
+    {.function = wc, .name = "wc", .isProcess = true, .description = "Count the lines of what it reads through its STDIN",.isSO = true},
+    {.function = filter, .name="filter", .isProcess = true, .description = "Prints without vowels of what it reads through its STDIN",.isSO = true},
+    {.function = phylo, .name="phylo", .isProcess = true, .description = "Problem of the eating thinking people",.isSO = true},
+    {.function = test_semaforito, .name="s1", .isProcess = true, .description = "Prueba un semaforo 1",.isSO = false},
+    {.function = test_semaforito2, .name="s2", .isProcess = true, .description = "Prueba un semaforo 2",.isSO = false},
     
 
-    {.function = help, .name = "help", .isProcess = false, .description = "It enumerates all the commands available on this shell\nIf there's an argument, it will tell you the funcition of that command."},
-    {.function = time, .name = "time", .isProcess = false, .description = "It shows the current date and time."},
-    {.function = infoReg, .name = "infoReg", .isProcess = false, .description = "It prints on screen the actual value of the registers."},
-    {.function = invalidOpcode, .name = "invalidOpcode", .isProcess = false, .description = "It is a test to validate the INVALID OPCODE exception."},
-    {.function = clearConsole, .name = "clear", .isProcess = false, .description = "It clears the screen."},
-    {.function = quotient, .name = "quotient", .isProcess = false, .description = "It calculates the quotient of the division of [Argument_1] by [Argument_2]. This can be used to test the DIVISION BY ZERO exception."},
-    {.function = malloc_test, .name = "malloctest", .isProcess = false, .description = "Our very own memory manager test."},
-    {.function = printMemoryState, .name = "mem", .isProcess = false, .description = "It prints on screen the first 32 bytes of memory from any given memory position."},
-    {.function = killProcess, .name = "kill", .isProcess = false, .description = "It kills any process by its PID. It won't kill the terminal."},
-    {.function = niceProcess, .name = "nice", .isProcess = false, .description = "It changes the priority of a process, with 1 beign more priority and 3 less priority."},
-    {.function = blockProcess, .name = "block", .isProcess = false, .description = "It blocks a process by its PID. It won't block the terminal."},
-    {.function = ProcessState, .name = "ps", .isProcess = false, .description = "It prints in the terminal information about all the processes that are currently running."},
-    {.function = pipe, .name = "pipe", .isProcess = false, .description = "It prints in the terminal information about all the pipes that currently exists."},
-    {.function = semInfo, .name = "sem", .isProcess = false, .description = "It prints in the terminal information about all the current semaphores that currently exists."},
+    {.function = help, .name = "help", .isProcess = false, .description = "It enumerates all the commands available on this shell\nIf there's an argument, it will tell you the funcition of that command.", .isSO = true},
+    {.function = time, .name = "time", .isProcess = false, .description = "It shows the current date and time.", .isSO = false},
+    {.function = infoReg, .name = "infoReg", .isProcess = false, .description = "It prints on screen the actual value of the registers.", .isSO = false},
+    {.function = invalidOpcode, .name = "invalidOpcode", .isProcess = false, .description = "It is a test to validate the INVALID OPCODE exception.", .isSO = false},
+    {.function = clearConsole, .name = "clear", .isProcess = false, .description = "It clears the screen.", .isSO = true},
+    {.function = quotient, .name = "quotient", .isProcess = false, .description = "It calculates the quotient of the division of [Argument_1] by [Argument_2]. This can be used to test the DIVISION BY ZERO exception.", .isSO = false},
+    {.function = malloc_test, .name = "malloctest", .isProcess = false, .description = "Our very own memory manager test.", .isSO = false},
+    {.function = printMemoryState, .name = "mem", .isProcess = false, .description = "It prints on screen the first 32 bytes of memory from any given memory position.", .isSO = true},
+    {.function = killProcess, .name = "kill", .isProcess = false, .description = "It kills any process by its PID. It won't kill the terminal.", .isSO = true},
+    {.function = niceProcess, .name = "nice", .isProcess = false, .description = "It changes the priority of a process, with 1 beign more priority and 3 less priority.", .isSO = true},
+    {.function = blockProcess, .name = "block", .isProcess = false, .description = "It blocks a process by its PID. It won't block the terminal.", .isSO = true},
+    {.function = ProcessState, .name = "ps", .isProcess = false, .description = "It prints in the terminal information about all the processes that are currently running.", .isSO = true},
+    {.function = pipe, .name = "pipe", .isProcess = false, .description = "It prints in the terminal information about all the pipes that currently exists.", .isSO = true},
+    {.function = semInfo, .name = "sem", .isProcess = false, .description = "It prints in the terminal information about all the current semaphores that currently exists.", .isSO = true},
     //{.function = testSem, .name = "testSem", .isProcess = false, .description = "Our very own function that tests our semaphores implementation."},
-    {.function = testPipes, .name = "testPipes", .isProcess = false, .description = "Our very own function that tests our pipes implementation."},
+    {.function = testPipes, .name = "testPipes", .isProcess = false, .description = "Our very own function that tests our pipes implementation.", .isSO = false},
 
     {.function = NULL, .name = NULL, .isProcess = false, .description = NULL}};
 
@@ -178,9 +179,18 @@ int help(int argc, char **argv)
     if (argc == 0)
     {
         int i = 0;
-
+        printf("FOR ARIEL:\n");    
         while (commands[i].name != NULL)
         {
+            if(commands[i].isSO)
+                printf("%s    |  %s\n", commands[i].isProcess ? "Proceso" : "Comando", commands[i].name);
+            i++;
+        }
+        i = 0;
+        printf("NOT FOR ARIEL:\n");    
+        while (commands[i].name != NULL)
+        {
+            if(!commands[i].isSO)
             printf("%s    |  %s\n", commands[i].isProcess ? "Proceso" : "Comando", commands[i].name);
             i++;
         }
