@@ -187,6 +187,10 @@ void handleBreaks(int input)
     }
 }
 
+void TEST(){
+
+}
+
 int handleASCII(int PressedKey)
 {
 
@@ -198,9 +202,11 @@ int handleASCII(int PressedKey)
             PressedKey = ShiftKeyMap[PressedKey];
         if (control)
         {
+                TEST();
 
-            if (tryToRunShortcuts(PressedKey))
+            if (tryToRunShortcuts(PressedKey)){
                 PressedKey = -1;
+            }
             else
                 PressedKey = ControlKeyMap[PressedKey];
         }

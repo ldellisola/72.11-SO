@@ -5,6 +5,7 @@
 // extern void _exit();
 // extern void sleep_process();
 // extern void get_pid(int * ret);
+extern void __ForceTimerTick__();
 
 
 
@@ -16,8 +17,7 @@ int getpid(){
 
 void exit_process(){
 	process_manager(7,0,0,0);
-	__asm__("hlt");
-
+	__ForceTimerTick__();
 }
 
 void ps(){
@@ -26,7 +26,7 @@ void ps(){
 
 void BlockAndSwitchProcess(int * pid){
 	process_manager(3,(void *)pid,0,0);
-	__asm__("hlt");
+	__ForceTimerTick__();
 }
 
 void SleepUntilUserInput(){
