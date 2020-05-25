@@ -113,6 +113,7 @@ int runTerminal()
     InitializeTerminal();
     clearArray(TerminalType, MAXBUFFER);
     TypeIndex = 0;
+    printf("Hey! You can use \"help\" to check for our commands...\n");
     printf(">>>>  ");
     int exit = 0;
             //SleepUntilUserInput();
