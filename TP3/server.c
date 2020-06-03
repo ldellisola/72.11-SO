@@ -78,7 +78,7 @@ int challenge = 0;
 char * message[] = {"Para asegurarnos que haya entendido, escriba \"grupo 4 es el mejor\\n\"\n"};
 char * ans[] = {"grupo 4 es el mejor\n"};
 char buffer[MAXBUFLEN];
-while(challenge!=11){
+while(1){
   printf("\n--- DESAFIO %d ---\n\n",challenge+1);
   printf("%s",*(message+challenge));
   int c=read(4,buffer,MAXBUFLEN);
