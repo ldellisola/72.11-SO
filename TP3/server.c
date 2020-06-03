@@ -82,13 +82,17 @@ char * message[] = {
   "Para asegurarnos que haya entendido, escriba \"grupo 4 es el mejor\\n\"\n",
   "Mixed fds\n",
   "Logo\n",
-  "TANGO HOTEL INDIA SIERRA INDIA SIERRA NOVEMBER OSCAR TANGO FOXTROT UNIFORM NOVEMBER NOVEMBER YANKEE \n"
+  "TANGO HOTEL INDIA SIERRA INDIA SIERRA NOVEMBER OSCAR TANGO FOXTROT UNIFORM NOVEMBER NOVEMBER YANKEE \n",
+  "NOx+ (4+7x2+2x9)/3 (/)SI \n",
+  ".rela.plt .init .plt ? .fini .rodata \n"
 };
 char * ans[] = {
   "grupo 4 es el mejor",
   "a_non_y_mous",
   "bojack horseman",
-  "this is not funny"
+  "this is not funny",
+  "(36)/3",
+  ".text"
 };
 char buffer[MAXBUFLEN];
 while(1){
@@ -105,6 +109,11 @@ while(1){
     break;
   case 3:
     break;
+  case 4:
+    break;
+  case 5:
+    break;
+  case 6:
   default: break;
   }
   int c=read(4,buffer,MAXBUFLEN);
@@ -118,10 +127,9 @@ while(1){
   {
     printf("Respuesta incorrecta: %s\n\n",buffer);
   }
-  
-} 
-
 }
+}
+
 
 void mixedFds(){
   char * ans = "a_non_y_mous";
