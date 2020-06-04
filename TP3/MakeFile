@@ -4,19 +4,19 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g
 
 
-CLIENT_EXEC = exec/Client
-CLIENT_OBJ = obj/Client.o 
+CLIENT_EXEC = Client.exec
+CLIENT_OBJ = Client.o 
 CLIENT_SRC = client.c
 
-SERVER_EXEC = exec/Server
-SERVER_OBJ = obj/Server.o 
+SERVER_EXEC = Server.exec
+SERVER_OBJ = Server.o 
 SERVER_SRC = server.c
 
 TESTS_OBJ = AudioTest.o GDBTest.o FDTest.o
 TESTS_SRC = AudioTest.c GDBTest.c FDTest.c
 TESTS_HDR = AudioTest.h GDBTest.h FDTest.h
 
-ASM_OBJ = obj/ASMTest.o
+ASM_OBJ = ASMTest.o
 ASM_SRC = ASMTest.asm
 
 

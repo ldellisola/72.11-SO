@@ -90,3 +90,8 @@ TP2/report.tasks
 TP2/strace_out
 
 TP2/runPVS.sh
+
+
+TP3/*.o
+
+TP3/*.exec
