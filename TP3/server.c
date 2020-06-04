@@ -14,13 +14,22 @@
 #include "AudioTest.h"
 
 /* the port users will be connecting to */
-#define MYPORT 8909
+#define MYPORT 8080
 #define MAXBUFLEN 500
 
 void challenges(int fd);
 void mixedFds();
 void logo();
 
+// Aca no estas llamando a las funciones de ASM.
+// Para hacerlo tenes que declararlas como extern:
+// extern void _dum1();
+
+void _dum1(){};
+void _dum2(){};
+void _dum3(){};
+
+char *dummystring = "are%oy";
 int main(int argc, char *argv[])
 {
   int sockfd;
@@ -29,8 +38,12 @@ int main(int argc, char *argv[])
   /* connector’s address information */
   struct sockaddr_in their_addr;
 
+  _dum1();
+  _dum2();
+  _dum3();
   int addr_len = 16, numbytes;
   char buf[MAXBUFLEN];
+
   sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP);
   if (sockfd == -1)
   {
@@ -39,7 +52,12 @@ int main(int argc, char *argv[])
   }
   else
     printf("Server-socket() sockfd %d is OK...\n", sockfd);
-  setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, NULL, 4);
+
+  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, NULL, 4) == -1)
+  {
+    perror("On SetSockOpt");
+    exit(-1);
+  }
 
   /* host byte order */
   my_addr.sin_family = AF_INET;
@@ -51,6 +69,12 @@ int main(int argc, char *argv[])
   if (argc == 2)
   {
     port = atoi(argv[1]);
+
+    if (port == 0)
+    {
+      printf("Invalid port. Switching to default %d\n", MYPORT);
+      port = MYPORT;
+    }
   }
 
   my_addr.sin_port = htons(port);
@@ -72,8 +96,19 @@ int main(int argc, char *argv[])
   else
     printf("Server-bind() is OK...\n");
 
-  listen(sockfd, 5);
+  if (listen(sockfd, 5) == -1)
+  {
+    perror("On Listen");
+    exit(-1);
+  }
+
   int communicationFD = accept(sockfd, (struct sockaddr *)&my_addr, &addr_len);
+
+  if (communicationFD == -1)
+  {
+    perror("On Accept");
+    exit(-1);
+  }
 
   // Hago bloqueante la lectura del socket
   int mode = 0;
@@ -83,11 +118,8 @@ int main(int argc, char *argv[])
   challenges(communicationFD);
 
   if (close(sockfd) != 0)
-
     printf("Server-sockfd closing failed!\n");
-
   else
-
     printf("Server-sockfd successfully closed!\n");
 
   return 0;
@@ -95,17 +127,18 @@ int main(int argc, char *argv[])
 
 void challenges(int fd)
 {
-  int challenge = 8;
+  int challenge = 0;
   char *message[] = {
       "Para asegurarnos que haya entendido, escriba \"grupo 4 es el mejor\\n\"\n",
       "Mixed fds\n",
       "Logo\n",
       "TANGO HOTEL INDIA SIERRA INDIA SIERRA NOVEMBER OSCAR TANGO FOXTROT UNIFORM NOVEMBER NOVEMBER YANKEE \n",
       "NOx+ (4+7x2+2x9)/3 (/)SI \n",
-      ".rela.plt .init .plt ? .fini .rodata \n",
-      "Busca un archivo que no deberia estar en el repositorio, reproducilo y resolve la prueba",
-      "GDB era clave para el TP2",
-      "hola?"
+      ".data .comment ? \n"
+      "strings: Hasta el final no sabemos bien: es _itsme \n",
+      "Busca un archivo que no deberia estar en el repositorio, reproducilo y resolve la prueba\n",
+      "GDB era clave para el TP2\n",
+      "hola?\n",
   };
   char *ans[] = {
       "grupo 4 es el mejor",
@@ -113,22 +146,22 @@ void challenges(int fd)
       "bojack horseman",
       "this is not funny",
       "(36)/3",
-      ".text",
+      ".RUN_ME",
+      "_itsme",
       "Harry Potter is dead",
       "Harry Potter is dead",
-      "nj213kjh23kh311jh2h3k1"
-
+      "nj213kjh23kh311jh2h3k1",
   };
   char buffer[MAXBUFLEN];
   while (1)
   {
     printf("\n--- DESAFIO %d ---\n\n", challenge + 1);
-    printf("hola? %s", *(message + challenge));
-
+    printf("%s", *(message + challenge));
     switch (challenge)
     {
-    //va a cambiar al que corresponda el de 2FDS
+      //va a cambiar al que corresponda el de 2FDS
     case 0:
+      // Grupo 4 es el mejor
       break;
     case 1:
       mixedFds();
@@ -137,28 +170,40 @@ void challenges(int fd)
       logo();
       break;
     case 3:
+      // Militar
       break;
     case 4:
+      // Matematica
       break;
     case 5:
+      // Tags ASM?
       break;
     case 6:
-      runAudioTest();
+      // strings
       break;
     case 7:
-      runGDBTest();
+      runAudioTest();
       break;
     case 8:
+      runGDBTest();
+      break;
+    case 9:
       runClosedFDTest();
       break;
     default:
+      // Termina
       return;
       break;
     }
     int c = read(fd, buffer, MAXBUFLEN);
     if (c == -1)
     {
-      perror("ERROR");
+      perror("On Read");
+    }
+    else if (c == 0)
+    {
+      printf("Se cerro el cliente, chau.\n");
+      exit(0);
     }
     buffer[c - 1] = 0;
     printf("\nbuffer : %s and ans: %s\n", buffer, *(ans + challenge));
