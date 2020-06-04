@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 // the port client will be connecting to
-#define PORT 8080
+#define PORT 8909
 // max number of bytes we can get at once
 #define MAXDATASIZE 300
 int main(int argc, char *argv[])
@@ -29,7 +29,7 @@ struct sockaddr_in their_addr;
 
 // if no command line argument supplied
 
-if(argc != 2)
+if(argc != 3)
 
 {
 
@@ -83,9 +83,15 @@ their_addr.sin_family = AF_INET;
 
 // short, network byte order
 
-printf("Server-Using %s and port %d...\n", argv[1], PORT);
+int port = PORT;
 
-their_addr.sin_port = htons(PORT);
+if(argc == 3){
+    port = atoi(argv[2]);
+}
+
+printf("Server-Using %s and port %d...\n", argv[1], port);
+
+their_addr.sin_port = htons(port);
 
 their_addr.sin_addr = *((struct in_addr *)he->h_addr);
 
