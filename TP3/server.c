@@ -21,15 +21,11 @@ void challenges(int fd);
 void mixedFds();
 void logo();
 
-// Aca no estas llamando a las funciones de ASM.
-// Para hacerlo tenes que declararlas como extern:
-// extern void _dum1();
+extern void _dum1(){};
+extern void _dum2(){};
+extern void _dum3(){};
 
-void _dum1(){};
-void _dum2(){};
-void _dum3(){};
-
-char *dummystring = "are%oy";
+char *dummystring = "era%yo";
 int main(int argc, char *argv[])
 {
   int sockfd;
@@ -38,9 +34,6 @@ int main(int argc, char *argv[])
   /* connector’s address information */
   struct sockaddr_in their_addr;
 
-  _dum1();
-  _dum2();
-  _dum3();
   int addr_len = 16, numbytes;
   char buf[MAXBUFLEN];
 
@@ -53,7 +46,8 @@ int main(int argc, char *argv[])
   else
     printf("Server-socket() sockfd %d is OK...\n", sockfd);
 
-  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, NULL, 4) == -1)
+  int on=1;
+  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on)) == -1)
   {
     perror("On SetSockOpt");
     exit(-1);
@@ -134,8 +128,8 @@ void challenges(int fd)
       "Logo\n",
       "TANGO HOTEL INDIA SIERRA INDIA SIERRA NOVEMBER OSCAR TANGO FOXTROT UNIFORM NOVEMBER NOVEMBER YANKEE \n",
       "NOx+ (4+7x2+2x9)/3 (/)SI \n",
-      ".data .comment ? \n"
-      "strings: Hasta el final no sabemos bien: es _itsme \n",
+      ".data .comment ? \n",
+      "strings: Hasta el final no sabemos bien: es era%yo \n",
       "Busca un archivo que no deberia estar en el repositorio, reproducilo y resolve la prueba\n",
       "GDB era clave para el TP2\n",
       "hola?\n",
@@ -147,7 +141,7 @@ void challenges(int fd)
       "this is not funny",
       "(36)/3",
       ".RUN_ME",
-      "_itsme",
+      "era%yo",
       "Harry Potter is dead",
       "Harry Potter is dead",
       "nj213kjh23kh311jh2h3k1",
