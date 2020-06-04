@@ -129,7 +129,7 @@ void challenges(int fd)
       "TANGO HOTEL INDIA SIERRA INDIA SIERRA NOVEMBER OSCAR TANGO FOXTROT UNIFORM NOVEMBER NOVEMBER YANKEE \n",
       "NOx+ (4+7x2+2x9)/3 (/)SI \n",
       ".data .comment ? \n",
-      "strings: Hasta el final no sabemos bien: es era%yo \n",
+      "strings: 44 \n",
       "Busca un archivo que no deberia estar en el repositorio, reproducilo y resolve la prueba\n",
       "GDB era clave para el TP2\n",
       "hola?\n",
