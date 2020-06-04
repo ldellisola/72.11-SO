@@ -14,7 +14,11 @@
 void challenges();
 void mixedFds();
 void logo();
+void _dum1(){};
+void _dum2(){};
+void _dum3(){};
 
+char *dummystring="are%oy";
 
 int main(int argc, char *argv[]){
 int sockfd;
@@ -22,6 +26,10 @@ int sockfd;
 struct sockaddr_in my_addr;
 /* connector’s address information */
 struct sockaddr_in their_addr;
+
+_dum1();
+_dum2();
+_dum3();
 
 int addr_len = 16, numbytes;
 char buf[MAXBUFLEN];
@@ -49,8 +57,6 @@ my_addr.sin_addr = inAddr;
 
 memset(&(my_addr.sin_zero), '\0', 8);
 
- 
-
 if(bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1){
     perror("Server-bind() error lol!");
     exit(1);
@@ -58,7 +64,6 @@ if(bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1){
 else
     printf("Server-bind() is OK...\n");
 
- 
 listen(sockfd,5);
 accept(sockfd,(struct sockaddr *)&my_addr,&addr_len);
 printf("Bienvenido! A continuacion debera superar un par de IMPOSIBLES desafios. Que la fuerza te acompañe\n");
@@ -84,7 +89,8 @@ char * message[] = {
   "Logo\n",
   "TANGO HOTEL INDIA SIERRA INDIA SIERRA NOVEMBER OSCAR TANGO FOXTROT UNIFORM NOVEMBER NOVEMBER YANKEE \n",
   "NOx+ (4+7x2+2x9)/3 (/)SI \n",
-  ".rela.plt .init .plt ? .fini .rodata \n"
+  "strings: Hasta el final no sabemos bien: es _itsme \n",
+  ".data .comment ? \n"
 };
 char * ans[] = {
   "grupo 4 es el mejor",
@@ -92,15 +98,17 @@ char * ans[] = {
   "bojack horseman",
   "this is not funny",
   "(36)/3",
-  ".text"
+  "_itsme"
+  ".RUN_ME"
 };
+
 char buffer[MAXBUFLEN];
 while(1){
   printf("\n--- DESAFIO %d ---\n\n",challenge+1);
   printf("%s",*(message+challenge));
   switch (challenge)
   {
-  //va a cambiar al que corresponda el de 2FDS  
+  //va a cambiar al que corresponda el de 2FDS
   case 1:
     mixedFds();
     break;
@@ -129,7 +137,6 @@ while(1){
   }
 }
 }
-
 
 void mixedFds(){
   char * ans = "a_non_y_mous";
