@@ -20,6 +20,7 @@
 void challenges(int fd);
 void mixedFds();
 void logo();
+void los_simuladores();
 
 extern void _dum1(){};
 extern void _dum2(){};
@@ -79,7 +80,6 @@ int main(int argc, char *argv[])
   my_addr.sin_addr = inAddr;
 
   /* zero the rest of the struct */
-
   memset(&(my_addr.sin_zero), '\0', 8);
 
   if (bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1)
@@ -133,6 +133,7 @@ void challenges(int fd)
       "Busca un archivo que no deberia estar en el repositorio, reproducilo y resolve la prueba\n",
       "GDB era clave para el TP2\n",
       "hola?\n",
+      "Los Simuladores\n"
   };
   char *ans[] = {
       "grupo 4 es el mejor",
@@ -145,12 +146,15 @@ void challenges(int fd)
       "Harry Potter is dead",
       "Harry Potter is dead",
       "nj213kjh23kh311jh2h3k1",
+      "TORTUGA MARITIMA"
   };
   char buffer[MAXBUFLEN];
   while (1)
   {
-    printf("\n--- DESAFIO %d ---\n\n", challenge + 1);
-    printf("%s", *(message + challenge));
+    if (challenge < 11) {
+      printf("\n--- DESAFIO %d ---\n\n", challenge + 1);
+      printf("%s", *(message + challenge));
+    }
     switch (challenge)
     {
       //va a cambiar al que corresponda el de 2FDS
@@ -183,6 +187,9 @@ void challenges(int fd)
       break;
     case 9:
       runClosedFDTest();
+      break;
+    case 10:
+      los_simuladores();
       break;
     default:
       // Termina
@@ -293,4 +300,34 @@ void logo()
   printf("       `--:::::`://++//+oo+:.::/+ooooooooo++++ooooooooooo+++++++++++--:::::::.-:::::::.`     \n");
   printf("    ``.::::::::.:-::///:////+ooooooooooooo+++++++++++++++++++++++++/.::::::::.::::::::::.`   \n");
   printf("  `.-::::::::::.:::::::.+o++++ooooooooooooo+++++++++++++++++++++++/.::::::::.::::::::::::``  \n");
+}
+
+void los_simuladores() {
+  FILE * pf;
+  char * fn = "milazzo.txt";
+  char buffer [24];
+  const char * r = "el pavo esta en el saco";
+
+  printf("...\n");
+  
+  if ((pf = fopen(fn, "r")) == NULL) {
+    printf("Error, Vanegas no pudo encontrar a: %s ¿Estuviste un año en la selva, solo, hablandole a una camara de television apagada? KJJJJJJ \n", fn);
+    return;
+  }
+
+  printf("Fase 1 completa, Santos \n");
+  printf("...\n");
+  printf("https://youtu.be/rHs_DBLJIwk 18:44\n");
+  printf("...\n");
+
+  if (!feof(pf)) {
+    fgets(buffer, 24, pf);
+    if (strcmp(buffer, r) == 0) {
+      printf("La respuesta es TORTUGA MARITIMA\n");
+    }
+  }
+  else {printf("Lamponne, tenemos un problema... \n");}
+  fclose(pf);
+  fflush(pf);
+  return;
 }
