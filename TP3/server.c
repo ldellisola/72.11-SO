@@ -26,17 +26,15 @@ extern void _dum1(){};
 extern void _dum2(){};
 extern void _dum3(){};
 
+
 char *dummystring = "era%yo";
 int main(int argc, char *argv[])
 {
   int sockfd;
   /* my address information */
   struct sockaddr_in my_addr;
-  /* connector’s address information */
-  struct sockaddr_in their_addr;
 
-  int addr_len = 16, numbytes;
-  char buf[MAXBUFLEN];
+  int addr_len = 16;
 
   sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP);
   if (sockfd == -1)
@@ -125,7 +123,7 @@ void challenges(int fd)
       "TANGO HOTEL INDIA SIERRA INDIA SIERRA NOVEMBER OSCAR TANGO FOXTROT UNIFORM NOVEMBER NOVEMBER YANKEE \n",
       "NOx+ (4+7x2+2x9)/3 (/)SI \n",
       ".data .comment ? \n",
-      "strings: 44 \n",
+      "strings: 50 \n",
       "Busca un archivo que no deberia estar en el repositorio, reproducilo y resolve la prueba\n",
       "GDB era clave para el TP2\n",
       "hola?\n",
@@ -301,11 +299,11 @@ void logo()
 void los_simuladores() {
   FILE * pf;
   char * fn = "milazzo.txt";
-  char buffer [24];
-  const char * r = "el pavo esta en el saco";
+  //char buffer [24];
+  //const char * r = "el pavo esta en el saco";
 
   printf("...\n");
-  
+
   if ((pf = fopen(fn, "r")) == NULL) {
     printf("Error, Vanegas no pudo encontrar a: %s ¿Estuviste un año en la selva, solo, hablandole a una camara de television apagada? KJJJJJJ \n", fn);
     return;
@@ -317,6 +315,8 @@ void los_simuladores() {
   printf("...\n");
 
   if (!feof(pf)) {
+    char buffer [24];
+    const char * r = "el pavo esta en el saco";
     fgets(buffer, 24, pf);
     if (strcmp(buffer, r) == 0) {
       printf("La respuesta es TORTUGA MARITIMA\n");
@@ -324,6 +324,5 @@ void los_simuladores() {
   }
   else {printf("Lamponne, tenemos un problema... \n");}
   fclose(pf);
-  fflush(pf);
   return;
 }
