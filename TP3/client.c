@@ -85,14 +85,12 @@ int main(int argc, char *argv[])
     else
         printf("Client-The connect() is OK...\n");
 
-    int c;
-
     printf("SOCKET: %d\n", sockfd);
 
     while (1)
     {
         char st[360];
-        c = read(0, st, 360);
+       	int c = read(0, st, 360);
         write(sockfd, st, c);
     }
 
