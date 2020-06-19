@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -33,10 +35,9 @@ int main(int argc, char *argv[])
   /* my address information */
   struct sockaddr_in my_addr;
   /* connector’s address information */
-  struct sockaddr_in their_addr;
+  // struct sockaddr_in their_addr;
 
-  int addr_len = 16, numbytes;
-  char buf[MAXBUFLEN];
+  unsigned int addr_len = 16;
 
   sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP);
   if (sockfd == -1)
