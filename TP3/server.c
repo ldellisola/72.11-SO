@@ -44,8 +44,6 @@ int main(int argc, char *argv[])
     perror("Server-socket() sockfd error lol!");
     exit(1);
   }
-  else
-    printf("Server-socket() sockfd %d is OK...\n", sockfd);
 
   int on=1;
   if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on)) == -1)
@@ -87,8 +85,6 @@ int main(int argc, char *argv[])
     perror("Server-bind() error lol!");
     exit(1);
   }
-  else
-    printf("Server-bind() is OK...\n");
 
   if (listen(sockfd, 5) == -1)
   {
@@ -207,10 +203,10 @@ void challenges(int fd)
       exit(0);
     }
     buffer[c - 1] = 0;
-    printf("\nbuffer : %s and ans: %s\n", buffer, *(ans + challenge));
+
     if (strcmp(*(ans + challenge), buffer) == 0)
     {
-      printf("tin tin tin CORRECTO!\n");
+      printf("*tin tin tin* CORRECTO!\n");
       challenge++;
     }
     else
