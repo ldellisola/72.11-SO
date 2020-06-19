@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 void runClosedFDTest(){
     int pipes[2];
@@ -12,7 +13,10 @@ void runClosedFDTest(){
         perror("Could't open pipe\n");
     }
 
-    write(pipes[0],"nj213kjh23kh311jh2h3k1",24);
+    char * ttt = "nj213kjh23kh311jh2h3k1";
+
+
+    write(pipes[0],ttt,strlen(ttt));
 
     close(pipes[0]);
     close(pipes[1]);

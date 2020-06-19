@@ -95,3 +95,11 @@ TP2/runPVS.sh
 TP3/*.o
 
 TP3/*.exec
+
+TP3/.gdb_history
+
+TP3/report.tasks
+
+TP3/PVS-Studio.log
+
+TP3/strace_out

@@ -127,7 +127,7 @@ void challenges(int fd)
       ".data .comment ? \n",
       "strings: 50 \n",
       "Busca un archivo que no deberia estar en el repositorio, reproducilo y resolve la prueba\n",
-      "GDB era clave para el TP2\n",
+      "GDB_Me\n",
       "hola?\n",
       "Los Simuladores\n"
   };
@@ -202,7 +202,9 @@ void challenges(int fd)
       printf("Se cerro el cliente, chau.\n");
       exit(0);
     }
-    buffer[c - 1] = 0;
+    else{
+      buffer[c - 1] = 0;
+    }
 
     if (strcmp(*(ans + challenge), buffer) == 0)
     {
@@ -221,7 +223,8 @@ void mixedFds()
   char *ans = "a_non_y_mous";
   char *trash = "asda213123s[*]*[$dasd23436*12}+{+{dasd234asd43as}-}31}+asd43as}{+{+-**-+dsfd\\¿'¿ASDA213123S[*]*[$Dasd234asd43as}{+{+-**-+dsfd\\¿'¿''dasd5636*12}+{+{-}31}+{3123sdfsadf23''daasdasdasdasdfgsdsd5636*12}+{+{daasd43as}{+{+-**-+dsfd\\¿'¿''dasd5636*12}+{sd234asd43as}-}31}+{3123s5461685as65das5df4ur890'34rhebwidsklmkñaiofpsu8g9hibnjreklm4,3lwqe'pdsñ{.dfsadf23a";
   int x = (strlen(trash) / strlen(ans));
-  int tr, rsp, i;
+  size_t rsp;
+  int tr, i;
   tr = rsp = i = 0;
   printf("\n\n");
   while (rsp != strlen(ans))

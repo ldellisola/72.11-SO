@@ -4,11 +4,26 @@
 
 #include <stdio.h>
 
+void GDB_Me();
+int CalculateOtherNumber(int num);
+
 void runGDBTest(){
     
     int magicNumber = 1;
 
-    if(magicNumber == magicNumber+1){
+    GDB_Me();
+
+    int otherNumber = CalculateOtherNumber(magicNumber);
+
+    if(magicNumber == otherNumber){
         printf("Igual que el anterior");
     }
+}
+
+int CalculateOtherNumber(int num){
+    return num + 1;
+}
+
+void GDB_Me(){
+
 }
