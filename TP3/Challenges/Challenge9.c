@@ -1,22 +1,27 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include "GDBTest.h"
-
+#include "Challenge9.h"
 #include <stdio.h>
 
 void GDB_Me();
 int CalculateOtherNumber(int num);
 
-void runGDBTest(){
-    
+const char * challenge9_GetHint(){
+    return "GDB_Me\n";
+}
+
+const char * challenge9_GetAnswer(){
+    return "Harry Potter is dead";
+}
+
+void challenge9_Run(){
     int magicNumber = 1;
+    int otherNumber = CalculateOtherNumber(magicNumber);
 
     GDB_Me();
 
-    int otherNumber = CalculateOtherNumber(magicNumber);
-
     if(magicNumber == otherNumber){
-        printf("Igual que el anterior");
+        printf("Igual que el anterior\n");
     }
 }
 
