@@ -10,9 +10,9 @@ SERVER_EXEC = Server.exec
 SERVER_OBJ = Server.o 
 SERVER_SRC = server.c
 
-TESTS_OBJ = AudioTest.o GDBTest.o FDTest.o
-TESTS_SRC = AudioTest.c GDBTest.c FDTest.c
-TESTS_HDR = AudioTest.h GDBTest.h FDTest.h
+CHALLENGES_OBJ = Challenge*.o
+CHALLENGES_SRC = Challenges/Challenge*.c
+CHALLENGES_HDR = Challenges/Challenge*.h
 
 ASM_OBJ = ASMTest.o
 ASM_SRC = ASMTest.asm
@@ -26,8 +26,8 @@ all: $(EXEC)
 $(CLIENT_EXEC): $(CLIENT_OBJ) 
 	$(CC) $(CFLAGS) $(CLIENT_OBJ)  -o $(CLIENT_EXEC)  
 
-$(SERVER_EXEC): $(SERVER_OBJ)  $(TESTS_OBJ) $(TESTS_HDR) $(ASM_OBJ)
-	$(CC) $(CFLAGS) $(TESTS_OBJ) $(ASM_OBJ) $(SERVER_OBJ) -o $(SERVER_EXEC) $(TESTS_HDR)
+$(SERVER_EXEC): $(SERVER_OBJ)  $(CHALLENGES_OBJ) $(CHALLENGES_HDR) $(ASM_OBJ)
+	$(CC) $(CFLAGS) $(CHALLENGES_OBJ) $(ASM_OBJ) $(SERVER_OBJ) -o $(SERVER_EXEC) $(CHALLENGES_HDR)
 
 
 $(CLIENT_OBJ): $(CLIENT_SRC)  
@@ -36,14 +36,14 @@ $(CLIENT_OBJ): $(CLIENT_SRC)
 $(SERVER_OBJ): $(SERVER_SRC)
 	$(CC) $(CFLAGS) -c $(SERVER_SRC)  -o $(SERVER_OBJ) 
 
-$(TESTS_OBJ): $(TESTS_SRC) 
-	$(CC) $(CFLAGS) -c $(TESTS_SRC)  
+$(CHALLENGES_OBJ): $(CHALLENGES_SRC) 
+	$(CC) $(CFLAGS) -c $(CHALLENGES_SRC)  
 
 $(ASM_OBJ): $(ASM_SRC)
 	nasm -f elf64 $(ASM_SRC) -o $(ASM_OBJ)
 
 clean:
-	rm -f $(CLIENT_OBJ) $(SERVER_OBJ) $(TESTS_OBJ) $(EXEC) $(ASM_OBJ)
+	rm -f $(CLIENT_OBJ) $(SERVER_OBJ) $(CHALLENGES_OBJ) $(EXEC) $(ASM_OBJ)
 
 
 .PHONY: all
