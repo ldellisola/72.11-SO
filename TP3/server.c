@@ -3,13 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
+
+#include "Network.h"
 
 #include "Challenges/Challenge1.h"
 #include "Challenges/Challenge2.h"
@@ -33,8 +29,7 @@ typedef struct
   function_t run;
 } Challenge_t;
 
-/* the port users will be connecting to */
-#define DEFAULT_PORT 8080
+
 #define MAXBUFLEN 500
 
 // This function will run through the challenges and interact with the client
@@ -44,31 +39,17 @@ void runChallenges(int fd);
 // Reads input from the client
 void readFromClient(int fd, char * buffer, int bufferSize);
 
-// Opens socket for the server
-int openSocket();
-
-// Closes socket for the server
-void closeSocket(int socket);
-
-// Selects wheter the server will use the default port or a prot provided by 
-// the user
-int selectPort(int argc, char ** argv);
-
-// Starts the server and waits for a client to connect
-int startServer(int port, int socket);
-
-
 int main(int argc, char *argv[])
 {
   int socket = openSocket();
-  int port = selectPort(argc, argv);
+  int port = selectPort(argc == 2, argv[1]);
   int fd = startServer(port,socket);
 
   printf("Bienvenido! A continuacion debera superar un par de IMPOSIBLES desafios. Que la fuerza te acompañe\n");
+
   runChallenges(fd);
 
   closeSocket(socket);
-
   return 0;
 }
 
@@ -130,85 +111,4 @@ void readFromClient(int fd, char * buffer, int bufferSize) {
   else {
     buffer[c - 1] = 0;
   }
-}
-
-int startServer(int port, int socket){
-
-  struct sockaddr_in my_addr;
-  my_addr.sin_family = AF_INET;
-  my_addr.sin_port = htons(port);
-  struct in_addr inAddr = {inet_addr("0.0.0.0")};
-  my_addr.sin_addr = inAddr;
-
-  /* zero the rest of the struct */
-  memset(&(my_addr.sin_zero), '\0', 8);
-
-  if (bind(socket, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1)
-  {
-    perror("Server-bind() error lol!");
-    exit(1);
-  }
-
-  if (listen(socket, 5) == -1)
-  {
-    perror("On Listen");
-    exit(-1);
-  }
-
-  unsigned int addr_len = 16;
-
-  int communicationFD = accept(socket, (struct sockaddr *)&my_addr, &addr_len);
-
-  if (communicationFD == -1)
-  {
-    perror("On Accept");
-    exit(-1);
-  }
-
-  // Hago bloqueante la lectura del socket
-  int mode = 0;
-  ioctl(communicationFD, FIONBIO, &mode);
-
-  return communicationFD;
-}
-
-int openSocket(){
-  int sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_IP);
-  if (sockfd == -1)
-  {
-    perror("Server-socket() sockfd error lol!");
-    exit(1);
-  }
-
-  int on=1;
-  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on)) == -1)
-  {
-    perror("On SetSockOpt");
-    exit(-1);
-  }
-
-  return sockfd;
-}
-
-void closeSocket(int socket){
-  if (close(socket) != 0)
-    perror("On socket close\n");
-  else
-    printf("Server-sockfd successfully closed!\n");
-}
-
-int selectPort(int argc, char ** argv){
-  int port = DEFAULT_PORT;
-
-  if (argc == 2)
-  {
-    port = atoi(argv[1]);
-
-    if (port == 0)
-    {
-      printf("Invalid port. Switching to default %d\n", DEFAULT_PORT);
-      port = DEFAULT_PORT;
-    }
-  }
-  return port;
 }

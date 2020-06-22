@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "Challenge9.h"
 #include <stdio.h>
 
@@ -19,7 +21,7 @@ void challenge9_Run(){
     GDB_Me();
 
     if(magicNumber == otherNumber){
-        printf("Igual que el anterior");
+        printf("Igual que el anterior\n");
     }
 }
 

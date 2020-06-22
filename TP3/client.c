@@ -3,114 +3,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-// the port client will be connecting to
-#define PORT 8080
-// max number of bytes we can get at once
-#define MAXDATASIZE 300
+#include <stdbool.h>
+
+#include "Network.h"
+
+#define MAX_BUFFER (500)
+
 int main(int argc, char *argv[])
 {
-
-    int sockfd, numbytes;
-    char buf[MAXDATASIZE];
-    struct hostent *he;
-    // connector’s address information
-    struct sockaddr_in their_addr;
-
-    // if no command line argument supplied
-
+    // if the arguments are not what the client was expecting
     if (argc != 3 && argc != 2)
     {
-        fprintf(stderr, "Client-Usage: %s the_client_hostname [optional PORT]\n", argv[0]);
-        // just exit
-        exit(1);
+        fprintf(stderr, "Client-Usage: %s HOST [optional PORT]\n", argv[0]);
+        exit(-1);
     }
 
-    // get the host info
+    int socket = openSocket();
+    int port = selectPort(argc == 3,argv[2]);
 
-    if ((he = gethostbyname(argv[1])) == NULL)
+    printf("Connecting to server %s:%d on socket %d\n", argv[1], port,socket);
+
+    startClient(argv[1],port,socket);
+
+    bool exitLoop = false;
+    while (!exitLoop)
     {
-        perror("gethostbyname()");
-        exit(1);
-    }
-    else
-        printf("Client-The remote host is: %s\n", argv[1]);
+        char st[MAX_BUFFER];
+       	int c = read(STDIN_FILENO, st, MAX_BUFFER);
 
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_IP)) == -1)
-    {
-        perror("socket()");
-        exit(1);
-    }
-    else
-        printf("Client-The socket() sockfd is OK...\n");
+        if(c == -1){
+            perror("on Read");
+            return -1;
+        }   
+        else if (c == 0){
+            printf("Server is closed. Shutting client down.\n");
+            exitLoop = true;
+        }
 
-    // host byte order
-
-    their_addr.sin_family = AF_INET;
-
-    // short, network byte order
-
-    int port = PORT;
-
-    if (argc == 3)
-    {
-        port = atoi(argv[2]);
-
-        if (port == 0)
+        if (write(socket, st, c) == -1)
         {
-            printf("Invalid port. Switching to default %d\n", PORT);
-            port = PORT;
+            perror("on Write");
+            return -1;
         }
     }
 
-    printf("Server-Using %s and port %d...\n", argv[1], port);
-
-    their_addr.sin_port = htons(port);
-    their_addr.sin_addr = *((struct in_addr *)he->h_addr);
-
-    // zero the rest of the struct
-
-    memset(&(their_addr.sin_zero), '\0', 8);
-
-    if (connect(sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1)
-    {
-        perror("connect()");
-        exit(1);
-    }
-    else
-        printf("Client-The connect() is OK...\n");
-
-    printf("SOCKET: %d\n", sockfd);
-
-    while (1)
-    {
-        char st[360];
-       	int c = read(0, st, 360);
-        write(sockfd, st, c);
-    }
-
-    if ((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) == -1)
-    {
-        perror("recv()");
-        exit(1);
-    }
-
-    else
-
-        printf("Client-The recv() is OK...\n");
-
-    buf[numbytes] = '\0';
-
-    printf("Client-Received: %s", buf);
-
-    printf("Client-Closing sockfd\n");
-
-    close(sockfd);
-
+    closeSocket(socket);
     return 0;
 }
